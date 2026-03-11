@@ -1,0 +1,7 @@
+pandas
+python-dotenv
+google-genai
+pydantic
+openai
+tabulate
+python-dotenv
