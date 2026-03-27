@@ -5,3 +5,4 @@ pydantic
 openai
 tabulate
 python-dotenv
+ollama

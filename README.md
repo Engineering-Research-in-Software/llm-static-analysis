@@ -1,4 +1,5 @@
-# LLM Powered Hybrid Android Application Static Analyzer
+# Verification of an LLM Powered Hybrid Android Application Static Analyzer
+v. 0.0.1
 
 ## The current state of this project is only a very limited POC
 
