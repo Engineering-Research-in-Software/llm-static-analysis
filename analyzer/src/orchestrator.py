@@ -21,23 +21,66 @@ class AnalysisOrchestrator:
         ])
 
         return f"""
-        # ROLE: Senior Android Security Researcher
-        # TASK: Analyze the cross-language data flows in this Hybrid App.
-        
+        # ROLE: Principal Android Security Architect & Vulnerability Researcher
+        # TASK: Deep-Dive Security Audit of Hybrid Bridge Data Flows (JS <-> Java)
+
+        ## CONTEXT
+        You are analyzing a high-risk Android Hybrid Application. Your goal is to identify "Bridge-to-Native" escalation paths where JavaScript (potentially controllable via XSS or compromised Remote URLs) interacts with sensitive Java Methods.
+
         APP PACKAGE: {context['app_name']}
 
-        ## NATIVE JAVA INTERFACES
+        ---
+
+        ## 1. NATIVE INTERFACE INVENTORY (The Attack Surface)
+        The following Java classes are exposed to the WebView via `addJavascriptInterface`. 
         {bridge_summary}
 
-        ## DETECTED JAVASCRIPT LOGIC
+        ## 2. JAVASCRIPT LOGIC ANALYIS (The Entry Points)
+        These snippets represent the client-side logic interacting with the native layer.
         {js_summary}
 
-        ## ANALYSIS REQUIREMENTS:
-        1. Identify high-risk native methods (e.g., PII access).
-        2. Detect data exfiltration in JS snippets.
-        3. Flag semantic mismatches between Java names and JS exposure.
-        
-        OUTPUT FORMAT: Provide a clear Markdown report.
+        ---
+
+        ## MANDATORY EVALUATION CRITERIA:
+
+        ### A. Data Flow & Sink Analysis
+        - Trace variables from JS calls (e.g., `window.<interfaceObject>.method(data)`) to their Java sinks. 
+        - Flag methods that accept strings which might be used in: 
+            - SQL Queries (SQL Injection)
+            - File Paths (Path Traversal)
+            - Intent Creation (Intent Redirection)
+            - Runtime.exec() or Reflection (RCE)
+
+        ### B. PII & Permission Leakage
+        - Identify Java methods returning sensitive data: `getDeviceId()`, `getAccounts()`, `getLocation()`, `getSimSerialNumber()`.
+        - Check if the JS snippets cache this PII in `localStorage` or transmit it to external `fetch/XMLHttpRequest` endpoints.
+
+        ### C. Semantic Mismatch & Over-Privilege
+        - **Name Obfuscation:** Does a method named `log()` actually perform a sensitive action like `uploadFile()`?
+        - **Interface Bloat:** Are there methods exposed in `bridgeMethods` that are never called in the JS snippets? (Unnecessary Attack Surface).
+
+        ### D. Protocol & Origin Security
+        - Analyze if the JS snippets imply the app is loading content over `http://` or if there is no validation of `message.origin` in event listeners.
+
+        ---
+
+        ## OUTPUT STRUCTURE (Markdown Report):
+
+        1. **EXECUTIVE SUMMARY**: 
+        - Total Attack Surface (Number of exposed methods).
+        - High-level risk posture.
+
+        2. **CRITICAL VULNERABILITY FINDINGS**:
+        - **Title**: (e.g., "Remote PII Exfiltration via Bridge Reflection")
+        - **Risk Level**: (Critical/High/Medium/Low)
+        - **Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+        - **Technical Description**: Detailed explanation of how the vulnerability can be exploited.
+        - **Evidence**: Quote the specific JS line and Java method name.
+
+        3. **REMEDIATION STEPS**:
+        - Specific coding advice to patch the identified flows (e.g., "Implement `@JavascriptInterface` validation" or "Sanitize input using [X]").
+
+        4. **CONFIDENCE SCORE**: (1-10) Based on the clarity of the provided snippets.
         """
 
     def get_analysis(self, context):
