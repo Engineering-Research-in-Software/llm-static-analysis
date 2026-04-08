@@ -11,15 +11,22 @@ class OllamaIntegration:
 
     def get_available_models(self) -> List[str]:
         response = self.client.list()
-        models: List[dict[str, Any]] = response.get("models", []) if isinstance(response, dict) else []
+
+        # Newer ollama SDK returns a ListResponse object with a .models attribute;
+        # older versions returned a plain dict.
+        if isinstance(response, dict):
+            raw_models = response.get("models", [])
+        else:
+            raw_models = getattr(response, "models", [])
 
         available: List[str] = []
-        for model in models:
-            if not isinstance(model, dict): # type: ignore
-                continue
+        for model in raw_models:
+            # Each entry may be a dict or a Model object depending on SDK version.
+            if isinstance(model, dict):
+                model_name = model.get("model") or model.get("name")
+            else:
+                model_name = getattr(model, "model", None) or getattr(model, "name", None)
 
-            # Ollama versions may expose either `model` or `name`.
-            model_name = model.get("model") or model.get("name")
             if model_name:
                 available.append(model_name)
 

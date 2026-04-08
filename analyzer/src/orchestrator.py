@@ -1,13 +1,20 @@
 import os
-from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
 class AnalysisOrchestrator:
-    def __init__(self, model_name="gemini-3.1-flash-lite-preview"):
-        self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-        self.model_name = model_name
+    def __init__(self, provider="gemini", model_name=None):
+        self.provider = provider.strip().lower()
+
+        if self.provider == "ollama":
+            from integrations.ollama_int import OllamaIntegration
+            self.model_name = model_name or "llama3.1:8b"
+            self._client = OllamaIntegration(model_name=self.model_name)
+        else:
+            from google import genai
+            self.model_name = model_name or "gemini-2.0-flash-lite"
+            self._client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     def format_prompt(self, context):
         bridge_summary = "\n".join([
@@ -84,9 +91,29 @@ class AnalysisOrchestrator:
         """
 
     def get_analysis(self, context):
+        import time
+        import re
+
         prompt = self.format_prompt(context)
-        response = self.client.models.generate_content(
-            model=self.model_name,
-            contents=prompt
-        )
-        return response.text
+
+        if self.provider == "ollama":
+            return self._client.generate_response(prompt)
+
+        max_retries = 5
+        delay = 60
+
+        for attempt in range(max_retries):
+            try:
+                response = self._client.models.generate_content(
+                    model=self.model_name,
+                    contents=prompt
+                )
+                return response.text
+            except Exception as e:
+                if "429" not in str(e) or attempt == max_retries - 1:
+                    raise
+
+                match = re.search(r"retryDelay.*?'(\d+)s'", str(e))
+                delay = int(match.group(1)) + 1 if match else delay * 2
+                print(f"    [!] Rate limited. Retrying in {delay}s (attempt {attempt + 1}/{max_retries})...")
+                time.sleep(delay)
