@@ -7,10 +7,12 @@ produced by the analysis pipeline.
 Commands:
     preview <app_name>          print bridge interfaces and JS snippets for an app
     template [--reports-dir]    generate a CSV annotation template from audit files
+    evaluate <csv>              compute Agent B accuracy against your annotations
 
 Run from the analyzer/ directory:
     python src/manual_verification.py preview com.cheogram.android_4206304
     python src/manual_verification.py template
+    python src/manual_verification.py evaluate annotations.csv
 """
 
 import argparse
@@ -120,6 +122,51 @@ def cmd_template(reports_dir, output_csv):
     print("Fill in 'is_real_vulnerability' with YES or NO for each row, then run evaluate.")
 
 
+def cmd_evaluate(csv_path):
+    if not os.path.exists(csv_path):
+        print(f"File not found: {csv_path}")
+        sys.exit(1)
+
+    with open(csv_path, newline="") as f:
+        rows = list(csv.DictReader(f))
+
+    annotated = [r for r in rows if r.get("is_real_vulnerability", "").strip().upper() in ("YES", "NO")]
+
+    if not annotated:
+        print("No annotated rows found. Fill in 'is_real_vulnerability' with YES or NO first.")
+        sys.exit(1)
+
+    skipped = len(rows) - len(annotated)
+    if skipped:
+        print(f"Skipping {skipped} unannotated row(s).\n")
+
+    bad_verdicts = {"HALLUCINATED", "UNSUPPORTED"}
+    tp, fp, tn, fn = 0, 0, 0, 0
+
+    for row in annotated:
+        flagged = row["agent_b_verdict"].strip().upper() in bad_verdicts
+        bad = row["is_real_vulnerability"].strip().upper() == "NO"
+
+        if flagged and bad:
+            tp += 1
+        elif flagged and not bad:
+            fp += 1
+        elif not flagged and bad:
+            fn += 1
+        else:
+            tn += 1
+
+    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+
+    print(f"Annotated findings: {len(annotated)}")
+    print(f"  TP {tp}  FP {fp}  TN {tn}  FN {fn}\n")
+    print(f"  Precision: {precision:.3f}")
+    print(f"  Recall:    {recall:.3f}")
+    print(f"  F1:        {f1:.3f}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Manual verification tool")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -132,12 +179,17 @@ def main():
     template.add_argument("--reports-dir", default=REPORTS_DIR)
     template.add_argument("--output", default=OUTPUT_CSV)
 
+    evaluate = sub.add_parser("evaluate", help="Compute Agent B accuracy against annotations")
+    evaluate.add_argument("csv_path")
+
     args = parser.parse_args()
 
     if args.command == "preview":
         cmd_preview(args.app_name, args.db)
     elif args.command == "template":
         cmd_template(args.reports_dir, args.output)
+    elif args.command == "evaluate":
+        cmd_evaluate(args.csv_path)
 
 
 if __name__ == "__main__":
