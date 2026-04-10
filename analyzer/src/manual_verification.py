@@ -22,6 +22,7 @@ import os
 import re
 import sqlite3
 import sys
+from math import comb
 
 
 DB_PATH = "data/Intent.sqlite"
@@ -165,6 +166,20 @@ def cmd_evaluate(csv_path):
     print(f"  Precision: {precision:.3f}")
     print(f"  Recall:    {recall:.3f}")
     print(f"  F1:        {f1:.3f}")
+
+    # Binomial test against H0: Agent B is no better than random at catching bad findings.
+    # Test whether the detection rate (tp / total bad) is significantly above 0.5.
+    total_bad = tp + fn
+    if total_bad >= 10:
+        p_value = sum(comb(total_bad, k) * (0.5 ** total_bad) for k in range(tp, total_bad + 1))
+        print(f"\n  Binomial test (H0: detection rate = 0.5)")
+        print(f"    n={total_bad}, successes={tp}, p={p_value:.4f}")
+        if p_value < 0.05:
+            print("    Reject H0 -- Agent B detects bad findings above chance.")
+        else:
+            print("    Cannot reject H0.")
+    else:
+        print(f"\n  Binomial test: not enough bad findings to test (need >= 10, have {total_bad}).")
 
 
 def main():
