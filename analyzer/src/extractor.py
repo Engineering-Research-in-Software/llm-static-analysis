@@ -1,3 +1,4 @@
+import re
 import sqlite3
 import pandas as pd
 
@@ -12,18 +13,20 @@ class DataExtractor:
             return df['appName'].tolist()
 
     def get_app_context(self, app_name):
+        js_package_name = re.sub(r'_\d+$', '', app_name)
+
         with sqlite3.connect(self.db_path) as conn:
             bridge_query = """
-                SELECT bridgeClass, intefaceObject, bridgeMethods, initiatingMethod 
+                SELECT bridgeClass, intefaceObject, bridgeMethods, initiatingMethod
                 FROM webview_new WHERE appName = ?
             """
             bridges = pd.read_sql_query(bridge_query, conn, params=(app_name,))
             
             js_query = """
-                SELECT PASS_STRING, confidence, resolution_type 
+                SELECT PASS_STRING, confidence, resolution_type
                 FROM jsdetails WHERE PACKAGE_NAME = ?
             """
-            js_facts = pd.read_sql_query(js_query, conn, params=(app_name,))
+            js_facts = pd.read_sql_query(js_query, conn, params=(js_package_name,))
             
         return {
             "app_name": app_name,
