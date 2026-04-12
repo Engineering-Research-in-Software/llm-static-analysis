@@ -2,4 +2,5 @@ __pychache__
 *.pyc
 *.pyo
 *.pyd
+analyzer/results/*.json
 

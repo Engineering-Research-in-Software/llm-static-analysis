@@ -1,13 +1,10 @@
-import os
 import json
+import os
 import argparse
 from extractor import DataExtractor
-from orchestrator import AnalysisOrchestrator
 from auditor import AuditorOrchestrator
-from cross_checker import CrossCheckerOrchestrator
-from utils import extract_json
-from trustworthiness import compute_trustworthiness, compute_comparison
-from aggregate import build_aggregate
+from inspector import InspectorOrchestrator
+from utils import extract_json, extract_findings_from_markdown, build_callsite_id, empty_metrics
 
 
 def _select_ollama_model(label: str) -> str:
@@ -32,202 +29,214 @@ def _select_ollama_model(label: str) -> str:
         print(f"    Invalid choice, enter a number between 1 and {len(models)}.")
 
 
-def _build_orchestrator(args: argparse.Namespace) -> AnalysisOrchestrator:
-    if args.provider == "ollama":
-        model_name = args.model or _select_ollama_model("Agent A")
-        return AnalysisOrchestrator(provider="ollama", model_name=model_name)
-    model_name = args.model or os.getenv("GEMINI_MODEL")
-    return AnalysisOrchestrator(provider="gemini", model_name=model_name)
+def load_config(path: str) -> dict:
+    with open(path) as f:
+        config = json.load(f)
+
+    if "auditor" not in config:
+        raise KeyError("Config missing required key: 'auditor'")
+    if "inspector_pairs" not in config:
+        raise KeyError("Config missing required key: 'inspector_pairs'")
+
+    for i, pair in enumerate(config["inspector_pairs"]):
+        for role in ("inspector_a", "inspector_c"):
+            if role not in pair:
+                raise KeyError(f"inspector_pairs[{i}] missing required key: '{role}'")
+            for field in ("provider", "model"):
+                if field not in pair[role]:
+                    raise KeyError(
+                        f"inspector_pairs[{i}]['{role}'] missing required key: '{field}'"
+                    )
+
+    return config
 
 
-def _build_auditor(args: argparse.Namespace) -> AuditorOrchestrator:
-    provider = args.auditor_provider or args.provider
-    model_name = args.auditor_model
-    if provider == "ollama":
-        model_name = model_name or _select_ollama_model("Agent B / Auditor")
-        return AuditorOrchestrator(provider="ollama", model_name=model_name)
-    return AuditorOrchestrator(provider="gemini", model_name=model_name or os.getenv("AUDITOR_GEMINI_MODEL"))
+def _build_inspector(spec: dict, label: str) -> InspectorOrchestrator:
+    provider = spec["provider"].strip().lower()
+    model_name: str | None = spec.get("model") or None
+
+    if provider == "ollama" and not model_name:
+        model_name = _select_ollama_model(label)
+
+    return InspectorOrchestrator(provider=provider, model_name=model_name)
 
 
-def _build_checker(args: argparse.Namespace) -> CrossCheckerOrchestrator:
-    provider = args.checker_provider or args.provider
-    model_name = args.checker_model
-    if provider == "ollama":
-        model_name = model_name or _select_ollama_model("Agent C / Cross-Checker")
-        return CrossCheckerOrchestrator(provider="ollama", model_name=model_name)
-    return CrossCheckerOrchestrator(provider="gemini", model_name=model_name or os.getenv("CHECKER_GEMINI_MODEL"))
+def _build_auditor(spec: dict) -> AuditorOrchestrator:
+    provider = spec["provider"].strip().lower()
+    model_name: str | None = spec.get("model") or None
+
+    if provider == "ollama" and not model_name:
+        model_name = _select_ollama_model("Auditor")
+
+    return AuditorOrchestrator(provider=provider, model_name=model_name)
 
 
-def _run_audit(
-    auditor: AuditorOrchestrator,
-    context: dict,
-    report: str,
-    app_dir: str,
-    audit_filename: str,
-    trust_filename: str,
-    label: str,
-) -> dict | None:
-    print(f"    [{label}] Auditing...")
-    try:
-        raw_audit = auditor.get_audit(context, report)
-        audit = extract_json(raw_audit)
-        scores = compute_trustworthiness(audit)
+def format_context_for_output(context: dict) -> str:
+    bridge = context["bridge"]
+    bridge_line = (
+        f"Interface '{bridge['intefaceObject']}' ({bridge['bridgeClass']}) "
+        f"exposes: {bridge['bridgeMethods']} | initiating method: {bridge['initiatingMethod']}"
+    )
 
-        with open(os.path.join(app_dir, audit_filename), "w") as f:
-            json.dump(audit, f, indent=2)
-        with open(os.path.join(app_dir, trust_filename), "w") as f:
-            json.dump(scores, f, indent=2)
+    js_parts = [
+        f"// [{s['resolution_type']}]\n{s['PASS_STRING']}"
+        for s in context["js_snippets"][:10]
+    ]
+    js_summary = "\n---\n".join(js_parts)
 
-        halluc_count = round(scores["hallucination_rate"] * len(audit.get("findings_audit", [])))
-        print(
-            f"    {label}: Consistency {scores['overall_consistency_score']}/10 | "
-            f"Trust {scores['trustworthiness_score']} | Halluc {halluc_count}"
-        )
-        return scores
-    except Exception as e:
-        print(f"    [!] Audit ({label}) failed: {e}")
-        with open(os.path.join(app_dir, audit_filename), "w") as f:
-            json.dump({"error": str(e)}, f, indent=2)
-        return None
+    return f"APP: {context['app_name']}\n\nBRIDGE:\n{bridge_line}\n\nJS SNIPPETS:\n{js_summary}"
 
 
 def run() -> None:
-    parser = argparse.ArgumentParser(description="LLM-powered Android bridge security analyzer")
-
-    parser.add_argument(
-        "--provider",
-        choices=["gemini", "ollama"],
-        default=os.getenv("LLM_PROVIDER", "gemini").strip().lower(),
-        help="LLM backend for Agent A (default: gemini)",
+    parser = argparse.ArgumentParser(
+        description="LLM-powered Android bridge security analyzer (callsite-level)"
     )
     parser.add_argument(
-        "--model",
-        default=None,
-        help="Model for Agent A. Ollama shows selector if omitted.",
+        "--config",
+        default="analysis_configuration.json",
+        metavar="PATH",
+        help="Path to the analysis configuration JSON (default: analysis_configuration.json)",
     )
     parser.add_argument(
         "--limit",
         type=int,
         default=None,
         metavar="N",
-        help="Only analyze the first N apps.",
-    )
-    parser.add_argument(
-        "--auditor-provider",
-        choices=["gemini", "ollama"],
-        default=None,
-        dest="auditor_provider",
-        help="LLM backend for Agent B. Defaults to --provider.",
-    )
-    parser.add_argument(
-        "--auditor-model",
-        default=None,
-        dest="auditor_model",
-        help="Model for Agent B.",
-    )
-    parser.add_argument(
-        "--checker-provider",
-        choices=["gemini", "ollama"],
-        default=None,
-        dest="checker_provider",
-        help="LLM backend for Agent C. Defaults to --provider.",
-    )
-    parser.add_argument(
-        "--checker-model",
-        default=None,
-        dest="checker_model",
-        help="Model for Agent C.",
-    )
-    parser.add_argument(
-        "--skip-audit",
-        action="store_true",
-        dest="skip_audit",
-        help="Run only Agent A, skipping audit and cross-check.",
-    )
-    parser.add_argument(
-        "--skip-checker",
-        action="store_true",
-        dest="skip_checker",
-        help="Run Agent A + Agent B only, skipping Agent C.",
+        help="Only analyze callsites belonging to the first N apps.",
     )
     args = parser.parse_args()
+
+    if not os.path.exists(args.config):
+        print(f"Error: Config file not found at {args.config}")
+        raise SystemExit(1)
+
+    config = load_config(args.config)
 
     db_path = os.path.join("data", "Intent.sqlite")
     if not os.path.exists(db_path):
         print(f"Error: Database not found at {db_path}")
-        return
+        raise SystemExit(1)
 
-    orchestrator = _build_orchestrator(args)
-    auditor = None if args.skip_audit else _build_auditor(args)
-    checker = None if (args.skip_audit or args.skip_checker) else _build_checker(args)
+    auditor = _build_auditor(config["auditor"])
+
+    # Pre-build all inspector pairs before the callsite loop so Ollama model
+    # selection (interactive) happens once upfront, not once per callsite.
+    inspector_pairs_built: list[tuple[InspectorOrchestrator, InspectorOrchestrator]] = []
+    for i, pair in enumerate(config["inspector_pairs"]):
+        inspector_a = _build_inspector(pair["inspector_a"], f"Pair {i} / Inspector A")
+        inspector_c = _build_inspector(pair["inspector_c"], f"Pair {i} / Inspector C")
+        inspector_pairs_built.append((inspector_a, inspector_c))
 
     extractor = DataExtractor(db_path)
-    apps = extractor.get_all_apps()
+    all_callsites = extractor.get_all_callsites()
+
     if args.limit is not None:
-        apps = apps[:args.limit]
+        seen_apps: list[str] = []
+        for row in all_callsites:
+            app = str(row["appName"])
+            if app not in seen_apps:
+                seen_apps.append(app)
+        apps_to_include = set(seen_apps[: args.limit])
+        callsites = [r for r in all_callsites if str(r["appName"]) in apps_to_include]
+    else:
+        callsites = all_callsites
 
-    reports_dir = "reports"
-    os.makedirs(reports_dir, exist_ok=True)
+    app_count = len({str(r["appName"]) for r in callsites})
+    os.makedirs("results", exist_ok=True)
+    output_path = os.path.join("results", "callsite_results.json")
 
-    print(f"\n[*] Analyzing {len(apps)} app(s). Starting semantic analysis...")
+    # Initialise the output file as a valid empty JSON array.
+    with open(output_path, "w") as f:
+        f.write("[]")
 
-    for app in apps:
-        app_dir = os.path.join(reports_dir, app)
-        os.makedirs(app_dir, exist_ok=True)
-        print(f"\n[>] Analyzing: {app}...")
+    print(
+        f"\n[*] Analyzing {len(callsites)} callsite(s) across {app_count} app(s) and "
+        f"{len(inspector_pairs_built)} inspector pair(s). Starting..."
+    )
 
-        context = extractor.get_app_context(app)
+    for idx, callsite_row in enumerate(callsites):
+        callsite_id = int(callsite_row["id"])
+        print(f"\n[>] Callsite {idx + 1}/{len(callsites)} (db id={callsite_id})...")
 
-        # Agent A
-        report_a = orchestrator.get_analysis(context)
-        with open(os.path.join(app_dir, "report.md"), "w") as f:
-            f.write(report_a)
-
-        if auditor is None:
-            continue
-
-        # Agent B audits Agent A
-        trust_a = _run_audit(auditor, context, report_a, app_dir, "audit.json", "trust.json", "B→A")
-
-        if checker is None:
-            continue
-
-        # Agent C — independent analysis (never sees Agent A's report)
-        print(f"    [C] Cross-checking...")
         try:
-            report_c = checker.get_analysis(context)
-            with open(os.path.join(app_dir, "checker.md"), "w") as f:
-                f.write(report_c)
+            context = extractor.get_callsite_context(callsite_id)
         except Exception as e:
-            print(f"    [!] Agent C failed: {e}")
-            with open(os.path.join(app_dir, "checker.md"), "w") as f:
-                f.write(f"ERROR: {e}")
+            print(f"    [!] Failed to load context: {e}")
             continue
 
-        # Agent B audits Agent C
-        trust_c = _run_audit(auditor, context, report_c, app_dir, "checker_audit.json", "checker_trust.json", "B→C")
+        callsite_id_str = build_callsite_id(context["db_stem"], context["callsite_id"])
+        context_str = format_context_for_output(context)
 
-        # Comparison
-        if trust_a and trust_c:
-            comp = compute_comparison(trust_a, trust_c)
-            with open(os.path.join(app_dir, "comparison.json"), "w") as f:
-                json.dump(comp, f, indent=2)
-            print(f"    Winner: Agent {comp['more_trustworthy_agent']} (Δ {comp['delta_trustworthiness']:+.3f})")
+        permutations: list[dict] = []
 
-    # Aggregate
-    if auditor is not None:
-        print()
-        build_aggregate(
-            reports_dir,
-            run_metadata={
-                "agent_a_model": f"{args.provider}/{orchestrator.model_name}",
-                "agent_b_model": f"{auditor.provider}/{auditor.model_name}",
-                "agent_c_model": f"{checker.provider}/{checker.model_name}" if checker else "N/A",
-                "apps_analyzed": len(apps),
-            },
-        )
+        for pair_idx, (inspector_a, inspector_c) in enumerate(inspector_pairs_built):
+            print(
+                f"    [Pair {pair_idx}] Inspector A={inspector_a.model_id} | "
+                f"Inspector C={inspector_c.model_id}"
+            )
 
-    print("\n[!] Done. Check the 'reports' folder.")
+            try:
+                report_a = inspector_a.get_analysis(context)
+            except Exception as e:
+                print(f"    [!] Inspector A failed: {e}")
+                report_a = ""
+
+            try:
+                report_c = inspector_c.get_analysis(context)
+            except Exception as e:
+                print(f"    [!] Inspector C failed: {e}")
+                report_c = ""
+
+            findings_a = extract_findings_from_markdown(report_a)
+            findings_c = extract_findings_from_markdown(report_c)
+            print(
+                f"    [Pair {pair_idx}] Findings: A={len(findings_a)}, C={len(findings_c)}"
+            )
+
+            print(f"    [Pair {pair_idx}] Auditing with {auditor.model_id}...")
+            try:
+                raw_verdict = auditor.get_audit(
+                    context, findings_a, findings_c, inspector_a.model_id, inspector_c.model_id
+                )
+                verdict = extract_json(raw_verdict)
+            except Exception as e:
+                print(f"    [!] Auditor failed: {e}")
+                verdict = {}
+
+            permutations.append(
+                {
+                    "researcher": 0,
+                    "inspectors": [inspector_a.model_id, inspector_c.model_id],
+                    "auditor": auditor.model_id,
+                    "results": [
+                        {"inspector": inspector_a.model_id, "findings": findings_a},
+                        {"inspector": inspector_c.model_id, "findings": findings_c},
+                    ],
+                    "auditorVerdict": verdict,
+                    "researcherConclusion": empty_metrics(),
+                }
+            )
+
+        record = {
+            "identifiedCallsiteID": callsite_id_str,
+            "context": context_str,
+            "permutations": permutations,
+        }
+
+        record_bytes = json.dumps(record, indent=2).encode()
+        with open(output_path, "rb+") as f:
+            # Seek back past the closing ']' and write separator + record + ']'.
+            f.seek(-1, 2)
+            if idx == 0:
+                f.write(b"\n")
+            else:
+                f.write(b",\n")
+            f.write(record_bytes)
+            f.write(b"\n]")
+
+        print(f"    [+] Written: {callsite_id_str}")
+
+    print(f"\n[!] Done. Results saved to {output_path}")
 
 
 if __name__ == "__main__":

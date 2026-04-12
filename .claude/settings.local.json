@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/joaocardoso/Documents/SDU/repos/llm-static-analysis -type f \\\\\\(-name .env* -o -name *.env \\\\\\) -o -name config*)",
+      "Bash(sqlite3:*)",
+      "Bash(pip show:*)",
+      "Bash(python -m mypy inspector.py --ignore-missing-imports --explicit-package-bases)",
+      "Bash(python3 -m mypy extractor.py inspector.py auditor.py utils.py main.py --ignore-missing-imports)",
+      "Bash(python3 -c \"from google import genai; print\\(type\\(genai.Client\\(\\)\\)\\)\")"
+    ]
+  }
+}

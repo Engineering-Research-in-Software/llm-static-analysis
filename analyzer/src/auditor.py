@@ -1,107 +1,145 @@
-import os
+from __future__ import annotations
+
 import json
-import time
+import os
 import re
+import time
+from typing import TYPE_CHECKING
 from dotenv import load_dotenv
+
+if TYPE_CHECKING:
+    from integrations.ollama_int import OllamaIntegration
+    from google.genai import Client as GeminiClient
 
 load_dotenv()
 
-_VERDICT_DEFINITIONS = """
-- SUPPORTED: The data flow path and any cited evidence are traceable in the raw context.
-- PARTIALLY_SUPPORTED: The risk category is plausible but the specific evidence cited is absent or misquoted.
-- UNSUPPORTED: The finding is not traceable to any entry in the bridge or JS snippet data.
-- HALLUCINATED: The finding references methods, objects, or snippets that do not exist in the context at all.
-"""
-
-_OUTPUT_SCHEMA = json.dumps({
-    "findings_audit": [
-        {
-            "finding_title": "string",
-            "verdict": "SUPPORTED | PARTIALLY_SUPPORTED | UNSUPPORTED | HALLUCINATED",
-            "reasoning": "string - cite specific evidence or note its absence",
-            "evidence_found_in_context": "true | false",
-            "consistency_score": "integer 1-10"
-        }
-    ],
-    "unsupported_claims": ["list of specific claims made without evidence"],
-    "missing_findings": ["risks visible in the raw context that Agent A did not flag"],
-    "overall_consistency_score": "integer 1-10",
-    "auditor_notes": "string - high-level commentary"
-}, indent=2)
-
 
 class AuditorOrchestrator:
+    _ollama: OllamaIntegration | None
+    _gemini: GeminiClient | None
+
     def __init__(self, provider: str = "gemini", model_name: str | None = None):
         self.provider = provider.strip().lower()
+        self._ollama = None
+        self._gemini = None
 
         if self.provider == "ollama":
             from integrations.ollama_int import OllamaIntegration
-            self.model_name = model_name or "llama3.1:8b"
-            self._client = OllamaIntegration(model_name=self.model_name)
+            self._model_name = model_name or "llama3.1:8b"
+            self._ollama = OllamaIntegration(model_name=self._model_name)
         else:
             from google import genai
-            self.model_name = model_name or "gemini-2.0-flash-lite"
-            self._client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+            self._model_name = model_name or "gemini-2.0-flash-lite"
+            self._gemini = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-    def _format_prompt(self, context: dict, agent_a_report: str) -> str:
-        bridge_summary = "\n".join([
-            f"- Interface '{b['intefaceObject']}' ({b['bridgeClass']}) exposes: {b['bridgeMethods']}"
-            for b in context["bridges"]
-        ])
+        self.model_id = f"{self.provider}/{self._model_name}"
 
-        js_summary = "\n---\n".join([
+    def _format_prompt(
+        self,
+        context: dict,
+        findings_a: list[str],
+        findings_c: list[str],
+        model_id_a: str,
+        model_id_c: str,
+    ) -> str:
+        bridge = context["bridge"]
+        bridge_line = (
+            f"Interface '{bridge['intefaceObject']}' ({bridge['bridgeClass']}) "
+            f"exposes: {bridge['bridgeMethods']} | initiating method: {bridge['initiatingMethod']}"
+        )
+
+        js_summary = "\n---\n".join(
             f"// [{s['resolution_type']}]\n{s['PASS_STRING']}"
             for s in context["js_snippets"][:10]
-        ])
+        )
 
-        return f"""# ROLE: Security Analysis Auditor
-# TASK: Audit the following security report against the raw evidence provided below.
+        findings_a_text = "\n\n".join(findings_a) if findings_a else "(no findings)"
+        findings_c_text = "\n\n".join(findings_c) if findings_c else "(no findings)"
 
-## GROUND TRUTH EVIDENCE
+        schema = json.dumps(
+            {
+                model_id_a: {
+                    "hallucinationFrequency": "0.0-1.0",
+                    "technicalAccuracy": "integer 1-10",
+                    "effectChainAwareness": "integer 1-10",
+                    "attackSurfaceCoverage": "0.0-1.0",
+                },
+                model_id_c: {
+                    "hallucinationFrequency": "0.0-1.0",
+                    "technicalAccuracy": "integer 1-10",
+                    "effectChainAwareness": "integer 1-10",
+                    "attackSurfaceCoverage": "0.0-1.0",
+                },
+            },
+            indent=2,
+        )
+
+        return f"""# ROLE: Security Audit Judge
+# TASK: Evaluate two independent security analyses of the same Android WebView bridge callsite.
+
+## GROUND TRUTH CONTEXT
 APP PACKAGE: {context['app_name']}
 
-### Bridge Interfaces (Java side)
-{bridge_summary}
+### Bridge Interface (Java side)
+{bridge_line}
 
 ### JavaScript Snippets (entry points)
 {js_summary}
 
-## AGENT A REPORT UNDER REVIEW
-{agent_a_report}
+---
 
-## AUDIT INSTRUCTIONS
-For each finding in the report:
-1. Check whether the data flow path (JS source -> bridge object -> Java method) can be traced in the evidence above.
-2. Check whether any quoted JS identifiers, method names, or class names actually appear in the evidence.
-3. Assess whether the severity rating is proportionate to what the evidence actually shows.
+## INSPECTOR FINDINGS
 
-Verdict definitions:
-{_VERDICT_DEFINITIONS}
+### Inspector {model_id_a}
+{findings_a_text}
 
-Also identify:
-- unsupported_claims: specific statements in the report that have no basis in the evidence
-- missing_findings: risks clearly visible in the raw context that Agent A did not flag
+### Inspector {model_id_c}
+{findings_c_text}
+
+---
+
+## EVALUATION INSTRUCTIONS
+
+### Hallucination Definition
+A hallucination is any finding that references a method, class, object, or code segment that does NOT appear in the provided ground truth context above. Count the number of hallucinated findings for each inspector.
+
+### Metric Definitions
+- **hallucinationFrequency**: Count hallucinated findings per inspector. Assign 1.0 to whichever inspector has more hallucinations and their_count/max_count to the other. If both have zero hallucinations, both get 0.0.
+- **technicalAccuracy**: Integer 1-10. How technically correct and precise are the non-hallucinated findings?
+- **effectChainAwareness**: Integer 1-10. How well does the inspector identify chained vulnerabilities and their combined impact?
+- **attackSurfaceCoverage**: Float 0.0-1.0. First identify all genuine vulnerabilities visible in the ground truth context. Then score each inspector as found/total_in_context.
+
+---
 
 ## OUTPUT
-Respond with ONLY a valid JSON object. Do not include markdown fences or any other text.
-The JSON must match this schema exactly:
-{_OUTPUT_SCHEMA}"""
+Respond with ONLY valid JSON matching this schema. No markdown fences, no other text:
+{schema}"""
 
-    def get_audit(self, context: dict, agent_a_report: str) -> str:
-        prompt = self._format_prompt(context, agent_a_report)
+    def get_audit(
+        self,
+        context: dict,
+        findings_a: list[str],
+        findings_c: list[str],
+        model_id_a: str,
+        model_id_c: str,
+    ) -> str:
+        prompt = self._format_prompt(context, findings_a, findings_c, model_id_a, model_id_c)
 
-        if self.provider == "ollama":
-            return self._client.generate_response(prompt)
+        if self._ollama is not None:
+            return self._ollama.generate_response(prompt)
 
+        assert self._gemini is not None
         max_retries = 5
         delay = 60
 
         for attempt in range(max_retries):
             try:
-                response = self._client.models.generate_content(
-                    model=self.model_name,
-                    contents=prompt
+                response = self._gemini.models.generate_content(
+                    model=self._model_name,
+                    contents=prompt,
                 )
+                if response.text is None:
+                    raise ValueError("Empty response from model")
                 return response.text
             except Exception as e:
                 if "429" not in str(e) or attempt == max_retries - 1:
@@ -109,5 +147,10 @@ The JSON must match this schema exactly:
 
                 match = re.search(r"retryDelay.*?'(\d+)s'", str(e))
                 delay = int(match.group(1)) + 1 if match else delay * 2
-                print(f"    [!] Auditor rate limited. Retrying in {delay}s (attempt {attempt + 1}/{max_retries})...")
+                print(
+                    f"    [!] Auditor rate limited. Retrying in {delay}s "
+                    f"(attempt {attempt + 1}/{max_retries})..."
+                )
                 time.sleep(delay)
+
+        raise RuntimeError("Max retries exceeded")
