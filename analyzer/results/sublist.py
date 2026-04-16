@@ -2,23 +2,7 @@ import json
 
 # Structure reference
 #
-# [{
-#   “identifiedCallsiteID”: string, //<databaseName>-<tableName>-<rowID>
-#   ”context": string, // JS and Java/Kotlin code
-    #”permutations": {
-#       “researcher”: uint8,
-#       “inspectors”: ModelID[], // type ModelID = string;
-#       "auditors”: ModelID[],
-#       “results”: {
-#           “inspector": ModelID,
-#           "findings”: string[],
-#       }[],
-#       ”audits”: { [key: ModelID]: 
-#                       {[key: ModelID]: EvaluationMetricsResult }
-#       }, // audits of inspectors
-#     ”researcherConclusion”: { [key: ModelID]:  EvaluationMetricsResult } // upon auditor
-#     }[]
-# }]
+# [{}]
 
 
 
