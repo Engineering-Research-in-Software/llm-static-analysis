@@ -71,6 +71,15 @@ def _build_auditor(spec: dict) -> AuditorOrchestrator:
     return AuditorOrchestrator(provider=provider, model_name=model_name)
 
 
+def _try_unload(orchestrator) -> None:
+    """Unload from VRAM if this is an Ollama-backed orchestrator. No-op for Gemini."""
+    if getattr(orchestrator, "provider", None) == "ollama":
+        ol = getattr(orchestrator, "_ollama", None)
+        if ol is not None:
+            ol.unload()
+            print(f"    [*] Unloaded {orchestrator.model_id} from VRAM.")
+
+
 def format_context_for_output(context: dict) -> str:
     bridge = context["bridge"]
     bridge_line = (
@@ -154,45 +163,74 @@ def run() -> None:
         f"{len(inspector_pairs_built)} inspector pair(s). Starting..."
     )
 
+    # ── Phase 0: Pre-load all callsite contexts (cheap SQLite reads) ──────────
+    loaded: list[tuple[dict, dict, str, str]] = []  # (row, context, id_str, ctx_str)
     for idx, callsite_row in enumerate(callsites):
         callsite_id = int(callsite_row["id"])
-        print(f"\n[>] Callsite {idx + 1}/{len(callsites)} (db id={callsite_id})...")
-
+        print(f"\n[>] Pre-loading context {idx + 1}/{len(callsites)} (db id={callsite_id})...")
         try:
             context = extractor.get_callsite_context(callsite_id)
         except Exception as e:
-            print(f"    [!] Failed to load context: {e}")
+            print(f"    [!] Skipping callsite {callsite_id}: {e}")
             continue
-
         callsite_id_str = build_callsite_id(context["db_stem"], context["callsite_id"])
         context_str = format_context_for_output(context)
+        loaded.append((callsite_row, context, callsite_id_str, context_str))
 
-        permutations: list[dict] = []
+    print(f"\n[*] {len(loaded)} callsite(s) pre-loaded.")
 
-        for pair_idx, (inspector_a, inspector_c) in enumerate(inspector_pairs_built):
-            print(
-                f"    [Pair {pair_idx}] Inspector A={inspector_a.model_id} | "
-                f"Inspector C={inspector_c.model_id}"
-            )
+    # intermediate[ctx_idx][pair_idx] = {"findings_a": [...], "findings_c": [...]}
+    intermediate: list[dict[int, dict[str, list[str]]]] = [{} for _ in loaded]
 
+    # ── Phase 1: Inspector batches — iterate by model, not by callsite ────────
+    for pair_idx, (inspector_a, inspector_c) in enumerate(inspector_pairs_built):
+        print(
+            f"\n[Phase 1 / Pair {pair_idx}] Inspector A={inspector_a.model_id} "
+            f"— {len(loaded)} callsite(s)"
+        )
+        for ctx_idx, (_, context, callsite_id_str, _) in enumerate(loaded):
+            print(f"  [{ctx_idx + 1}/{len(loaded)}] {callsite_id_str} — Inspector A")
             try:
                 report_a = inspector_a.get_analysis(context)
             except Exception as e:
                 print(f"    [!] Inspector A failed: {e}")
                 report_a = ""
+            intermediate[ctx_idx].setdefault(pair_idx, {"findings_a": [], "findings_c": []})
+            intermediate[ctx_idx][pair_idx]["findings_a"] = extract_findings_from_markdown(report_a)
 
+        _try_unload(inspector_a)
+
+        print(
+            f"\n[Phase 1 / Pair {pair_idx}] Inspector C={inspector_c.model_id} "
+            f"— {len(loaded)} callsite(s)"
+        )
+        for ctx_idx, (_, context, callsite_id_str, _) in enumerate(loaded):
+            print(f"  [{ctx_idx + 1}/{len(loaded)}] {callsite_id_str} — Inspector C")
             try:
                 report_c = inspector_c.get_analysis(context)
             except Exception as e:
                 print(f"    [!] Inspector C failed: {e}")
                 report_c = ""
+            intermediate[ctx_idx].setdefault(pair_idx, {"findings_a": [], "findings_c": []})
+            intermediate[ctx_idx][pair_idx]["findings_c"] = extract_findings_from_markdown(report_c)
 
-            findings_a = extract_findings_from_markdown(report_a)
-            findings_c = extract_findings_from_markdown(report_c)
+        _try_unload(inspector_c)
+
+    # ── Phase 2: Auditor pass + incremental output write ─────────────────────
+    print(f"\n[Phase 2] Auditing {len(loaded)} callsite(s) with {auditor.model_id}...")
+    written_count = 0
+
+    for ctx_idx, (_, context, callsite_id_str, context_str) in enumerate(loaded):
+        print(f"\n[>] Callsite {ctx_idx + 1}/{len(loaded)} ({callsite_id_str})...")
+        permutations: list[dict] = []
+
+        for pair_idx, (inspector_a, inspector_c) in enumerate(inspector_pairs_built):
+            slot = intermediate[ctx_idx].get(pair_idx, {})
+            findings_a = slot.get("findings_a", [])
+            findings_c = slot.get("findings_c", [])
             print(
                 f"    [Pair {pair_idx}] Findings: A={len(findings_a)}, C={len(findings_c)}"
             )
-
             print(f"    [Pair {pair_idx}] Auditing with {auditor.model_id}...")
             try:
                 raw_verdict = auditor.get_audit(
@@ -227,15 +265,17 @@ def run() -> None:
         with open(output_path, "rb+") as f:
             # Seek back past the closing ']' and write separator + record + ']'.
             f.seek(-1, 2)
-            if idx == 0:
+            if written_count == 0:
                 f.write(b"\n")
             else:
                 f.write(b",\n")
             f.write(record_bytes)
             f.write(b"\n]")
 
+        written_count += 1
         print(f"    [+] Written: {callsite_id_str}")
 
+    _try_unload(auditor)
     print(f"\n[!] Done. Results saved to {output_path}")
 
 

@@ -93,3 +93,10 @@ class OllamaIntegration:
             return cast(Any, response).text
 
         return str(response)
+
+    def unload(self) -> None:
+        """Evict this model from Ollama VRAM. Best-effort; ignores errors."""
+        try:
+            self.client.generate(model=self.model_name, prompt="", keep_alive=0)
+        except Exception:
+            pass
