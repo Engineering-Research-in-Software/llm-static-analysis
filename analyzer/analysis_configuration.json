@@ -1,9 +1,6 @@
 {
-  "auditor": { "provider": "ollama", "model": "gemma3:12b" },
-  "inspector_pairs": [
-    {
-      "inspector_a": { "provider": "ollama", "model": "llama3.2:3b" },
-      "inspector_c": { "provider": "ollama", "model": "gemma3:4b" }
-    }
+  "models": [
+    { "provider": "ollama", "model": "llama3.2:3b" },
+    { "provider": "ollama", "model": "gemma3:4b" }
   ]
 }

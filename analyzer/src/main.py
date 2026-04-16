@@ -4,7 +4,7 @@ import argparse
 from extractor import DataExtractor
 from auditor import AuditorOrchestrator
 from inspector import InspectorOrchestrator
-from utils import extract_json, extract_findings_from_markdown, build_callsite_id, empty_metrics
+from utils import extract_json, extract_findings_from_markdown, build_callsite_id
 
 
 def _select_ollama_model(label: str) -> str:
@@ -33,42 +33,30 @@ def load_config(path: str) -> dict:
     with open(path) as f:
         config = json.load(f)
 
-    if "auditor" not in config:
-        raise KeyError("Config missing required key: 'auditor'")
-    if "inspector_pairs" not in config:
-        raise KeyError("Config missing required key: 'inspector_pairs'")
+    if "models" not in config:
+        raise KeyError("Config missing required key: 'models'")
+    if not isinstance(config["models"], list) or len(config["models"]) == 0:
+        raise ValueError("Config 'models' must be a non-empty list")
 
-    for i, pair in enumerate(config["inspector_pairs"]):
-        for role in ("inspector_a", "inspector_c"):
-            if role not in pair:
-                raise KeyError(f"inspector_pairs[{i}] missing required key: '{role}'")
-            for field in ("provider", "model"):
-                if field not in pair[role]:
-                    raise KeyError(
-                        f"inspector_pairs[{i}]['{role}'] missing required key: '{field}'"
-                    )
+    for i, spec in enumerate(config["models"]):
+        for field in ("provider", "model"):
+            if field not in spec:
+                raise KeyError(f"models[{i}] missing required key: '{field}'")
 
     return config
 
 
-def _build_inspector(spec: dict, label: str) -> InspectorOrchestrator:
+def _build_model(spec: dict, label: str) -> tuple[InspectorOrchestrator, AuditorOrchestrator]:
     provider = spec["provider"].strip().lower()
     model_name: str | None = spec.get("model") or None
 
     if provider == "ollama" and not model_name:
         model_name = _select_ollama_model(label)
 
-    return InspectorOrchestrator(provider=provider, model_name=model_name)
-
-
-def _build_auditor(spec: dict) -> AuditorOrchestrator:
-    provider = spec["provider"].strip().lower()
-    model_name: str | None = spec.get("model") or None
-
-    if provider == "ollama" and not model_name:
-        model_name = _select_ollama_model("Auditor")
-
-    return AuditorOrchestrator(provider=provider, model_name=model_name)
+    return (
+        InspectorOrchestrator(provider=provider, model_name=model_name),
+        AuditorOrchestrator(provider=provider, model_name=model_name),
+    )
 
 
 def _try_unload(orchestrator) -> None:
@@ -126,15 +114,15 @@ def run() -> None:
         print(f"Error: Database not found at {db_path}")
         raise SystemExit(1)
 
-    auditor = _build_auditor(config["auditor"])
+    # Pre-build all models before the callsite loop so Ollama model selection
+    # (interactive) happens once upfront, not once per callsite.
+    built: list[tuple[InspectorOrchestrator, AuditorOrchestrator]] = []
+    for i, spec in enumerate(config["models"]):
+        inspector, auditor = _build_model(spec, f"Model {i}")
+        built.append((inspector, auditor))
 
-    # Pre-build all inspector pairs before the callsite loop so Ollama model
-    # selection (interactive) happens once upfront, not once per callsite.
-    inspector_pairs_built: list[tuple[InspectorOrchestrator, InspectorOrchestrator]] = []
-    for i, pair in enumerate(config["inspector_pairs"]):
-        inspector_a = _build_inspector(pair["inspector_a"], f"Pair {i} / Inspector A")
-        inspector_c = _build_inspector(pair["inspector_c"], f"Pair {i} / Inspector C")
-        inspector_pairs_built.append((inspector_a, inspector_c))
+    inspectors = [inspector for inspector, _ in built]
+    auditors = [auditor for _, auditor in built]
 
     extractor = DataExtractor(db_path)
     all_callsites = extractor.get_all_callsites()
@@ -159,8 +147,8 @@ def run() -> None:
         f.write("[]")
 
     print(
-        f"\n[*] Analyzing {len(callsites)} callsite(s) across {app_count} app(s) and "
-        f"{len(inspector_pairs_built)} inspector pair(s). Starting..."
+        f"\n[*] Analyzing {len(callsites)} callsite(s) across {app_count} app(s) "
+        f"with {len(inspectors)} model(s). Starting..."
     )
 
     # ── Phase 0: Pre-load all callsite contexts (cheap SQLite reads) ──────────
@@ -179,86 +167,74 @@ def run() -> None:
 
     print(f"\n[*] {len(loaded)} callsite(s) pre-loaded.")
 
-    # intermediate[ctx_idx][pair_idx] = {"findings_a": [...], "findings_c": [...]}
-    intermediate: list[dict[int, dict[str, list[str]]]] = [{} for _ in loaded]
+    # intermediate[ctx_idx][model_id] = findings: list[str]
+    intermediate: list[dict[str, list[str]]] = [{} for _ in loaded]
+    # audit_results[ctx_idx][auditor_model_id][inspector_model_id] = metrics: dict
+    audit_results: list[dict[str, dict[str, dict]]] = [{} for _ in loaded]
 
-    # ── Phase 1: Inspector batches — iterate by model, not by callsite ────────
-    for pair_idx, (inspector_a, inspector_c) in enumerate(inspector_pairs_built):
+    # ── Phase 1: Inspector passes — one model at a time over all callsites ────
+    for inspector in inspectors:
         print(
-            f"\n[Phase 1 / Pair {pair_idx}] Inspector A={inspector_a.model_id} "
-            f"— {len(loaded)} callsite(s)"
+            f"\n[Phase 1] Inspector={inspector.model_id} — {len(loaded)} callsite(s)"
         )
         for ctx_idx, (_, context, callsite_id_str, _) in enumerate(loaded):
-            print(f"  [{ctx_idx + 1}/{len(loaded)}] {callsite_id_str} — Inspector A")
+            print(f"  [{ctx_idx + 1}/{len(loaded)}] {callsite_id_str}")
             try:
-                report_a = inspector_a.get_analysis(context)
+                report = inspector.get_analysis(context)
             except Exception as e:
-                print(f"    [!] Inspector A failed: {e}")
-                report_a = ""
-            intermediate[ctx_idx].setdefault(pair_idx, {"findings_a": [], "findings_c": []})
-            intermediate[ctx_idx][pair_idx]["findings_a"] = extract_findings_from_markdown(report_a)
+                print(f"    [!] Inspector failed: {e}")
+                report = ""
+            intermediate[ctx_idx][inspector.model_id] = extract_findings_from_markdown(report)
 
-        _try_unload(inspector_a)
+        _try_unload(inspector)
 
+    # ── Phase 2: Cross-audit passes — each auditor evaluates all inspectors ─────
+    for auditor in auditors:
         print(
-            f"\n[Phase 1 / Pair {pair_idx}] Inspector C={inspector_c.model_id} "
-            f"— {len(loaded)} callsite(s)"
+            f"\n[Phase 2] Auditor={auditor.model_id} "
+            f"— {len(inspectors)} inspector(s) × {len(loaded)} callsite(s)"
         )
         for ctx_idx, (_, context, callsite_id_str, _) in enumerate(loaded):
-            print(f"  [{ctx_idx + 1}/{len(loaded)}] {callsite_id_str} — Inspector C")
-            try:
-                report_c = inspector_c.get_analysis(context)
-            except Exception as e:
-                print(f"    [!] Inspector C failed: {e}")
-                report_c = ""
-            intermediate[ctx_idx].setdefault(pair_idx, {"findings_a": [], "findings_c": []})
-            intermediate[ctx_idx][pair_idx]["findings_c"] = extract_findings_from_markdown(report_c)
+            audit_results[ctx_idx].setdefault(auditor.model_id, {})
+            for inspector in inspectors:
+                inspector_findings = intermediate[ctx_idx].get(inspector.model_id, [])
+                print(
+                    f"  [{ctx_idx + 1}/{len(loaded)}] {callsite_id_str} "
+                    f"auditing {inspector.model_id} — {len(inspector_findings)} finding(s)"
+                )
+                try:
+                    raw = auditor.get_audit(context, inspector_findings, inspector.model_id)
+                    metrics = extract_json(raw)
+                except Exception as e:
+                    print(f"    [!] Auditor failed: {e}")
+                    metrics = {}
+                audit_results[ctx_idx][auditor.model_id][inspector.model_id] = metrics
 
-        _try_unload(inspector_c)
+        _try_unload(auditor)
 
-    # ── Phase 2: Auditor pass + incremental output write ─────────────────────
-    print(f"\n[Phase 2] Auditing {len(loaded)} callsite(s) with {auditor.model_id}...")
+    # ── Phase 3: Assemble records + incremental output write ──────────────────
+    print(f"\n[Phase 3] Writing {len(loaded)} record(s)...")
     written_count = 0
+    model_ids = [inspector.model_id for inspector in inspectors]
 
     for ctx_idx, (_, context, callsite_id_str, context_str) in enumerate(loaded):
-        print(f"\n[>] Callsite {ctx_idx + 1}/{len(loaded)} ({callsite_id_str})...")
-        permutations: list[dict] = []
-
-        for pair_idx, (inspector_a, inspector_c) in enumerate(inspector_pairs_built):
-            slot = intermediate[ctx_idx].get(pair_idx, {})
-            findings_a = slot.get("findings_a", [])
-            findings_c = slot.get("findings_c", [])
-            print(
-                f"    [Pair {pair_idx}] Findings: A={len(findings_a)}, C={len(findings_c)}"
-            )
-            print(f"    [Pair {pair_idx}] Auditing with {auditor.model_id}...")
-            try:
-                raw_verdict = auditor.get_audit(
-                    context, findings_a, findings_c, inspector_a.model_id, inspector_c.model_id
-                )
-                verdict = extract_json(raw_verdict)
-            except Exception as e:
-                print(f"    [!] Auditor failed: {e}")
-                verdict = {}
-
-            permutations.append(
-                {
-                    "researcher": 0,
-                    "inspectors": [inspector_a.model_id, inspector_c.model_id],
-                    "auditor": auditor.model_id,
-                    "results": [
-                        {"inspector": inspector_a.model_id, "findings": findings_a},
-                        {"inspector": inspector_c.model_id, "findings": findings_c},
-                    ],
-                    "auditorVerdict": verdict,
-                    "researcherConclusion": empty_metrics(),
-                }
-            )
-
+        results = [
+            {"inspector": mid, "findings": intermediate[ctx_idx].get(mid, [])}
+            for mid in model_ids
+        ]
+        audits = audit_results[ctx_idx]
+        permutation = {
+            "researcher": 0,
+            "inspectors": model_ids,
+            "auditors": model_ids,
+            "results": results,
+            "audits": audits,
+            "researcherConclusion": {},
+        }
         record = {
             "identifiedCallsiteID": callsite_id_str,
             "context": context_str,
-            "permutations": permutations,
+            "permutations": [permutation],
         }
 
         record_bytes = json.dumps(record, indent=2).encode()
@@ -273,9 +249,8 @@ def run() -> None:
             f.write(b"\n]")
 
         written_count += 1
-        print(f"    [+] Written: {callsite_id_str}")
+        print(f"  [+] Written: {callsite_id_str}")
 
-    _try_unload(auditor)
     print(f"\n[!] Done. Results saved to {output_path}")
 
 

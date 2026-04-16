@@ -37,10 +37,8 @@ class AuditorOrchestrator:
     def _format_prompt(
         self,
         context: dict,
-        findings_a: list[str],
-        findings_c: list[str],
-        model_id_a: str,
-        model_id_c: str,
+        findings: list[str],
+        inspector_model_id: str,
     ) -> str:
         bridge = context["bridge"]
         bridge_line = (
@@ -53,29 +51,20 @@ class AuditorOrchestrator:
             for s in context["js_snippets"][:10]
         )
 
-        findings_a_text = "\n\n".join(findings_a) if findings_a else "(no findings)"
-        findings_c_text = "\n\n".join(findings_c) if findings_c else "(no findings)"
+        findings_text = "\n\n".join(findings) if findings else "(no findings)"
 
         schema = json.dumps(
             {
-                model_id_a: {
-                    "hallucinationFrequency": "0.0-1.0",
-                    "technicalAccuracy": "integer 1-10",
-                    "effectChainAwareness": "integer 1-10",
-                    "attackSurfaceCoverage": "0.0-1.0",
-                },
-                model_id_c: {
-                    "hallucinationFrequency": "0.0-1.0",
-                    "technicalAccuracy": "integer 1-10",
-                    "effectChainAwareness": "integer 1-10",
-                    "attackSurfaceCoverage": "0.0-1.0",
-                },
+                "hallucinationFrequency": "0.0-1.0",
+                "technicalAccuracy": "integer 1-10",
+                "effectChainAwareness": "integer 1-10",
+                "attackSurfaceCoverage": "0.0-1.0",
             },
             indent=2,
         )
 
         return f"""# ROLE: Security Audit Judge
-# TASK: Evaluate two independent security analyses of the same Android WebView bridge callsite.
+# TASK: Evaluate the security analysis of an Android WebView bridge callsite produced by inspector {inspector_model_id}.
 
 ## GROUND TRUTH CONTEXT
 APP PACKAGE: {context['app_name']}
@@ -90,24 +79,21 @@ APP PACKAGE: {context['app_name']}
 
 ## INSPECTOR FINDINGS
 
-### Inspector {model_id_a}
-{findings_a_text}
-
-### Inspector {model_id_c}
-{findings_c_text}
+### Inspector {inspector_model_id}
+{findings_text}
 
 ---
 
 ## EVALUATION INSTRUCTIONS
 
 ### Hallucination Definition
-A hallucination is any finding that references a method, class, object, or code segment that does NOT appear in the provided ground truth context above. Count the number of hallucinated findings for each inspector.
+A hallucination is any finding that references a method, class, object, or code segment that does NOT appear in the provided ground truth context above.
 
 ### Metric Definitions
-- **hallucinationFrequency**: Count hallucinated findings per inspector. Assign 1.0 to whichever inspector has more hallucinations and their_count/max_count to the other. If both have zero hallucinations, both get 0.0.
+- **hallucinationFrequency**: Float 0.0-1.0. Ratio of hallucinated findings to total findings. If there are no findings, use 0.0.
 - **technicalAccuracy**: Integer 1-10. How technically correct and precise are the non-hallucinated findings?
 - **effectChainAwareness**: Integer 1-10. How well does the inspector identify chained vulnerabilities and their combined impact?
-- **attackSurfaceCoverage**: Float 0.0-1.0. First identify all genuine vulnerabilities visible in the ground truth context. Then score each inspector as found/total_in_context.
+- **attackSurfaceCoverage**: Float 0.0-1.0. First identify all genuine vulnerabilities visible in the ground truth context. Then score as found/total_in_context.
 
 ---
 
@@ -118,12 +104,10 @@ Respond with ONLY valid JSON matching this schema. No markdown fences, no other 
     def get_audit(
         self,
         context: dict,
-        findings_a: list[str],
-        findings_c: list[str],
-        model_id_a: str,
-        model_id_c: str,
+        findings: list[str],
+        inspector_model_id: str,
     ) -> str:
-        prompt = self._format_prompt(context, findings_a, findings_c, model_id_a, model_id_c)
+        prompt = self._format_prompt(context, findings, inspector_model_id)
 
         if self._ollama is not None:
             return self._ollama.generate_response(prompt)
