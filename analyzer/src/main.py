@@ -6,6 +6,13 @@ from auditor import AuditorOrchestrator
 from inspector import InspectorOrchestrator
 from utils import extract_json, extract_findings_from_markdown, build_callsite_id
 
+from datetime import datetime
+
+_original_print = print
+
+def print(*args, **kwargs):
+    timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+    _original_print(timestamp, *args, **kwargs)
 
 def _select_ollama_model(label: str) -> str:
     from integrations.ollama_int import OllamaIntegration
