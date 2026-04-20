@@ -26,9 +26,7 @@ def generate_csvs(results_path: str, output_dir: str) -> None:
             for result in permutation.get("results", []):
                 inspector = result["inspector"]
                 for finding_text in result.get("findings", []):
-                    title_match = re.match(r"###\s*Finding:\s*(.+)", finding_text)
-                    finding_title = title_match.group(1).strip() if title_match else finding_text[:80]
-                    app_rows[app].append([callsite_id, inspector, finding_title, "", js_call_place, android_context])
+                    app_rows[app].append([callsite_id, inspector, finding_text.strip(), "", js_call_place, android_context])
 
     os.makedirs(output_dir, exist_ok=True)
     for app, rows in app_rows.items():
