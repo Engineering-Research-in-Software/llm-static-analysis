@@ -1,0 +1,1266 @@
+"Callsite","Inspector","Finding","Verdict","JS Call Place","Android Context"
+"Intent-webview_new-9","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A
+
+The analysis of the bridge callsite did not identify any immediate security vulnerabilities such as SQL Injection, File Paths, Intent Creation, Runtime.exec() or Reflection. The methods exposed are primarily intended for communication and control purposes rather than handling sensitive data or performing potentially dangerous operations that could be exploited by attackers.","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/deepseek-r1:8b","### Finding: Clipboard Copy (Method 5)
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [JS call to copy] -> [Java method copy] -> [Clipboard]  
+**Technical Description**: The `copy` method allows arbitrary JavaScript to write to the clipboard. This can lead to sensitive information being copied without user consent, or the user being tricked into copying malicious data.  
+**Evidence**: `copy('arbitrary string');`
+
+---","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/deepseek-r1:8b","### Finding: File Save (Method 14)
+**Risk Level**: High  
+**Data Flow Path**: [JS Source] -> [JS call to saveFile] -> [Java method saveFile] -> [File System]  
+**Technical Description**: The `saveFile` method allows arbitrary JavaScript to save a file with a user-controlled name and content. This can lead to arbitrary file write, potentially allowing an attacker to overwrite sensitive files or execute code if the file is executable.  
+**Evidence**: `saveFile('file.txt', 'content', '/path/to/directory/');`
+
+---","VALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/deepseek-r1:8b","### Finding: Intent Creation (Method 11)
+**Risk Level**: High  
+**Data Flow Path**: [JS Source] -> [JS call to intentPosLink] -> [Java method intentPosLink] -> [Intent]  
+**Technical Description**: The `intentPosLink` method creates an intent with arbitrary data (location, type, string, and boolean). The arbitrary string might be used to start an activity with a malicious URL or action, leading to phishing or unauthorized operations.  
+**Evidence**: `intentPosLink(0.0, 0.0, 0, 'http://malicious.com', true);`
+
+---","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/deepseek-r1:8b","### Finding: Share Method (Method 20)
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [JS call to shareString] -> [Java method shareString] -> [Intent]  
+**Technical Description**: The `shareString` method allows arbitrary JavaScript to share a string via an intent. This can be used to leak sensitive information to other apps.  
+**Evidence**: `shareString('arbitrary string');`
+
+---","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/deepseek-r1:8b","### Finding: Permalink Setting (Method 18)
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [JS call to setPermalink] -> [Java method setPermalink] -> [Permalink storage]  
+**Technical Description**: The `setPermalink` method allows arbitrary JavaScript to set the permalink, which might be a URL. This can be used to set a malicious URL that, when clicked, leads to phishing.  
+**Evidence**: `setPermalink('http://malicious.com');`
+
+---","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/deepseek-r1:8b","### Finding: Update Method (Method 24)
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [JS call to updateIitc] -> [Java method updateIitc] -> [App state update]  
+**Technical Description**: The `updateIitc` method allows arbitrary JavaScript to update the app's state with a string. If the string is used to inject HTML or execute code, it could lead to XSS. However, without knowing the implementation, we can't be certain.  
+**Evidence**: `updateIitc('<script>alert(1)</script>');`","PARTIAL","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/phi4:14b","### Finding: Potential Path Traversal Vulnerability
+**Risk Level**: High  
+**Data Flow Path**: [JavaScript] -> [WebView Bridge Object] -> [Java Method: saveFile(String, String, String)]  
+**Technical Description**: The `saveFile` method may be susceptible to path traversal attacks if it constructs file paths using unsanitized user input from JavaScript. Attackers could manipulate inputs to access or overwrite arbitrary files on the device.
+**Evidence**: Method `void saveFile(String, String, String)`","VALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/phi4:14b","### Finding: Potential Intent Redirection Vulnerability
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> [WebView Bridge Object] -> [Java Methods: addPane, setPermalink, switchToPane]  
+**Technical Description**: These methods may allow for intent redirection if they are not properly validating and sanitizing inputs. An attacker could manipulate the input to redirect users to malicious sites or perform phishing attacks.
+**Evidence**: Methods `void addPane(String, String)`, `void setPermalink(String)`, `void switchToPane(String)`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/phi4:14b","### Finding: Protocol & Origin Security Concerns
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> WebView Content Loading  
+**Technical Description**: If content is loaded over HTTP without proper origin validation, it could expose the application to security risks such as man-in-the-middle attacks or unauthorized script execution.
+**Evidence**: N/A (requires review of JavaScript content loading practices)","PARTIAL","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/phi4:14b","### Finding: No vulnerabilities identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: No direct evidence of SQL Injection, RCE via `Runtime.exec()` or Reflection, or explicit PII leakage was found in the provided context.
+**Evidence**: N/A
+
+This analysis outlines potential risks and provides guidance for further investigation. Each finding should be verified with additional code reviews and testing to confirm vulnerabilities.","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/llama3.2:3b","### Finding: SQL Injection in `addPane` method
+**Risk Level**: Critical
+**Data Flow Path**: JS -> android -> addPane(Ljava/lang/String;Ljava/lang/String;)V (Method 1)
+**Technical Description**: The `addPane` method allows the attacker to inject malicious SQL queries by passing a specially crafted `String` parameter. This can lead to SQL Injection vulnerabilities.
+**Evidence**: `void addPane(String, String)`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/llama3.2:3b","### Finding: File Path Traversal in `saveFile` method
+**Risk Level**: Medium
+**Data Flow Path**: JS -> android -> saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V (Method 14)
+**Technical Description**: The `saveFile` method allows the attacker to access files outside of the intended directory by passing a specially crafted `String` parameter.
+**Evidence**: `void saveFile(String, String, String)`","VALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/llama3.2:3b","### Finding: Intent Redirection in `intentPosLink` method
+**Risk Level**: High
+**Data Flow Path**: JS -> android -> intentPosLink(DDILjava/lang/String;Z)V (Method 11)
+**Technical Description**: The `intentPosLink` method allows the attacker to create and launch an intent with arbitrary data, potentially leading to Intent Redirection vulnerabilities.
+**Evidence**: `void intentPosLink(double, double, int, String, boolean)`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/llama3.2:3b","### Finding: RCE in `setActiveHighlighter` method
+**Risk Level**: Critical
+**Data Flow Path**: JS -> android -> setActiveHighlighter(Ljava/lang/String;)V (Method 15)
+**Technical Description**: The `setActiveHighlighter` method allows the attacker to inject malicious code by passing a specially crafted `String` parameter, potentially leading to Remote Code Execution vulnerabilities.
+**Evidence**: `void setActiveHighlighter(String)`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/llama3.2:3b","### Finding: PII Leakage in `getDeviceId` and `getLocation` methods
+**Risk Level**: Medium
+**Data Flow Path**: JS -> android -> getDeviceId() (Method 9) and getLocation() (Method 10)
+**Technical Description**: The `getDeviceId` and `getLocation` methods return sensitive device information, which could potentially be leaked to an attacker.
+**Evidence**: `int getVersionCode()` and `String getVersionName()`.","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/llama3.2:3b","### Finding: Permission Leakage in `setFollowMode` method
+**Risk Level**: Medium
+**Data Flow Path**: JS -> android -> setFollowMode(Z)V (Method 16)
+**Technical Description**: The `setFollowMode` method allows the attacker to enable or disable follow mode, potentially leading to unintended access to sensitive data.
+**Evidence**: `void setFollowMode(boolean)`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/llama3.2:3b","### Finding: Origin Validation Issue
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: There is no validation of `message.origin` in event listeners, which could potentially lead to Origin-based attacks.
+**Evidence**: N/A
+
+## No vulnerabilities identified
+###","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/gemma3:12b","### Finding: Unvalidated File Path in `saveFile` Method
+**Risk Level**: High
+**Data Flow Path**: [JS Source: `saveFile(filename)`] -> `IITC_JSInterface.saveFile(filename, content, mime)` ->  Java File I/O
+**Technical Description**: The `saveFile` method takes a filename as input directly from JavaScript.  Without proper sanitization and validation on the filename parameter, this creates a path traversal vulnerability. An attacker could potentially manipulate the filename to write files outside the intended directory, leading to arbitrary file write capabilities.  The `content` and `mime` parameters are also present, suggesting the possibility of writing files with arbitrary content and potentially dangerous MIME types, which could lead to further exploitation.
+**Evidence**: `saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V`, `iitc_init(Landroid/content/Context;)V`","VALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/gemma3:12b","### Finding: Potential for RCE via `Runtime.exec` via `updateIitc`
+**Risk Level**: Critical
+**Data Flow Path**: [JS Source: `updateIitc(updateUrl)`] -> `IITC_JSInterface.updateIitc(updateUrl)` ->  Potentially `Runtime.exec` within update process.
+**Technical Description**: The `updateIitc` method receives a URL (`updateUrl`) from JavaScript.  While the specifics of the update process are not visible in the provided bridge interface, it's highly probable that it involves downloading content from the provided URL and executing some update logic. If the update process incorporates `Runtime.exec` or similar methods without robust input validation of the `updateUrl`, an attacker could craft a malicious URL containing shell commands. This could lead to remote code execution on the device.  The `updateUrl` dictates the entire update process, providing significant attacker control.
+**Evidence**: `updateIitc(Ljava/lang/String;)V`, `iitc_init(Landroid/content/Context;)V`","PARTIAL","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/gemma3:12b","### Finding: Intent Redirection Vulnerability in `intentPosLink`
+**Risk Level**: High
+**Data Flow Path**: [JS Source: `intentPosLink(latitude, longitude, zoom, url, openExternalLink)`] -> `IITC_JSInterface.intentPosLink(latitude, longitude, zoom, url, openExternalLink)` -> Android Intent
+**Technical Description**: The `intentPosLink` method receives a URL (`url`) from JavaScript and passes it directly to an Android Intent.  The `openExternalLink` flag determines whether the URL is opened using an external application. If the URL isn't properly validated, an attacker could inject malicious URLs designed to redirect the user to phishing sites or download malware.  The latitude, longitude, and zoom parameters do not directly contribute to the vulnerability but further demonstrate attacker control over the parameters sent to the Android Intent.
+**Evidence**: `intentPosLink(DDILjava/lang/String;Z)V`, `iitc_init(Landroid/content/Context;)V`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/gemma3:12b","### Finding: Unvalidated Input in `addPane` Methods leading to potential XSS
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source: `addPane(paneName, paneContent)` or `addPane(paneName, paneContent, paneType)`] -> `IITC_JSInterface.addPane(paneName, paneContent)` or `IITC_JSInterface.addPane(paneName, paneContent, paneType)` -> WebView
+**Technical Description**: The `addPane` methods take `paneName` and `paneContent` (and optionally `paneType`) as input from JavaScript. These parameters are then likely rendered in a WebView. If the `paneContent` is not properly sanitized before being displayed, it could lead to stored or reflected Cross-Site Scripting (XSS) vulnerabilities. An attacker could inject malicious JavaScript code that would execute in the context of the WebView, potentially stealing user data or modifying the application's behavior. The `paneName` parameter may also be vulnerable to injection if it’s used in a way that can trigger JavaScript execution.
+**Evidence**: `addPane(Ljava/lang/String;Ljava/lang/String;)V`, `addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/gemma3:12b","### Finding: Potential Leakage of Version Information
+**Risk Level**: Low
+**Data Flow Path**: [JS Source: Requesting version info] -> `IITC_JSInterface.getVersionCode()` and `IITC_JSInterface.getVersionName()`
+**Technical Description**:  While not directly exploitable, exposing version information (version code and version name) can aid attackers in identifying vulnerable versions of the application. This information can be used to tailor exploits and bypass security measures.
+**Evidence**: `getVersionCode()I`, `getVersionName()Ljava/lang/String;`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
+"Intent-webview_new-9","ollama/gemma3:12b","### Finding: Potential for Information Disclosure via `getFileRequestUrlPrefix`
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source: Requesting prefix] -> `IITC_JSInterface.getFileRequestUrlPrefix()` ->  Revealing Internal URL Structure
+**Technical Description**: The `getFileRequestUrlPrefix` method returns a prefix used for file requests. Depending on the implementation, revealing this prefix might provide an attacker with information about the application’s internal file structure and potentially lead to information disclosure or manipulation of file requests.
+**Evidence**: `getFileRequestUrlPrefix()Ljava/lang/String;`","INVALID","","Interface 'android' (Lcom/cradle/iitc_mobile/IITC_JSInterface;) exposes: [METHOD 1] addPane(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String)
+[METHOD 2] addPane(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void addPane(String, String, String)
+[METHOD 3] addPortalHighlighter(Ljava/lang/String;)V
+  Readable: void addPortalHighlighter(String)
+[METHOD 4] bootFinished()V
+  Readable: void bootFinished()
+[METHOD 5] copy(Ljava/lang/String;)V
+  Readable: void copy(String)
+[METHOD 6] dialogFocused(Ljava/lang/String;)V
+  Readable: void dialogFocused(String)
+[METHOD 7] dialogOpened(Ljava/lang/String;Z)V
+  Readable: void dialogOpened(String, boolean)
+[METHOD 8] getFileRequestUrlPrefix()Ljava/lang/String;
+  Readable: String getFileRequestUrlPrefix()
+[METHOD 9] getVersionCode()I
+  Readable: int getVersionCode()
+[METHOD 10] getVersionName()Ljava/lang/String;
+  Readable: String getVersionName()
+[METHOD 11] intentPosLink(DDILjava/lang/String;Z)V
+  Readable: void intentPosLink(double, double, int, String, boolean)
+[METHOD 12] reloadIITC()V
+  Readable: void reloadIITC()
+[METHOD 13] reloadIITC(Z)V
+  Readable: void reloadIITC(boolean)
+[METHOD 14] saveFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveFile(String, String, String)
+[METHOD 15] setActiveHighlighter(Ljava/lang/String;)V
+  Readable: void setActiveHighlighter(String)
+[METHOD 16] setFollowMode(Z)V
+  Readable: void setFollowMode(boolean)
+[METHOD 17] setLayers(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void setLayers(String, String)
+[METHOD 18] setPermalink(Ljava/lang/String;)V
+  Readable: void setPermalink(String)
+[METHOD 19] setProgress(D)V
+  Readable: void setProgress(double)
+[METHOD 20] shareString(Ljava/lang/String;)V
+  Readable: void shareString(String)
+[METHOD 21] showZoom()Z
+  Readable: boolean showZoom()
+[METHOD 22] spinnerEnabled(Z)V
+  Readable: void spinnerEnabled(boolean)
+[METHOD 23] switchToPane(Ljava/lang/String;)V
+  Readable: void switchToPane(String)
+[METHOD 24] updateIitc(Ljava/lang/String;)V
+  Readable: void updateIitc(String) | initiating method: iitc_init(Landroid/content/Context;)V"
