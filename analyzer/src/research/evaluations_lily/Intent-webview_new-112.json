@@ -1,0 +1,319 @@
+{
+  "identifiedCallsiteID": "Intent-webview_new-112",
+  "context": "APP: com.github.trilinder.tapasclient_1\n\nBRIDGE:\nInterface 'androidBridge' () exposes:  | initiating method: .method public constructor <init>(Lcom/getcapacitor/Bridge;Landroid/webkit/WebView;Lorg/apache/cordova/PluginManager;)V\n\nJS SNIPPETS:\n",
+  "permutations": [
+    {
+      "researcher": 0,
+      "inspectors": [
+        "ollama/qwen2.5-coder:7b",
+        "ollama/deepseek-r1:8b",
+        "ollama/starcoder2:7b",
+        "ollama/phi4:14b",
+        "ollama/llama3.2:3b",
+        "ollama/gemma3:12b"
+      ],
+      "auditors": [
+        "ollama/qwen2.5-coder:7b",
+        "ollama/deepseek-r1:8b",
+        "ollama/starcoder2:7b",
+        "ollama/phi4:14b",
+        "ollama/llama3.2:3b",
+        "ollama/gemma3:12b"
+      ],
+      "results": [
+        {
+          "inspector": "ollama/qwen2.5-coder:7b",
+          "findings": [
+            "[INVALID] ### Finding: SQL Injection Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The Android WebView bridge interface exposes methods that could be used to construct SQL queries. If attacker-controlled JavaScript is able to influence the input parameters, this could lead to SQL injection vulnerabilities.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object\nandroidBridge.executeSQL(\"SELECT * FROM users WHERE id = \" + userInput);\n```",
+            "[INVALID] ### Finding: File Path Manipulation Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The Android WebView bridge interface exposes methods that could be used to construct file paths. If attacker-controlled JavaScript is able to influence the input parameters, this could lead to path traversal vulnerabilities.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object\nandroidBridge.readFile(\"/path/to/user/data/\" + userInput);\n```",
+            "[INVALID] ### Finding: Intent Creation Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The Android WebView bridge interface exposes methods that could be used to create intents. If attacker-controlled JavaScript is able to influence the input parameters, this could lead to intent redirection vulnerabilities.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object\nandroidBridge.startActivity(\"com.example.target.Activity\", userInput);\n```",
+            "[INVALID] ### Finding: Runtime Execution Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The Android WebView bridge interface exposes methods that could be used to execute shell commands. If attacker-controlled JavaScript is able to influence the input parameters, this could lead to remote code execution vulnerabilities.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object\nandroidBridge.runCommand(\"ls -la \" + userInput);\n```",
+            "[INVALID] ### Finding: Reflection Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The Android WebView bridge interface exposes methods that could be used to invoke Java methods reflectively. If attacker-controlled JavaScript is able to influence the input parameters, this could lead to remote code execution vulnerabilities.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object\nandroidBridge.reflectInvoke(\"com.example.target.Class\", \"methodName\", userInput);\n```",
+            "[INVALID] ### Finding: PII Leakage Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The Android WebView bridge interface exposes methods that could return sensitive data, such as device ID or SIM serial number. If this information is cached in localStorage or transmitted externally by attacker-controlled JavaScript, it could lead to PII leakage.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially leaking PII\nandroidBridge.getDeviceId();\n```",
+            "[PARTIAL] ### Finding: Unvalidated Message Origin Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The JavaScript snippets do not validate the `message.origin` in event listeners, which could allow cross-site scripting (XSS) attacks.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially unvalidated message origin\nandroidBridge.handleMessage(message);\n```",
+            "[PARTIAL] ### Finding: Reachability & Attacker Control\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: Many of the methods in the Android WebView bridge interface could be reached by attacker-controlled JavaScript. The extent of input that is attacker-controlled varies, but many methods allow for arbitrary input.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially reachable by attacker-controlled JavaScript\nandroidBridge.executeSQL(\"SELECT * FROM users WHERE id = \" + userInput);\n```",
+            "[INVALID] ### Finding: Impact Chain & Privilege Escalation Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: If an attacker is able to call these methods with arbitrary input, they could potentially escalate privileges or cause significant damage. For example, executing SQL commands, manipulating file paths, creating intents, running shell commands, and invoking methods reflectively could all lead to severe consequences.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially exploitable for privilege escalation\nandroidBridge.runCommand(\"su\");\n```",
+            "[PARTIAL] ### Finding: Protocol Security Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The JavaScript snippets do not validate the protocol of URLs loaded by WebView, which could allow attackers to load malicious content over http:// instead of https://.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially loading unsecured content\nandroidBridge.loadURL(\"http://example.com\");\n```",
+            "[INVALID] ### Finding: Cross-Origin Resource Sharing (CORS) Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The JavaScript snippets do not enforce CORS policies, which could allow attackers to perform cross-origin requests and access sensitive data.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially allowing CORS\nandroidBridge.makeRequest(\"http://example.com/api/data\");\n```",
+            "[PARTIAL] ### Finding: Protocol Validation Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The JavaScript snippets do not validate the protocol of URLs loaded by WebView, which could allow attackers to load malicious content over http:// instead of https://.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially loading unsecured content\nandroidBridge.loadURL(\"http://example.com\");\n```",
+            "[INVALID] ### Finding: Data Exfiltration Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: If attacker-controlled JavaScript is able to call methods that access sensitive data, this data could be exfiltrated from the device.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially accessing sensitive data\nandroidBridge.getSensitiveData();\n```",
+            "[PARTIAL] ### Finding: Cross-Site Scripting (XSS) Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The JavaScript snippets do not validate the `message.origin` in event listeners, which could allow cross-site scripting (XSS) attacks.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially unvalidated message origin\nandroidBridge.handleMessage(message);\n```",
+            "[INVALID] ### Finding: Data Integrity Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: If attacker-controlled JavaScript is able to call methods that modify data, this could lead to integrity issues. For example, if a method allows for arbitrary updates to database records or file contents, it could be exploited to introduce malicious content.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially allowing data modifications\nandroidBridge.updateData(\"SELECT * FROM users WHERE id = \" + userInput);\n```",
+            "[INVALID] ### Finding: Data Masking Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: If the bridge methods do not properly mask or sanitize sensitive data before exposing it to JavaScript, this could lead to data masking vulnerabilities. For example, if a method returns a user's credit card number without masking it, an attacker could exploit this to steal sensitive information.\n**Evidence**: ```javascript\n// Example of a method that might be exposed on the bridge object and potentially returning unmasked sensitive data\nandroidBridge.getCardNumber();\n```",
+            "[INVALID] [prior repeated 313 times]",
+            "[INVALID] ### Finding: Data Masking Risk\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: If the bridge methods do not properly mask or sanitize sensitive data before exposing it to JavaScript, this could lead to data masking vulnerabilities. For example, if a method"
+          ]
+        },
+        {
+          "inspector": "ollama/deepseek-r1:8b",
+          "findings": [
+            "[VALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: The provided context lacks sufficient details to identify exploitable data flows, such as JavaScript snippets or bridge method implementations. Without specific code, vulnerabilities like SQL injection, path traversal, or PII leakage cannot be confirmed. The bridge interface and constructor parameters are typical for WebView frameworks, but without the actual method implementations or JS usage patterns, no actionable vulnerabilities can be detected.  \n**Evidence**: N/A"
+          ]
+        },
+        {
+          "inspector": "ollama/starcoder2:7b",
+          "findings": []
+        },
+        {
+          "inspector": "ollama/phi4:14b",
+          "findings": [
+            "[INVALID] ### Finding: Potential Remote Code Execution via Bridge Method\n**Risk Level**: Critical  \n**Data Flow Path**: [JavaScript Input] -> [Bridge Object] -> [Java `Runtime.exec()`]  \n**Technical Description**: If a bridge method invokes Java code that uses `Runtime.exec()` without proper input sanitization, an attacker could execute arbitrary commands on the device.  \n**Evidence**: Method invoking `Runtime.exec()` within exposed Android bridge interface.\n\n---",
+            "[INVALID] ### Finding: Intent Redirection Vulnerability\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript Input] -> [Bridge Object] -> [Java `Intent` Creation]  \n**Technical Description**: A bridge method that creates or manipulates Intents based on JavaScript input can lead to unintended app behavior or redirect users to malicious applications.  \n**Evidence**: Method creating Intent with parameters from JavaScript.\n\n---",
+            "[INVALID] ### Finding: PII Leakage via Bridge Interface\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript Input] -> [Bridge Object] -> [Java `getDeviceId()` / `getLocation()`]  \n**Technical Description**: If a bridge method returns sensitive information such as device identifiers or location data, it can be exploited to track users.  \n**Evidence**: Bridge interface methods returning PII without proper access control.\n\n---",
+            "[PARTIAL] ### Finding: Insecure Protocol and Origin Handling\n**Risk Level**: Medium  \n**Data Flow Path**: [HTTP Content] -> [WebView] -> [Bridge Object]  \n**Technical Description**: Loading content over HTTP or failing to validate the origin of messages can lead to information leakage or malicious data injection.  \n**Evidence**: WebView loading URLs over HTTP, absence of origin validation in event listeners.\n\n---\n\nIf no vulnerabilities are found based on this analysis, the report would be:",
+            "[VALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: No exploitable data flows found in the provided context.  \n**Evidence**: N/A\n\nThis assessment provides a structured approach to identifying and reporting potential security issues within the Android WebView bridge callsite, ensuring that risks are clearly communicated with actionable insights for mitigation."
+          ]
+        },
+        {
+          "inspector": "ollama/llama3.2:3b",
+          "findings": []
+        },
+        {
+          "inspector": "ollama/gemma3:12b",
+          "findings": [
+            "[PARTIAL] ### Finding: Unvalidated WebView Content Loading - Potential for XSS & More\n**Risk Level**: High\n**Data Flow Path**: JavaScript (potentially attacker-controlled URL) -> `androidBridge` (implicit WebView.loadUrl()) -> Android WebView\n**Technical Description**: The presence of a WebView and bridge calls suggests that JavaScript code can trigger `WebView.loadUrl()`. If the URL passed to `loadUrl()` is not properly validated *before* being loaded, an attacker could inject malicious JavaScript.  This could lead to Cross-Site Scripting (XSS), information leakage (accessing cookies, local storage), redirection to phishing sites, or even Remote Code Execution (RCE) if the WebView is configured to execute JavaScript in a dangerous way (e.g., allowing `file://` URLs).  Because this is a bridge, a malicious web page could be injected into the app's context and have elevated privileges.\n**Evidence**: Implicit `WebView.loadUrl()` call triggered by `androidBridge` and attacker controlled JavaScript.\n**Mitigation**:  Strict URL validation (allowlist known domains, reject dangerous schemes), Content Security Policy (CSP), disable JavaScript if not needed.",
+            "[INVALID] ### Finding: Potential for Arbitrary JavaScript Execution via `androidBridge`\n**Risk Level**: Critical\n**Data Flow Path**: Attacker-Controlled JavaScript -> `androidBridge` (exposed methods, potentially) -> Java code (likely via reflection or other bridge mechanisms)\n**Technical Description**:  The bridge interface exposes methods. If any of these methods are called with attacker-controlled data, without proper sanitization, it creates a significant risk of arbitrary JavaScript execution within the Android application's context.  This is exacerbated by the `PluginManager` parameter, which likely handles JavaScript calls to native plugins. A vulnerability in any of these plugins could be exploited through the bridge. Reflection, if used, is a prime target for malicious manipulation.\n**Evidence**: Presence of `androidBridge` and `PluginManager`.\n**Mitigation**: Input validation on all methods exposed by the bridge, carefully review and audit all plugins used by the `PluginManager`, avoid reflection where possible, implement robust sanitization.",
+            "[INVALID] ### Finding: Potential Information Leakage via Method Names\n**Risk Level**: Medium\n**Data Flow Path**:  JavaScript -> `androidBridge` -> `getDeviceId()`, `getAccounts()`, `getLocation()`, `getSimSerialNumber()` (potential)\n**Technical Description**: The listing of `getDeviceId()`, `getAccounts()`, `getLocation()`, and `getSimSerialNumber()` suggests these methods *might* be exposed through the bridge. If so, an attacker could potentially access sensitive user information from JavaScript. Even if these methods aren't directly exposed, an attacker might be able to infer their existence and exploit them through other means (e.g., through a plugin that uses them internally without proper security measures).\n**Evidence**: Presence of `getDeviceId()`, `getAccounts()`, `getLocation()`, `getSimSerialNumber()` in the context.\n**Mitigation**:  Strictly limit the methods exposed through the bridge, sanitize all data returned by these methods, and implement robust access controls.",
+            "[PARTIAL] ### Finding: Lack of Origin Validation - Potential for Cross-App Communication\n**Risk Level**: Medium\n**Data Flow Path**: External Web Page -> `androidBridge` (postMessage/event listeners) -> JavaScript\n**Technical Description**:  If the application uses `postMessage` or event listeners within the WebView and does not properly validate `event.origin`, an attacker could potentially inject malicious messages from a different application (or website) and execute arbitrary JavaScript.  This is a form of cross-app communication and information leakage.\n**Evidence**: Potential use of `postMessage` or event listeners in the bridge.\n**Mitigation**: Strict origin validation on all incoming messages.",
+            "[INVALID] ### Finding: Potential Path Traversal via File Interactions\n**Risk Level**: Medium\n**Data Flow Path**:  JavaScript -> `androidBridge` -> Java code (interacting with files)\n**Technical Description**:  While not explicitly mentioned, if the bridge allows any interaction with local files on the device (e.g., reading or writing to files), an attacker could potentially exploit path traversal vulnerabilities to access sensitive data or execute arbitrary code.  This is particularly concerning if the application has access to shared storage.\n**Evidence**: Lack of information - assuming interaction with local file system.\n**Mitigation**: Avoid file system access if possible. If necessary, carefully validate file paths to prevent path traversal.",
+            "[INVALID] ### Finding: Potential SQL Injection Vulnerabilities\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript -> `androidBridge` -> Java Code (Database Interaction)\n**Technical Description**: If the bridge exposes functionality that interacts with a database, and that functionality uses attacker-controlled input in SQL queries without proper sanitization or parameterization, a SQL injection vulnerability is possible.\n**Evidence**: Lack of information - assuming SQL database interactions.\n**Mitigation**: Always use parameterized queries or prepared statements.",
+            "[INVALID] ### Finding: Potential Intent Redirection\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript -> `androidBridge` -> Java Code (Intent Creation/Launching)\n**Technical Description**: If the bridge allows creation of Intents from attacker-controlled input, an attacker could redirect the user to malicious applications or perform actions on their behalf without their consent.\n**Evidence**: Lack of information - assuming Intent interactions.\n**Mitigation**: Validate Intent data carefully and avoid allowing attacker-controlled input to directly define Intent parameters."
+          ]
+        }
+      ],
+      "audits": {
+        "ollama/qwen2.5-coder:7b": {
+          "ollama/qwen2.5-coder:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 4,
+            "effectChainAwareness": 2,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 5,
+            "attackSurfaceCoverage": 0.2
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 9,
+            "effectChainAwareness": 8,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 10,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 1.0
+          }
+        },
+        "ollama/deepseek-r1:8b": {
+          "ollama/qwen2.5-coder:7b": {
+            "hallucinationFrequency": 0.8,
+            "technicalAccuracy": 7,
+            "effectChainAwareness": 5,
+            "attackSurfaceCoverage": 0.2
+          },
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 5,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 10,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 1.0,
+            "technicalAccuracy": 1,
+            "effectChainAwareness": 1,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 5,
+            "effectChainAwareness": 5,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.57,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 6,
+            "attackSurfaceCoverage": 0.28
+          }
+        },
+        "ollama/starcoder2:7b": {
+          "ollama/qwen2.5-coder:7b": {},
+          "ollama/deepseek-r1:8b": {},
+          "ollama/starcoder2:7b": {},
+          "ollama/phi4:14b": {},
+          "ollama/llama3.2:3b": {},
+          "ollama/gemma3:12b": {}
+        },
+        "ollama/phi4:14b": {
+          "ollama/qwen2.5-coder:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/deepseek-r1:8b": {},
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 10,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.25,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 0.75
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 10,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.5,
+            "technicalAccuracy": 7,
+            "effectChainAwareness": 6,
+            "attackSurfaceCoverage": 0.4
+          }
+        },
+        "ollama/llama3.2:3b": {
+          "ollama/qwen2.5-coder:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 9,
+            "effectChainAwareness": 8,
+            "attackSurfaceCoverage": 0.5
+          },
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 9,
+            "effectChainAwareness": 8,
+            "attackSurfaceCoverage": 0.7
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 9,
+            "attackSurfaceCoverage": 0.83
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.4,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 0.9
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 6,
+            "attackSurfaceCoverage": 0.5
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 9,
+            "attackSurfaceCoverage": 0.5
+          }
+        },
+        "ollama/gemma3:12b": {
+          "ollama/qwen2.5-coder:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 6,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 7,
+            "effectChainAwareness": 2,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 10,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 6,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 1.0,
+            "technicalAccuracy": 0,
+            "effectChainAwareness": 0,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.2,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 0.7
+          }
+        }
+      },
+      "researcherConclusion": {
+        "ollama/qwen2.5-coder:7b": {
+          "hallucinationFrequency": 1.0,
+          "technicalAccuracy": 2.1,
+          "effectChainAwareness": 4,
+          "attackSurfaceCoverage": 0.0
+        },
+        "ollama/deepseek-r1:8b": {
+          "hallucinationFrequency": 0.0,
+          "technicalAccuracy": 10.0,
+          "effectChainAwareness": 7,
+          "attackSurfaceCoverage": 1.0
+        },
+        "ollama/starcoder2:7b": {
+          "hallucinationFrequency": 0.0,
+          "technicalAccuracy": 0,
+          "effectChainAwareness": 0,
+          "attackSurfaceCoverage": 0.0
+        },
+        "ollama/phi4:14b": {
+          "hallucinationFrequency": 0.23,
+          "technicalAccuracy": 3.6,
+          "effectChainAwareness": 4,
+          "attackSurfaceCoverage": 1.0
+        },
+        "ollama/llama3.2:3b": {
+          "hallucinationFrequency": 0.0,
+          "technicalAccuracy": 0,
+          "effectChainAwareness": 0,
+          "attackSurfaceCoverage": 0.0
+        },
+        "ollama/gemma3:12b": {
+          "hallucinationFrequency": 0.38,
+          "technicalAccuracy": 2.1,
+          "effectChainAwareness": 6,
+          "attackSurfaceCoverage": 0.0
+        }
+      }
+    }
+  ]
+}
