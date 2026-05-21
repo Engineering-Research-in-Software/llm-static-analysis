@@ -1,0 +1,303 @@
+{
+    "identifiedCallsiteID": "Intent-webview_new-119",
+    "context": "APP: com.github.wgh136.venera_1623\n\nBRIDGE:\nInterface '' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;)V\n  Readable: void _callHandler(String)\n[METHOD 2] _hideContextMenu()V\n  Readable: void _hideContextMenu() | initiating method: .method public prepare()V\n\nJS SNIPPETS:\n",
+    "permutations": [
+        {
+            "researcher": 0,
+            "inspectors": [
+                "ollama/qwen2.5-coder:7b",
+                "ollama/deepseek-r1:8b",
+                "ollama/starcoder2:7b",
+                "ollama/phi4:14b",
+                "ollama/llama3.2:3b",
+                "ollama/gemma3:12b"
+            ],
+            "auditors": [
+                "ollama/qwen2.5-coder:7b",
+                "ollama/deepseek-r1:8b",
+                "ollama/starcoder2:7b",
+                "ollama/phi4:14b",
+                "ollama/llama3.2:3b",
+                "ollama/gemma3:12b"
+            ],
+            "results": [
+                {
+                    "inspector": "ollama/qwen2.5-coder:7b",
+                    "findings": [
+                        "[INVALID] ### Finding: No vulnerabilities identified  \n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: No exploitable data flows found in the provided context.  \n**Evidence**: N/A  \n\nThe bridge interface methods `_callHandler(String)` and `_hideContextMenu()` do not exhibit any clear signs of critical security vulnerabilities based on the information provided. The JavaScript snippets are also straightforward and do not involve potentially dangerous operations such as SQL queries, file path manipulations, intent creation, or runtime execution. Additionally, there is no indication of sensitive data leakage through methods like `getDeviceId()`, `getAccounts()`, etc., nor any evident protocol or origin validation issues.\n\n**Researcher Note**: Concludes no exploitable data flows, but this is a different bridge from -117/-118. _callHandler is a named-dispatch router for a login WebView that loads EXTERNAL third-party comic site pages. A malicious or MITM'd site can call the registered 'getCookies' handler and obtain the user's auth cookies. The JS-snippets field being empty does not make the risk hypothetical here \u2014 the attacker surface is the external page content, which is inherently untrusted. qwen failed to distinguish this bridge from a simple Pigeon relay."
+                    ]
+                },
+                {
+                    "inspector": "ollama/deepseek-r1:8b",
+                    "findings": [
+                        "[INVALID] ### Finding: Potential SQL Injection via _callHandler\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript] -> [bridge._callHandler] -> [Java method that uses the string in a SQL query]  \n**Technical Description**: The `_callHandler` method receives a string from JavaScript and passes it to a Java method. If this string is directly incorporated into a SQL query without proper sanitization, it could enable SQL Injection attacks, allowing attackers to execute arbitrary SQL commands.  \n**Evidence**: The `_callHandler` method is exposed and takes a string as input, with no indication of input validation or parameterized query usage.  \n\n---\n\n**Researcher Note**: The Dart handlers registered for this WebView (getCookies, setCookies, close) do not perform SQL queries. The handler name is parsed as a string key in a Dart Map lookup; the payload args are decoded as JSON. No SQL pathway exists.",
+                        "[INVALID] ### Finding: Potential Path Traversal via _callHandler\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript] -> [bridge._callHandler] -> [Java method that uses the string to form a file path]  \n**Technical Description**: If the string passed to `_callHandler` is used to construct file paths in Java without proper sanitization, attackers could manipulate the input to access restricted files or directories.  \n**Evidence**: The `_callHandler` method is exposed and takes a string as input, with no validation for special characters (e.g., `../`) or user-controlled path traversal patterns.  \n\n---\n\n**Researcher Note**: None of the registered login-WebView handlers construct file paths from the callHandler payload. The inspector explicitly admits 'no validation for ../' \u2014 i.e., no evidence the path even exists. Pure speculation.",
+                        "[INVALID] ### Finding: Intent Redirection via _callHandler\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript] -> [bridge._callHandler] -> [Java method that creates an Intent with the string]  \n**Technical Description**: If the string is used to build an `Intent` object in Java (e.g., for deep linking or URI handling), attackers could craft malicious inputs to redirect users to unintended destinations (e.g., phishing sites).  \n**Evidence**: The `_callHandler` method is exposed and takes a string, which may be used in Intent creation without validation, enabling attackers to control the Intent's data.  \n\n---\n\n**Researcher Note**: The Dart dispatch table for this WebView does not create Intents from the handler payload. No Intent-creation pathway is evidenced in the venera codebase for the login WebView handlers.",
+                        "[INVALID] ### Finding: Remote Code Execution (RCE) via _callHandler\n**Risk Level**: Critical  \n**Data Flow Path**: [JavaScript] -> [bridge._callHandler] -> [Java method that uses Runtime.exec or reflection]  \n**Technical Description**: If the string passed to `_callHandler` is used to execute system commands via `Runtime.exec()` or reflection APIs, attackers could exploit this to run arbitrary code on the device, leading to full system compromise.  \n**Evidence**: The `_callHandler` method is exposed and takes a string, with no indication of input sanitization or restrictions on command execution.  \n\n---\n\n**Researcher Note**: No Runtime.exec or reflection invocation exists in the Dart handler dispatch chain. The inspector fabricates a consequence ('full system compromise') without any evidence.",
+                        "[PARTIAL] ### Finding: PII Leakage via _callHandler\n**Risk Level**: Medium  \n**Data Flow Path**: [JavaScript] -> [bridge._callHandler] -> [Java method that exposes sensitive data]  \n**Technical Description**: If `_callHandler` triggers a Java method that retrieves sensitive data (e.g., device identifiers, location, or account info), this data could be exposed to JavaScript and accessed by malicious scripts.  \n**Evidence**: The `_callHandler` method is exposed and takes a string, which may act as a trigger for methods like `getDeviceId()` or `getAccounts()` without proper access controls.  \n\n---\n\n**Researcher Note**: The direction of concern is correct but the mechanism is wrong. The real PII risk is that the 'getCookies' handler returns stored auth cookies to JS, not that it calls getDeviceId()/getAccounts(). The inspector names the right risk category but the wrong implementation.",
+                        "[VALID] ### Finding: Origin Policy Violation\n**Risk Level**: Medium  \n**Data Flow Path**: N/A  \n**Technical Description**: The WebView may load content over HTTP (insecure protocol) or lack proper origin validation for JavaScript events (e.g., `message` events without `message.origin` checks). This could allow attackers to inject malicious scripts and hijack the WebView.  \n**Evidence**: No validation of message origins or HTTPS enforcement mentioned in the context.  \n\n---\n\n**Researcher Note**: Correct and important: flutter_inappwebview does not scope callHandler endpoints by origin. A malicious page in the login WebView can call any registered handler, including getCookies. The HTTPS concern is also legitimate \u2014 if a comic source configures an HTTP login URL, MITM interception of the page allows injecting callHandler() calls.",
+                        "[INVALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: The provided context does not include the actual Java implementation of the bridge methods or JavaScript code, making definitive conclusions impossible. The analysis flags potential risks based on method signatures alone.  \n**Evidence**: Analysis relies solely on the exposed bridge interface and method signatures.\n\n**Researcher Note**: Self-contradicting: the inspector filed five prior findings then adds a 'no vulnerabilities' conclusion, which is methodologically inconsistent."
+                    ]
+                },
+                {
+                    "inspector": "ollama/starcoder2:7b",
+                    "findings": []
+                },
+                {
+                    "inspector": "ollama/phi4:14b",
+                    "findings": [
+                        "[INVALID] ### Finding: Potential JavaScript Injection\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript Source] -> [_callHandler(String)] -> [Java Sink]  \n**Technical Description**: The `_callHandler` method accepts a string from JavaScript, which could be manipulated by an attacker to execute arbitrary Java code if not properly sanitized. This presents a risk of remote code execution or unauthorized method invocation within the application.  \n**Evidence**: \"_callHandler(Ljava/lang/String;)V\"\n\n**Researcher Note**: Claims _callHandler can 'execute arbitrary Java code.' The named-dispatch table is a fixed Dart Map; calling an unregistered handler name is a no-op (returns null). Calling a registered handler with a crafted payload can invoke cookie operations, not arbitrary Java execution. 'Remote code execution' is an overstatement without a code-exec sink.",
+                        "[VALID] ### Finding: Lack of Origin Validation\n**Risk Level**: Medium  \n**Data Flow Path**: [JavaScript Source] -> [WebView Event Listener] -> [Java Sink]  \n**Technical Description**: The lack of validation for `message.origin` in event listeners means that data from untrusted origins can be processed, leading to potential Cross-Site Scripting (XSS) attacks. This could allow attackers to execute arbitrary scripts within the WebView context.  \n**Evidence**: No specific evidence provided; inferred from typical security practices.\n\n**Researcher Note**: Correctly identifies the absence of origin validation as a real concern. In venera's login WebView, any frame can call getCookies and receive auth cookies as a JS Promise. This is architecturally the primary risk of the callsite. The XSS framing is slightly off (it is not XSS but handler-hijacking), but the underlying observation is sound."
+                    ]
+                },
+                {
+                    "inspector": "ollama/llama3.2:3b",
+                    "findings": []
+                },
+                {
+                    "inspector": "ollama/gemma3:12b",
+                    "findings": [
+                        "[INVALID] ### Finding: Arbitrary Java Code Execution via `_callHandler`\n**Risk Level**: Critical\n**Data Flow Path**: [JavaScript: `window.callHandler(payload)`](https://example.com/placeholder) -> [JavaScriptBridgeInterface: `_callHandler(String)`](https://example.com/placeholder) -> [Potentially vulnerable Java code within the handled event]\n**Technical Description**: The `_callHandler` method on the `JavaScriptBridgeInterface` receives a string directly from JavaScript. This string is presumably passed to some handler within the Flutter InAppWebView plugin. Without understanding the implementation of the handler, it is *highly likely* this could lead to Remote Code Execution (RCE). The attacker controls the entire string passed to Java, making it possible to inject malicious commands or trigger unexpected behavior.  The `_callHandler` method is the primary bridge entry point and therefore has very high risk.\n**Evidence**: `window.callHandler(payload)` in Javascript; `_callHandler(Ljava/lang/String;)V` in Java.\n\n**Researcher Note**: Same overclaim as deepseek finding 3: _callHandler dispatches to a fixed set of named Dart handlers. None of them execute shell commands or invoke reflection. The 'highly likely RCE' claim is asserted from ignorance of the handler implementation, not from evidence.",
+                        "[INVALID] ### Finding: Potential Context Menu Manipulation with Unvalidated Input\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript: (Initiated via `.method public prepare()V`)] -> [JavaScriptBridgeInterface: `_hideContextMenu()`](https://example.com/placeholder)\n**Technical Description**: The `_hideContextMenu()` method, reachable via the `prepare()` method (implying it's meant to be called during WebView initialization), is responsible for hiding the context menu.  While hiding the context menu itself isn't directly exploitable, the fact that the method is called *before* context menu logic might be fully initialized is concerning.  A malicious website could potentially manipulate the context menu display and functionality if the developer uses a vulnerable approach. Moreover, if the handler code associated with the context menu is not properly sanitized, an attacker may leverage it to trigger unintended actions.\n**Evidence**:  `_hideContextMenu()V` method; initiating method: `.method public prepare()V`.\n\n**Researcher Note**: _hideContextMenu() is called by native Java code in prepare(), which runs during WebView setup \u2014 not in response to JavaScript input. It is not JS-controllable. The inspector speculates that 'a malicious website could potentially manipulate the context menu' but there is no injection path into this method from the WebView's JS context.",
+                        "[VALID] ### Finding: Missing Origin Validation in Bridge Calls\n**Risk Level**: Medium\n**Data Flow Path**: N/A - concerns overall architecture\n**Technical Description**: This analysis only considers the provided snippets. However, the absence of any mention of origin validation when calls are made from JavaScript to Java, especially within a WebView context, is a significant security concern. A malicious website from an arbitrary origin can potentially inject JavaScript code and interact with the native Java code via the bridge.  This necessitates rigorous origin validation to prevent cross-site scripting (XSS) and other malicious attacks.\n**Evidence**: N/A - Architectural design concerns are implicit.\n\n**Researcher Note**: Correctly identifies the architectural gap: flutter_inappwebview's _callHandler does not validate the origin of the calling frame. In venera's login WebView (which loads external comic site pages), this means any frame \u2014 including subresource iframes or redirect targets \u2014 can invoke the getCookies handler and receive auth cookies. The framing is accurate and this is the primary confirmed risk.",
+                        "[PARTIAL] ### Finding: Lack of Input Validation in `_callHandler`\n**Risk Level**: Critical\n**Data Flow Path**: [JavaScript: `window.callHandler(payload)`](https://example.com/placeholder) -> [JavaScriptBridgeInterface: `_callHandler(String)`](https://example.com/placeholder) -> [Java handler code]\n**Technical Description**: The `_callHandler` method takes a raw String from JavaScript without any apparent sanitization or validation. This opens the door to various injection attacks depending on how that String is used. Even if not directly leading to RCE, a poorly-handled payload could trigger Denial of Service (DoS), or other undesired outcomes.\n**Evidence**: `window.callHandler(payload)` in Javascript; `_callHandler(Ljava/lang/String;)V` in Java.\n\n**Researcher Note**: The claim that lack of input validation 'opens the door to various injection attacks' is conditionally correct: the handler payload does flow into Dart logic that executes cookie operations. A malformed payload could cause JSON-parse errors or unexpected behavior, but the 'DoS / undesired outcomes' framing is vague. The specific injection path (cookie handler receiving attacker-controlled domain/value strings) is real but unstated.",
+                        "[INVALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No further exploitable data flows or vulnerabilities could be identified based on the limited scope provided.\n**Evidence**: N/A\n\n**Researcher Note**: Self-contradicting epilogue after four prior findings. Not a distinct finding."
+                    ]
+                }
+            ],
+            "audits": {
+                "ollama/qwen2.5-coder:7b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 10,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 10,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    }
+                },
+                "ollama/deepseek-r1:8b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
+                    }
+                },
+                "ollama/starcoder2:7b": {
+                    "ollama/qwen2.5-coder:7b": {},
+                    "ollama/deepseek-r1:8b": {},
+                    "ollama/starcoder2:7b": {},
+                    "ollama/phi4:14b": {},
+                    "ollama/llama3.2:3b": {},
+                    "ollama/gemma3:12b": {}
+                },
+                "ollama/phi4:14b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.4
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 10,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    }
+                },
+                "ollama/llama3.2:3b": {
+                    "ollama/qwen2.5-coder:7b": {},
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.8
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 9,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.9
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.83
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.6
+                    }
+                },
+                "ollama/gemma3:12b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.7
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.8
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.8
+                    }
+                }
+            },
+            "researcherConclusion": {
+                "ollama/qwen2.5-coder:7b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 3,
+                    "effectChainAwareness": 2,
+                    "attackSurfaceCoverage": 0.0
+                },
+                "ollama/deepseek-r1:8b": {
+                    "hallucinationFrequency": 1.0,
+                    "technicalAccuracy": 4,
+                    "effectChainAwareness": 5,
+                    "attackSurfaceCoverage": 0.5
+                },
+                "ollama/starcoder2:7b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 0,
+                    "effectChainAwareness": 0,
+                    "attackSurfaceCoverage": 0.0
+                },
+                "ollama/phi4:14b": {
+                    "hallucinationFrequency": 0.2,
+                    "technicalAccuracy": 6,
+                    "effectChainAwareness": 7,
+                    "attackSurfaceCoverage": 0.5
+                },
+                "ollama/llama3.2:3b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 0,
+                    "effectChainAwareness": 0,
+                    "attackSurfaceCoverage": 0.0
+                },
+                "ollama/gemma3:12b": {
+                    "hallucinationFrequency": 0.6,
+                    "technicalAccuracy": 5,
+                    "effectChainAwareness": 6,
+                    "attackSurfaceCoverage": 0.75
+                }
+            }
+        }
+    ]
+}
