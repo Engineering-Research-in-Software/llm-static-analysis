@@ -6,7 +6,8 @@
       "Bash(pip show:*)",
       "Bash(python -m mypy inspector.py --ignore-missing-imports --explicit-package-bases)",
       "Bash(python3 -m mypy extractor.py inspector.py auditor.py utils.py main.py --ignore-missing-imports)",
-      "Bash(python3 -c \"from google import genai; print\\(type\\(genai.Client\\(\\)\\)\\)\")"
+      "Bash(python3 -c \"from google import genai; print\\(type\\(genai.Client\\(\\)\\)\\)\")",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

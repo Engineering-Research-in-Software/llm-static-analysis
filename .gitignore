@@ -4,3 +4,5 @@ __pychache__
 *.pyd
 
 analyzer/.claude/settings.local.json
+.claude/settings.local.json
+.gitignore

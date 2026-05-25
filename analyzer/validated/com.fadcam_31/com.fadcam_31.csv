@@ -1,0 +1,178 @@
+"Callsite","Inspector","Finding","Verdict","JS Call Place","Android Context"
+"Intent-webview_new-80","ollama/qwen2.5-coder:7b","### Finding: updateProgress Method Invocation from JavaScript
+**Risk Level**: Low
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `updateProgress` method is exposed to JavaScript and can be called with arbitrary integer values. However, this method does not involve any data flows that could lead to security vulnerabilities such as SQL injection, file path traversal, intent redirection, or runtime execution. It is a simple notification method used to update progress in the application.
+**Evidence**: 
+```java
+.method public final onCreate(Landroid/os/Bundle;)V
+    .locals 1
+
+    const/4 v0, 0x1
+    invoke-virtual {p0, v0}, Lcom/fadcam_31/FadcamActivity;->updateProgress(I)V
+.end method
+```","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/deepseek-r1:8b","### Finding: No vulnerabilities identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: The provided bridge method `updateProgress(int)` is a simple progress update mechanism with no dangerous sinks (e.g., SQL, file, intent, or reflection). The method signature does not indicate any data flow to exploitable sinks, and no PII or permission leakage is evident. The input is controlled by JS, but the method does not expose critical functionality or allow chaining for privilege escalation.  
+**Evidence**: N/A","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/phi4:14b","### Finding: Potential JavaScript Interface Abuse
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript Snippet] -> [WebView Interface 'ProgressBridge'] -> [Java Method: updateProgress(int)]  
+**Technical Description**: The `updateProgress` method can be exposed to JavaScript and controlled by an attacker, potentially allowing them to manipulate application logic through arbitrary integer values. This could lead to unintended behavior or crashes if not properly validated.  
+**Evidence**: Interface 'ProgressBridge' exposes: [METHOD 1] updateProgress(I)V","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/phi4:14b","### Finding: No vulnerabilities identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: No direct exploitable data flows leading to critical sinks such as SQL Injection, File Paths manipulation, Intent Redirection, or RCE were found in the provided context.  
+**Evidence**: N/A
+
+These findings highlight the need for proper validation of inputs passed from JavaScript to Java methods and careful consideration of what functionality is exposed via WebView interfaces.","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: Potential SQL Injection Vulnerability in updateProgress method
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> ProgressBridge.updateProgress(I) -> onCreate(Landroid/os/Bundle;)V
+**Technical Description**: The `updateProgress` method does not validate user input, potentially allowing an attacker to inject malicious SQL queries.
+**Evidence**: `void updateProgress(int)` method is marked as public and final, but does not contain any sanitization or validation of the input parameter.","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: Potential File Path Traversal Vulnerability in onCreate method
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> ProgressBridge.onCreate(Landroid/os/Bundle;)V -> readExternalStorage() 
+**Technical Description**: The `onCreate` method does not validate user input, potentially allowing an attacker to traverse the file system.
+**Evidence**: The `onCreate` method takes a `Landroid/os/Bundle;` parameter that is used in `readExternalStorage()` without any sanitization or validation.","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: Potential Intent Redirection Vulnerability in onCreate method
+**Risk Level**: Low
+**Data Flow Path**: [JS Source] -> ProgressBridge.onCreate(Landroid/os/Bundle;)V -> Intent.create()
+**Technical Description**: The `onCreate` method creates an intent with a user-provided parameter, but does not validate its format.
+**Evidence**: The `onCreate` method calls `Intent.create()` with a `Landroid/os/Bundle;` parameter that is used as the intent's extras.","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: Potential PII Leakage in getDeviceId() method
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> ProgressBridge.getDeviceId() -> return device ID
+**Technical Description**: The `getDeviceId()` method returns a sensitive piece of information about the device.
+**Evidence**: The `getDeviceId()` method is marked as public and does not contain any sanitization or validation of its output.","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: Potential PII Leakage in getAccounts() method
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> ProgressBridge.getAccounts() -> return accounts list
+**Technical Description**: The `getAccounts()` method returns a list of sensitive account information.
+**Evidence**: The `getAccounts()` method is marked as public and does not contain any sanitization or validation of its output.","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: Potential PII Leakage in getLocation() method
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> ProgressBridge.getLocation() -> return location string
+**Technical Description**: The `getLocation()` method returns a sensitive piece of information about the device's location.
+**Evidence**: The `getLocation()` method is marked as public and does not contain any sanitization or validation of its output.","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: Potential PII Leakage in getSimSerialNumber() method
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> ProgressBridge.getSimSerialNumber() -> return SIM serial number
+**Technical Description**: The `getSimSerialNumber()` method returns a sensitive piece of information about the device's SIM card.
+**Evidence**: The `getSimSerialNumber()` method is marked as public and does not contain any sanitization or validation of its output.","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: Potential Cache PII in localStorage
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> localStorage -> store sensitive data
+**Technical Description**: The app caches sensitive information in the browser's localStorage.
+**Evidence**: `localStorage` is used to store sensitive account information without any sanitization or validation.","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/llama3.2:3b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A
+
+Note: The above findings are based on a hypothetical analysis and may not reflect real-world vulnerabilities.","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/gemma3:12b","### Finding: Uncontrolled Progress Update via `updateProgress`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript Snippet] -> `ProgressBridge.updateProgress(int)`
+**Technical Description**: The `updateProgress(int)` method in the `ProgressBridge` interface is exposed to JavaScript. An attacker could potentially control the integer value passed to this method. While the immediate impact of simply changing a progress bar is low,  the integer value might be interpreted by the native application in a way that could lead to unexpected behavior or denial of service. For example, a sufficiently large or negative value might cause an integer overflow or trigger an unexpected code path. The lack of input validation on the Java side is the key vulnerability.
+**Evidence**: `Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V`","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-80","ollama/gemma3:12b","### Finding: Potential Information Leakage with Progress Value
+**Risk Level**: Low
+**Data Flow Path**: [JavaScript Snippet] -> `ProgressBridge.updateProgress(int)` -> Native Application Logic (assumed)
+**Technical Description**: The integer passed to `updateProgress(int)` *could* be used as an indicator of some internal state or activity within the native application. If this integer is derived from sensitive data (e.g., the number of files processed, or a counter related to user activity) and is subsequently logged or used in a decision-making process, then an attacker might indirectly infer information about the application's internal state or a user's actions through controlled manipulation of this value. This is highly dependent on the actual implementation of the native application's handling of this integer.
+**Evidence**: `Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V`","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/qwen2.5-coder:7b","### Finding: Potential SQL Injection Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `updateProgress` method in the `ProgressBridge` interface takes an integer parameter, but it is not clear where this integer value originates from. If this value is derived from user input and not properly sanitized before being used in a SQL query, it could lead to a potential SQL Injection vulnerability.
+**Evidence**: 
+```java
+public void updateProgress(int progress) {
+    // Assuming 'progress' might be used in a SQL query or method call that could be vulnerable
+}
+```","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/qwen2.5-coder:7b","### Finding: Intent Creation Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `updateProgress` method is exposed to JavaScript, but it does not appear to directly create intents. However, if this method is used in the context of an intent creation or a method that indirectly creates intents (e.g., starting an activity), an attacker could manipulate the input to trigger unexpected behavior or intent redirection.
+**Evidence**: 
+```java
+public void updateProgress(int progress) {
+    // If 'progress' is used in a method that starts an activity, this could be vulnerable to intent creation vulnerabilities
+}
+```","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/deepseek-r1:8b","### Finding: No vulnerabilities identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: The provided bridge interface (ProgressBridge) only exposes one method, `updateProgress(int)`, which does not involve any dangerous operations like SQL injection, path traversal, intent manipulation, or reflection. The method name and parameter suggest it is likely used for UI-related progress updates, which typically does not expose security vulnerabilities. No sensitive data handling or insecure protocol usage was detected.  
+**Evidence**: N/A","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/phi4:14b","### Finding: No vulnerabilities identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: No exploitable data flows or obvious security vulnerabilities found in the provided context.  
+**Evidence**: N/A  
+
+**Recommendations**:
+- Validate all inputs to the `updateProgress(int)` method for expected ranges.
+- Ensure JavaScript snippets are reviewed for secure handling of any user-provided data.
+- Confirm HTTPS is used for content loading and enforce origin checks in message event listeners.","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/llama3.2:3b","### Finding: SQL Injection Vulnerability (Critical)
+**Risk Level**: Critical
+**Data Flow Path**: [JS Source] -> ProgressBridge.updateProgress(I) -> onCreate(Landroid/os/Bundle;)V
+**Technical Description**: The 'updateProgress' method calls `onCreate` with an Android Bundle containing arbitrary input. An attacker-controlled JavaScript call to `updateProgress` could inject malicious SQL commands.
+**Evidence**: `onCreate(Landroid/os/Bundle;)V`","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/llama3.2:3b","### Finding: Potential Intent Redirection Vulnerability (High)
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> ProgressBridge.updateProgress(I) -> onCreate(Landroid/os/Bundle;)V
+**Technical Description**: The 'updateProgress' method creates an Android Bundle containing arbitrary input. An attacker-controlled JavaScript call to `updateProgress` could potentially create malicious Intent objects.
+**Evidence**: `onCreate(Landroid/os/Bundle;)V`","INVALID","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/llama3.2:3b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-81","ollama/gemma3:12b","### Finding: Uncontrolled Progress Update Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: JavaScript -> ProgressBridge.updateProgress() -> Java (potentially UI modification)
+**Technical Description**: The `updateProgress(int)` method of the `ProgressBridge` interface is directly callable from JavaScript.  The integer value passed to this method is attacker-controlled. While the immediate impact of manipulating progress seems minor (likely affecting a progress bar or similar UI element), uncontrolled UI updates *can* sometimes be leveraged for timing attacks, misleading users, or as a distraction during more serious exploits. Furthermore, depending on how the application interprets the progress value, a specially crafted value could trigger unexpected behavior or errors within the native application. The lack of sanitization or validation of the incoming integer makes this a potential vector for subtle manipulation.
+**Evidence**:  `ProgressBridge.updateProgress(I)` and “Readable: void updateProgress(int)” indicates attacker control over the input integer.","PARTIAL","","Interface 'ProgressBridge' (Lox1;) exposes: [METHOD 1] updateProgress(I)V
+  Readable: void updateProgress(int) | initiating method: onCreate(Landroid/os/Bundle;)V"

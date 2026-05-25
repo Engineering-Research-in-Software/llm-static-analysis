@@ -1,0 +1,195 @@
+"Callsite","Inspector","Finding","Verdict","JS Call Place","Android Context"
+"Intent-webview_new-89","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context. The bridge method `finish()` is static and synthetic, not directly accessible from JavaScript. There are no indications of SQL queries, file paths, intent creation, or other potential vulnerabilities that could be exploited through this bridge callsite.
+**Evidence**: N/A","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: .method static synthetic lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-89","ollama/deepseek-r1:8b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided bridge interface includes a `finish()` method with no parameters, limiting its potential impact. Since it takes no input, there is no attacker-controlled data flow, reducing the risk of injection or escalation. The method is static and synthetic, suggesting it may be part of internal logic rather than directly exposed to JavaScript. No sensitive data flows, PII leaks, or dangerous operations (e.g., SQL, file, intent, or exec) are evident. The method's limited functionality and lack of input do not enable significant attacks or chains.
+**Evidence**: N/A","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: .method static synthetic lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-89","ollama/phi4:14b","### Finding: Unrestricted Activity Termination via WebView Bridge
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> [WebViewUtils$WebAppInterface] -> [finish()]  
+**Technical Description**: The `finish()` method is exposed to JavaScript and can be triggered by attacker-controlled inputs. This could result in unintended termination of an activity within the app, potentially leading to denial of service or disruption of application functionality.
+**Evidence**: Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface) exposes: [METHOD 1] finish()V
+
+If additional JavaScript snippets or context were available and indicated further exploitable paths or methods, those would need to be evaluated similarly. If no other vulnerabilities are identified beyond this finding based on the current information, it concludes the assessment.","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: .method static synthetic lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-89","ollama/gemma3:12b","### Finding: Uncontrolled WebView Page Navigation via `finish()`
+**Risk Level**: High
+**Data Flow Path**: [JavaScript: `webViewUtils.finish()`] -> [Bridge Object: `android.finish()`] -> [Android System: Activity Close]
+**Technical Description**: The `finish()` method on the `WebViewUtils.WebAppInterface` allows JavaScript to directly close the current activity. This method is reachable by attacker-controlled Javascript. If a malicious website is loaded into the WebView, an attacker can use `webViewUtils.finish()` to terminate the application activity. This can be used to disrupt the user experience, potentially force the application to restart and lose data, or to hide malicious activity. While not direct RCE, it's a significant control point and can be a component of a more complex attack.
+**Evidence**: `webViewUtils.finish()`","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: .method static synthetic lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/qwen2.5-coder:7b","### Finding: Method Invocation from JavaScript to Java
+**Risk Level**: High
+**Data Flow Path**: [JavaScript Source] -> [Bridge Object] -> `finish()V`
+**Technical Description**: The bridge method `finish()` is exposed to JavaScript via the `WebAppInterface`. This method could potentially be invoked by an attacker-controlled script, allowing them to terminate the current activity or finish the WebView, which can lead to unexpected behavior or security issues. Since this method is not tied to any input parameters, it cannot be directly exploited for RCE, SQL Injection, Path Traversal, etc., but it can still be misused in a broader context, such as denial of service by terminating the activity prematurely.
+**Evidence**: `void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V`","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/deepseek-r1:8b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows or security issues found in the provided context. The bridge method `finish()` does not handle sensitive data, and no evidence of insecure data handling, PII exposure, or attacker-controlled input was identified.
+**Evidence**: N/A","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/phi4:14b","### Finding: Unrestricted Bridge Method Access
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> [Bridge Object: WebViewUtils$WebAppInterface] -> [Java Sink: finish()]  
+**Technical Description**: The `finish()` method is exposed to JavaScript through the bridge interface, allowing an attacker-controlled script to invoke it. This could disrupt app functionality or cause unintended termination of activities.  
+**Evidence**: Method signature `void finish()`","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/phi4:14b","### Finding: Potential Origin Validation Issue
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> [Bridge Object: WebViewUtils$WebAppInterface]  
+**Technical Description**: There is no evidence that the message origin is validated before processing bridge calls. This could allow an attacker to invoke methods if they can inject malicious JavaScript into the WebView context.  
+**Evidence**: Absence of `message.origin` validation in event listeners","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/phi4:14b","### Finding: No PII Exposure
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: There is no evidence that any sensitive data retrieval or storage methods are exposed to JavaScript through this bridge interface.  
+**Evidence**: Lack of methods like `getDeviceId()`, `getLocation()` in the provided context
+
+These findings highlight potential issues with unrestricted access and origin validation, which could be mitigated by implementing stricter controls over what JavaScript can invoke and ensuring that message origins are validated before processing any actions.","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/llama3.2:3b","### Finding: finish() Method
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> `finish()` Bridge Object -> N/A
+**Technical Description**: The `finish()` method allows the attacker to terminate any ongoing operations without providing a clear indication of the operation being performed. This could be exploited to prevent certain actions from taking place, potentially leading to a denial-of-service condition.
+**Evidence**: `void finish()`","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/llama3.2:3b","### Finding: Lambda Function Initialization
+**Risk Level**: Low
+**Data Flow Path**: [JS Source] -> `lambda$renterToPng$1()` Bridge Object -> N/A
+**Technical Description**: The lambda function initialization allows the attacker to execute arbitrary code, as it bypasses traditional method invocation checks. However, this is not a direct security vulnerability but rather a potential for abuse.
+**Evidence**: `lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V`","INVALID","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/llama3.2:3b","### Finding: No Vulnerabilities Identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A
+
+No further findings were made beyond those listed above. The app's bridge interface and JavaScript snippets do not appear to contain any notable security vulnerabilities based on the evaluation criteria provided.
+
+Note: This analysis is limited by the scope of the task and may require additional testing or evaluation to confirm the absence of other potential vulnerabilities.","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/gemma3:12b","### Finding: Uncontrolled WebView Page Closure via `finish()`
+**Risk Level**: High
+**Data Flow Path**: JavaScript (attacker-controlled URL) -> `WebViewUtils$WebAppInterface.finish()` -> Activity Closure (Potential Denial of Service/Application State Loss)
+**Technical Description**: The `finish()` method on the `android` bridge interface directly closes the current activity.  An attacker could trigger this method via JavaScript to force the application to close. This is a denial-of-service vulnerability and could lead to loss of user data if the application was in the middle of a complex operation (e.g., PDF rendering, editing). While not an RCE, abruptly closing the app can cause significant disruption. Furthermore, repeatedly calling `finish()` could potentially lead to application instability.  The provided code indicates that the method is invoked from a lambda expression `lambda$renterToPng$1`. While this doesn't directly show how the method is called *from* JavaScript, it's accessible through the WebView bridge.
+**Evidence**: `android.finish()` | `lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V` - indicates the method is part of the WebView bridge interface.","PARTIAL","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-90","ollama/gemma3:12b","### Finding: Potential for Information Disclosure via WebView Interaction
+**Risk Level**: Medium
+**Data Flow Path**: JavaScript (attacker-controlled URL) -> WebView -> Application Data (potentially exposed through WebView context)
+**Technical Description**: While the provided context only contains a single bridge method, the fact that a WebView is present inherently creates a risk of information disclosure.  Attackers can leverage JavaScript within the WebView to access local storage, attempt to exploit vulnerabilities in WebView components, or potentially interact with the underlying system via carefully crafted URLs or JavaScript code.  Even without direct access to Java methods, the WebView's sandbox can be bypassed, allowing access to sensitive data within the application's context. The application com.foobnix.pro.pdf.reader_6978, being a PDF reader, likely handles sensitive documents, which makes this risk especially concerning.
+**Evidence**:  Existence of WebView component.  PDF reader application handling sensitive documents.","INVALID","","Interface 'android' (Lcom/foobnix/android/utils/WebViewUtils$WebAppInterface;) exposes: [METHOD 1] finish()V
+  Readable: void finish() | initiating method: lambda$renterToPng$1(Ljava/lang/String;Ljava/lang/Runnable;)V"
+"Intent-webview_new-91","ollama/qwen2.5-coder:7b","### Finding: Toast Injection
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `showToast` method is exposed through a WebView bridge interface. If attacker-controlled JavaScript injects arbitrary strings into this method, it could lead to unauthorized toast messages being displayed, potentially confusing or misleading users.
+**Evidence**: 
+```java
+.method protected onCreate(Landroid/os/Bundle;)V
+    .locals 1
+
+    iput-object v0, p0, Ltest/SvgActivity;->mWebAppInterface:Landroid/webkit/JavascriptInterface;
+    invoke-virtual {p0}, Ltest/SvgActivity;->loadUrl(Ljava/lang/String;)V
+    return-void
+.end method
+```
+```javascript
+// Example JavaScript code that could be used to inject arbitrary strings into the showToast method
+function triggerToast(message) {
+    window.android.showToast(message);
+}
+```","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-91","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-91","ollama/deepseek-r1:8b","### Finding: No Critical Vulnerabilities Identified
+**Risk Level**: Low
+**Data Flow Path**: [JavaScript Input] → [WebAppInterface] → [showToast Method]
+**Technical Description**: The exposed `showToast` method does not perform any dangerous operations (e.g., SQL injection, file system access, intent manipulation, or command execution). It simply displays a toast message, which is a benign user interaction. The method does not return sensitive data or expose critical system functionality. While the lack of input sanitization could theoretically allow for an attacker-controlled message to be displayed (potentially leading to an XSS-like scenario if the app were vulnerable to code injection, which it isn't in this case), this does not constitute a data leakage or code execution vulnerability. The method does not interact with any external protocols or violate origin security principles as defined in the criteria.
+**Evidence**: N/A (No JavaScript snippets provided for analysis. Only the `showToast` method is exposed via the bridge interface.)","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-91","ollama/phi4:14b","### Finding: Information Disclosure via showToast
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object: SvgActivity$1WebAppInterface] -> [Java Sink: showToast(String)]
+**Technical Description**: The `showToast` method allows arbitrary strings from JavaScript within the WebView to be displayed as system toast messages. If not properly sanitized, this could lead to displaying misleading information or phishing attempts.
+**Evidence**: Java Method `showToast(Ljava/lang/String;)V`
+
+Overall, while there is no direct risk of privilege escalation or data leakage through sensitive methods in this specific context, caution should still be exercised regarding the content loaded into the WebView and ensuring proper origin validation. If more bridge methods are exposed or additional JavaScript functionality is present, further analysis would be warranted.","INVALID","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-91","ollama/phi4:14b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found related to SQL Injection, Path Traversal, Intent Redirection, Runtime.exec(), Reflection, or direct PII leakage in the provided context.
+**Evidence**: N/A
+
+These findings highlight areas for potential improvement and suggest monitoring additional bridge methods if they exist.","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-91","ollama/gemma3:12b","### Finding: Toast Injection via showToast()
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> [WebAppInterface.showToast(String)] -> [Toast.makeText(Context, String, int)]
+**Technical Description**: The `showToast()` bridge method directly displays a string provided by JavaScript as a Toast notification. This presents a potential for information disclosure if an attacker can inject malicious content into the displayed string. While Toast notifications are typically benign, they can be used to provide subtle cues to an attacker, potentially aiding in reconnaissance or social engineering. The text is not sanitized before being displayed.
+**Evidence**: `WebAppInterface.showToast(Ljava/lang/String;)V` and ""Readable: void showToast(String)"" indicating arbitrary String input from JS.","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-92","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context. The `showToast` method simply displays a string on the screen, which does not involve any potentially dangerous operations such as SQL queries, file paths, intent creation, runtime execution, or reflection.
+**Evidence**: N/A","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-92","ollama/deepseek-r1:8b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The exposed bridge method `showToast` is non-functional and does not interact with any sensitive system components (e.g., file system, network, permissions). It lacks dangerous sinks like SQL injection, path traversal, intent manipulation, or sensitive data exposure. The method is not reachable with attacker-controlled input in a way that enables exploitation.
+**Evidence**: N/A","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-92","ollama/phi4:14b","### Finding: Potential Cross-Site Scripting via Toast Notification
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [Bridge Object: `android`] -> [Java Sink: `showToast(Ljava/lang/String;)V`]  
+**Technical Description**: The `showToast` method, when invoked with unsanitized input from JavaScript, may allow execution of arbitrary HTML or script if the toast supports such content. This could lead to XSS attacks where malicious scripts are executed in the context of the app.  
+**Evidence**: `void showToast(String message)`
+
+#","INVALID","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-92","ollama/phi4:14b","### Finding: Lack of Origin Validation for WebView Content
+**Risk Level**: Medium  
+**Data Flow Path**: N/A (General security practice)  
+**Technical Description**: The application does not validate the origin of messages received by JavaScript running within the WebView, which could lead to man-in-the-middle attacks if external content is loaded over HTTP. Proper validation using `event.origin` is recommended to ensure that only trusted sources are allowed interaction.  
+**Evidence**: N/A (General recommendation)
+
+### Conclusion
+While no direct PII leakage or privilege escalation vectors were identified from the provided snippet, attention should be given to input sanitization for the `showToast` method and ensuring secure content loading practices within the WebView.","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-92","ollama/gemma3:12b","### Finding: Toast Injection via `showToast`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript: `window.WebAppInterface.showToast()`] -> [Bridge Object: `WebAppInterface.showToast(String)`] -> [Java Sink: `Toast.makeText(context, message, Toast.LENGTH_SHORT).show()`]
+**Technical Description**: The `showToast` bridge method allows JavaScript to directly inject arbitrary strings into a Toast message displayed on the Android device. While Toasts are primarily informational, malicious strings could be crafted to mislead the user, trigger unintended actions (though limited), or even potentially obfuscate more serious attacks.  Although not a direct exploit, it is a vector for social engineering or masking other malicious activity.
+**Evidence**: `window.WebAppInterface.showToast()`","PARTIAL","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-92","ollama/gemma3:12b","### Finding: Potential for XSS in Toast Content
+**Risk Level**: Low
+**Data Flow Path**: [JavaScript: `window.WebAppInterface.showToast(malicious_string)`] -> [Bridge Object: `WebAppInterface.showToast(String)`] -> [Java Sink: `Toast.makeText(context, message, Toast.LENGTH_SHORT).show()`]
+**Technical Description**: Although Toasts are not typically vulnerable to XSS, depending on how the application handles and displays Toast content (e.g., if it renders HTML within the Toast), a carefully crafted malicious string could potentially trigger unintended behavior or exploit vulnerabilities in the rendering engine.  This is highly dependent on the underlying Toast implementation.
+**Evidence**: `window.WebAppInterface.showToast(malicious_string)`","INVALID","","Interface 'android' (Ltest/SvgActivity$1WebAppInterface;) exposes: [METHOD 1] showToast(Ljava/lang/String;)V
+  Readable: void showToast(String) | initiating method: onCreate(Landroid/os/Bundle;)V"

@@ -1,0 +1,496 @@
+"Callsite","Inspector","Finding","Verdict","JS Call Place","Android Context"
+"Intent-webview_new-93","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context. The bridge methods exposed are relatively simple and do not appear to involve any of the critical operations that could lead to security vulnerabilities such as SQL queries, file path manipulation, intent redirection, runtime execution, or privilege escalation.
+**Evidence**: N/A","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/deepseek-r1:8b","### Finding: Potential Remote Code Execution (RCE) via exec()
+**Risk Level**: Critical  
+**Data Flow Path**: [JS Source] -> [exec] -> [Runtime.exec()] (if implemented via plugin)  
+**Technical Description**: The `exec` method is a common entry point for Cordova plugins, which may use `Runtime.exec()` or similar to execute system commands. If a malicious plugin is loaded or if the method is misused, attackers can chain inputs to execute arbitrary code.  
+**Evidence**: `String exec(int, String, String, String, String)`
+
+---","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/deepseek-r1:8b","### Finding: Information Disclosure via retrieveJsMessages()
+**Risk Level**: High  
+**Data Flow Path**: [retrieveJsMessages] -> [returns sensitive data] (if implemented to fetch device info)  
+**Technical Description**: This method retrieves native-side messages, potentially exposing sensitive data like device identifiers or account info. If misused, it could leak PII or internal system details.  
+**Evidence**: `String retrieveJsMessages(int, boolean)`
+
+---","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/deepseek-r1:8b","### Finding: Bridge Mode Manipulation (Privilege Escalation)
+**Risk Level**: High  
+**Data Flow Path**: [setNativeToJsBridgeMode] -> [changes bridge security]  
+**Technical Description**: Attacker-controlled inputs (int, int) could alter bridge behavior, enabling insecure modes (e.g., disabling security checks) and leading to privilege escalation.  
+**Evidence**: `void setNativeToJsBridgeMode(int, int)`
+
+---","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/deepseek-r1:8b","### Finding: PII Exposure via retrieveJsMessages()
+**Risk Level**: Medium  
+**Data Flow Path**: [retrieveJsMessages] -> [returns device data]  
+**Technical Description**: If this method fetches sensitive data (e.g., device ID, location) and exposes it to JS, attackers can harvest PII. Lack of input validation may exacerbate risks.  
+**Evidence**: `String retrieveJsMessages(int, boolean)`
+
+---","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/deepseek-r1:8b","### Finding: WebView Security Misconfiguration
+**Risk Level**: Medium  
+**Data Flow Path**: N/A  
+**Technical Description**: The WebView may load unvalidated HTTP content or lack origin checks, enabling XSS or content injection attacks.  
+**Evidence**: N/A
+
+---","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/deepseek-r1:8b","### Finding: No Vulnerabilities Identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: No exploitable data flows or insecure patterns detected in the provided bridge methods.  
+**Evidence**: N/A","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/phi4:14b","### Finding: Potential SQL Injection or Remote Code Execution via exec Method
+**Risk Level**: Critical  
+**Data Flow Path**: JavaScript -> exec(I, String, String, String, String) -> Java Sinks  
+**Technical Description**: The `exec` method could be exploited to perform arbitrary code execution if untrusted input is passed without proper validation or sanitization. This poses a significant risk of SQL Injection or RCE.
+**Evidence**: Method: `exec`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/phi4:14b","### Finding: Insecure Data Transmission via retrieveJsMessages
+**Risk Level**: High  
+**Data Flow Path**: JavaScript -> retrieveJsMessages(I, Z) -> Java Sinks  
+**Technical Description**: If this method is used to transmit sensitive data without proper security measures, it could lead to data leakage.
+**Evidence**: Method: `retrieveJsMessages`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/phi4:14b","### Finding: Lack of Origin Validation in WebView Content
+**Risk Level**: High  
+**Data Flow Path**: JavaScript (WebView) -> N/A  
+**Technical Description**: If content loaded into the WebView is not over HTTPS or lacks origin validation, it could be susceptible to man-in-the-middle attacks and cross-origin information leakage.
+**Evidence**: Content Loading Over HTTP","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/phi4:14b","### Finding: Potential Privilege Escalation through Chained Method Calls
+**Risk Level**: Medium  
+**Data Flow Path**: JavaScript -> setNativeToJsBridgeMode(II) -> WebView Configuration -> exec  
+**Technical Description**: An attacker might exploit method chaining to first alter WebView configuration and then execute arbitrary code, leading to privilege escalation.
+**Evidence**: Methods: `setNativeToJsBridgeMode`, `exec`
+
+### Conclusion:
+The analysis identifies several critical vulnerabilities that require immediate attention. Ensuring input validation, secure data transmission practices, origin checks, and proper permission management are crucial steps towards mitigating these risks.","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/phi4:14b","### Finding: No additional vulnerabilities identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: Beyond the above findings, no further exploitable data flows were detected in the provided context.
+**Evidence**: N/A","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/llama3.2:3b","### Finding: <title>
+**Risk Level**: Critical/High/Medium/Low
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: ...
+**Evidence**: <quoted JS line or method name>
+
+If no vulnerabilities are found, output:","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/llama3.2:3b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A
+
+## FINDINGS","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/llama3.2:3b","### Finding: Potential SQL Injection Vulnerability
+**Risk Level**: High
+**Data Flow Path**: JS -> Bridge Object 'exec' -> Java Sink: [SQL Query]
+**Technical Description**: The `exec` method takes user input as parameters, which can lead to a potential SQL injection vulnerability if not properly sanitized.
+**Evidence**: `.method public static void exec(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/llama3.2:3b","### Finding: Path Traversal Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: JS -> Bridge Object 'exec' -> Java Sink: [File Path]
+**Technical Description**: The `exec` method can take user input as file paths, which can lead to a path traversal vulnerability if not properly sanitized.
+**Evidence**: `.method public static void exec(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/llama3.2:3b","### Finding: Potential RCE Vulnerability
+**Risk Level**: Critical
+**Data Flow Path**: JS -> Bridge Object 'exec' -> Java Sink: [Runtime.exec() or Reflection]
+**Technical Description**: The `exec` method can execute arbitrary commands if not properly validated, leading to a potential remote code execution (RCE) vulnerability.
+**Evidence**: `.method public static void exec(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/llama3.2:3b","### Finding: Potential PII Leakage
+**Risk Level**: Medium
+**Data Flow Path**: JS -> Bridge Object 'getDeviceId' -> Java Sink: [Returning sensitive data]
+**Technical Description**: The `getDeviceId` method can return sensitive device information to JavaScript, potentially leaking PII.
+**Evidence**: `.method public static java.lang.String getDeviceId()`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/llama3.2:3b","### Finding: Potential Permission Leakage
+**Risk Level**: Medium
+**Data Flow Path**: JS -> Bridge Object 'getLocation' -> Java Sink: [Returning location data]
+**Technical Description**: The `getLocation` method can return sensitive location data to JavaScript, potentially leaking PII.
+**Evidence**: `.method public static java.lang.String getLocation()`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/llama3.2:3b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/gemma3:12b","### Finding: Uncontrolled Execution via `exec()`
+**Risk Level**: Critical
+**Data Flow Path**: [JavaScript: `window.cordovaNative.exec()`] -> [Bridge Object: `_cordovaNative.exec()`] -> [Java Sink:  `org.apache.cordova.engine.SystemExposedJsApi.exec()`]
+**Technical Description**: The `exec()` method in the Cordova bridge allows JavaScript to execute native code via an integer message ID and string parameters. This method is highly dangerous as it provides attacker-controlled input directly to native code execution without adequate validation.  An attacker can craft JavaScript to call `exec()` with arbitrary parameters, potentially triggering arbitrary native code execution, leading to Remote Code Execution (RCE) vulnerabilities.  The message ID and string parameters directly influence the action performed by the native code, offering extensive attacker control. Specifically, the first argument (message ID) dictates which native handler to call, and the subsequent strings provide arguments to that handler.  Without strict validation of the message ID and associated arguments, attackers can trigger unintended or malicious behavior.
+**Evidence**: `window.cordovaNative.exec()`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/gemma3:12b","### Finding: Potential Message Injection via `retrieveJsMessages()`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript: Calls to `window.cordovaNative.retrieveJsMessages()`] -> [Bridge Object: `_cordovaNative.retrieveJsMessages()`] -> [Java Sink: `org.apache.cordova.engine.SystemExposedJsApi.retrieveJsMessages()`]
+**Technical Description**: The `retrieveJsMessages()` method receives a boolean flag, `Z` in the signature. While the impact isn't immediately clear without knowing how this method is used, the presence of this flag as a direct input from JavaScript warrants further investigation.  An attacker might be able to influence its behavior or extract unintended data depending on the downstream usage of the returned string. The returned string could be used to construct subsequent commands or influence the app's behavior.  While not a direct RCE, this can be a stepping stone or information leak vulnerability.
+**Evidence**: `window.cordovaNative.retrieveJsMessages()`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/gemma3:12b","### Finding: Lack of Validation in `setNativeToJsBridgeMode()`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript: Calls to `window.cordovaNative.setNativeToJsBridgeMode()`] -> [Bridge Object: `_cordovaNative.setNativeToJsBridgeMode()`] -> [Java Sink: `org.apache.cordova.engine.SystemExposedJsApi.setNativeToJsBridgeMode()`]
+**Technical Description**: The `setNativeToJsBridgeMode()` method takes two integer arguments. Lack of validation on these integer values could lead to unexpected behavior or potentially exploitable side effects.  Attackers might be able to manipulate the mode settings of the bridge, which could affect how JavaScript interacts with native code. Without knowing the specific consequences of different mode settings, it's difficult to assess the full impact, but the possibility of manipulation requires attention.
+**Evidence**: `window.cordovaNative.setNativeToJsBridgeMode()`","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-93","ollama/gemma3:12b","### Finding: No Origin Validation Concerns
+**Risk Level**: Medium
+**Data Flow Path**: N/A - Based on the context given
+**Technical Description**:  The provided snippet doesn't include details about event listeners or content loading mechanisms. However, given the Cordova bridge's ability to execute arbitrary native code via Javascript, a lack of origin validation or insecure content loading practices (e.g., loading content over http://) could create a significant attack vector. Attackers could potentially inject malicious content or execute scripts by tricking the WebView into loading from an untrusted source.  This is a concern that needs verification against the wider application context.
+**Evidence**:  N/A – This is a potential issue requiring broader analysis.","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: .method private static exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/qwen2.5-coder:7b","### Finding: SQL Injection Vulnerability
+**Risk Level**: High
+**Data Flow Path**: [JavaScript Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The method `exec(int, String, String, String, String)` in the `_cordovaNative` interface accepts user-controlled inputs (`String`, `String`, `String`, `String`) which are then passed to the Java sink without proper sanitization. This could lead to SQL injection if the input is used in any SQL query execution.
+**Evidence**: `exec(int, String, String, String, String)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/qwen2.5-coder:7b","### Finding: Potential Path Traversal Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The method `setNativeToJsBridgeMode(int, int)` in the `_cordovaNative` interface accepts user-controlled inputs (`int`, `int`). While the risk of path traversal is lower compared to SQL injection, it still poses a moderate security concern if the input is used to construct file paths.
+**Evidence**: `setNativeToJsBridgeMode(int, int)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/qwen2.5-coder:7b","### Finding: Intent Redirection Vulnerability
+**Risk Level**: High
+**Data Flow Path**: [JavaScript Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The method `exec(int, String, String, String, String)` could be used to construct and launch intents with attacker-controlled data. If the intent is not properly sanitized or validated, it could lead to intent redirection vulnerabilities.
+**Evidence**: `exec(int, String, String, String, String)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/qwen2.5-coder:7b","### Finding: Potential Runtime.exec() Vulnerability
+**Risk Level**: High
+**Data Flow Path**: [JavaScript Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The method `setNativeToJsBridgeMode(int, int)` could be used to execute commands through the Java runtime if it accepts user-controlled input. This could lead to remote code execution (RCE) vulnerabilities.
+**Evidence**: `setNativeToJsBridgeMode(int, int)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/qwen2.5-coder:7b","### Finding: No PII Leaks Identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided context does not include any methods that return sensitive data like device ID, account information, location, or SIM serial number.
+**Evidence**: None","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/qwen2.5-coder:7b","### Finding: Protocol & Origin Security Concerns
+**Risk Level**: Medium
+**Data Flow Path**: N/A
+**Technical Description**: There is no evidence of protocol validation (e.g., checking if content is loaded over `http://`) or origin validation in the provided context. This could expose the application to cross-site scripting (XSS) and other vulnerabilities.
+**Evidence**: None","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/deepseek-r1:8b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided bridge interface and methods do not exhibit any exploitable data flows, PII exposure, insecure configurations, or potential for privilege escalation based on the given context. The `exec` method's unusual signature may require further analysis, but no immediate vulnerabilities are evident from the limited information.
+**Evidence**: N/A","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/phi4:14b","### Finding: Remote Code Execution Vulnerability
+**Risk Level**: Critical  
+**Data Flow Path**: JavaScript -> `_cordovaNative` -> `exec()` method  
+**Technical Description**: The `exec()` method allows execution of commands with string inputs. If these inputs are controlled by an attacker and not properly sanitized, they could execute arbitrary code on the device.  
+**Evidence**: `""Lorg/apache/cordova/engine/SystemExposedJsApi;) executes commands via exec(int, String, String, String, String)""`
+
+#","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/phi4:14b","### Finding: Potential PII Leakage
+**Risk Level**: Medium  
+**Data Flow Path**: JavaScript -> `_cordovaNative` -> `retrieveJsMessages()` method  
+**Technical Description**: The `retrieveJsMessages()` method might inadvertently return sensitive data if it accesses or processes PII without proper checks. Additionally, JavaScript could cache or transmit this data externally.  
+**Evidence**: `""Lorg/apache/cordova/engine/SystemExposedJsApi;) retrieves messages via retrieveJsMessages(int, boolean)""`
+
+#","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/phi4:14b","### Finding: Origin Validation Missing
+**Risk Level**: High  
+**Data Flow Path**: N/A  
+**Technical Description**: If the WebView loads content over insecure protocols or lacks origin validation in event listeners, it could lead to XSS attacks or data interception.  
+**Evidence**: Absence of specific protocol and origin validation details.
+
+### Conclusion
+
+The assessment identifies critical vulnerabilities related to RCE potential through unsanitized input handling in `exec()`, medium risk concerning PII leakage from `retrieveJsMessages()`, and high-risk issues stemming from insecure content loading protocols or missing origin validations. These should be addressed promptly to enhance the security posture of the application.","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/llama3.2:3b","### Finding: Potential SQL Injection Vulnerability
+**Risk Level**: Critical
+**Data Flow Path**: JS Source -> '_cordovaNative' -> exec(String, String, String)
+**Technical Description**: The `exec` method with an integer argument can be used to execute arbitrary shell commands. An attacker could inject malicious SQL queries by manipulating the `String` parameters passed to this method.
+**Evidence**: `exec(int, String, String, String, String)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/llama3.2:3b","### Finding: Potential Path Traversal Vulnerability
+**Risk Level**: High
+**Data Flow Path**: JS Source -> '_cordovaNative' -> exec(String, String, String)
+**Technical Description**: The `exec` method allows reading arbitrary files on the device. An attacker could exploit this by manipulating the `String` parameters to traverse up the file system hierarchy.
+**Evidence**: `exec(int, String, String, String, String)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/llama3.2:3b","### Finding: Potential Intent Redirection Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: JS Source -> '_cordovaNative' -> retrieveJsMessages(boolean)
+**Technical Description**: The `retrieveJsMessages` method allows reading messages from the native log queue. An attacker could exploit this by manipulating the `boolean` parameter to redirect the app's intent flow.
+**Evidence**: `retrieveJsMessages(int, boolean)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/llama3.2:3b","### Finding: Potential Runtime.exec() or Reflection Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: JS Source -> '_cordovaNative' -> setNativeToJsBridgeMode(int)
+**Technical Description**: The `setNativeToJsBridgeMode` method allows setting the native-to-JS bridge mode. An attacker could exploit this by manipulating the `int` parameter to execute arbitrary shell commands or load malicious native libraries.
+**Evidence**: `exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/llama3.2:3b","### Finding: Potential PII Leakage
+**Risk Level**: Low
+**Data Flow Path**: JS Source -> '_cordovaNative' -> retrieveJsMessages(boolean)
+**Technical Description**: The `retrieveJsMessages` method returns the device's serial number, which could be used to identify the device. This is only a moderate risk since this information is not typically considered sensitive.
+**Evidence**: `retrieveJsMessages(int, boolean)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/llama3.2:3b","### Finding: Potential Permission Leakage
+**Risk Level**: Low
+**Data Flow Path**: JS Source -> '_cordovaNative' -> retrieveJsMessages(boolean)
+**Technical Description**: The `retrieveJsMessages` method returns the device's location data, which could be used to access sensitive information. However, this is not a critical risk since location data is not typically considered sensitive.
+**Evidence**: `retrieveJsMessages(int, boolean)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/llama3.2:3b","### Finding: Potential Attacker-Controlled JavaScript Reachability
+**Risk Level**: Low
+**Data Flow Path**: JS Source -> '_cordovaNative' -> setNativeToJsBridgeMode(int)
+**Technical Description**: The `setNativeToJsBridgeMode` method allows setting the native-to-JS bridge mode. While this does allow for some attacker control, it is not considered a critical risk since the bridge mode can be disabled.
+**Evidence**: `exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/llama3.2:3b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows or sensitive information leaks were found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/gemma3:12b","### Finding: Untrusted Input to `exec()` method - Potential RCE via `Runtime.exec()`
+**Risk Level**: Critical
+**Data Flow Path**: [JavaScript] -> `_cordovaNative.exec()` -> Java, potentially invoking native code with attacker-controlled input
+**Technical Description**: The `exec()` method is the core bridge function, allowing JavaScript to call native code.  It takes five string arguments (`javaScriptCallbackId`, `service`, `action`, `echoArgs`, `extraArgs`).  If the `service` or `action` parameters are not properly validated and sanitized, an attacker could potentially manipulate them to trigger arbitrary code execution on the device via a vulnerable native plugin registered for that service and action.  Cordova itself doesn't inherently provide robust validation; the onus is on the plugin developers to sanitize these inputs.  A poorly written plugin might then use this attacker-controlled input in a dangerous function such as `Runtime.exec()`, reflection, or direct file access. The `echoArgs` and `extraArgs` are also potential vectors.
+**Evidence**: `_cordovaNative.exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` (The presence of `exec()` makes it a central point of vulnerability)","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/gemma3:12b","### Finding: Potential PII Leakage via `retrieveJsMessages()`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> `_cordovaNative.retrieveJsMessages()` -> Java -> Possibly external transmission.
+**Technical Description**: The `retrieveJsMessages()` method accepts an integer and a boolean.  While the purpose of this method isn't immediately clear without more context (what messages are being retrieved, how they're used),  its presence suggests that the application might be gathering and passing data between JavaScript and native code. If this data includes Personally Identifiable Information (PII) such as device identifiers, account information, or location data, a malicious plugin could intercept these messages and transmit them externally without the user's consent.
+**Evidence**: `retrieveJsMessages(IZ)Ljava/lang/String;`","INVALID","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/gemma3:12b","### Finding: Potential Privilege Escalation via `setNativeToJsBridgeMode()`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> `_cordovaNative.setNativeToJsBridgeMode()` -> Java -> Potential alteration of bridge behavior
+**Technical Description**: `setNativeToJsBridgeMode()` takes two integer arguments.  The functionality of these arguments is not known from the provided snippet, but manipulating bridge mode could potentially allow an attacker to bypass security restrictions or inject malicious code into the WebView environment. This is particularly concerning because it's called from `exposeJsInterface`, indicating it's related to the core bridge setup.
+**Evidence**: `setNativeToJsBridgeMode(II)V | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V`","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/gemma3:12b","### Finding: Lack of Origin Validation in Event Listeners - Potential Cross-Site Scripting (XSS)
+**Risk Level**: High
+**Data Flow Path**: N/A (This is a general concern with WebView bridges)
+**Technical Description**:  While not directly visible in the snippet, Cordova bridges often involve message passing between the WebView and native code. If the application doesn't properly validate the `message.origin` during event listener handling (e.g., `postMessage`), it creates a significant XSS risk.  An attacker could potentially inject malicious messages from a different origin, hijacking the WebView's functionality.
+**Evidence**:  Not directly present, but a common weakness in WebView-based applications.","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
+"Intent-webview_new-94","ollama/gemma3:12b","### Finding:  No vulnerability identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+  Readable: String exec(int, String, String, String, String)
+[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;
+  Readable: String retrieveJsMessages(int, boolean)
+[METHOD 3] setNativeToJsBridgeMode(II)V
+  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V"
