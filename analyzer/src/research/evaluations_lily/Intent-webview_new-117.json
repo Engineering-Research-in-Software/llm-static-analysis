@@ -1,0 +1,307 @@
+{
+    "identifiedCallsiteID": "Intent-webview_new-117",
+    "context": "APP: com.github.vauvenal5.yaga_4300\n\nBRIDGE:\nInterface '' (Lio/flutter/plugins/webviewflutter/t2;) exposes: [METHOD 1] postMessage(Ljava/lang/String;)V\n  Readable: void postMessage(String) | initiating method: .method public i(Ljava/lang/Long;Ljava/lang/Long;)V\n\nJS SNIPPETS:\n",
+    "permutations": [
+        {
+            "researcher": 0,
+            "inspectors": [
+                "ollama/qwen2.5-coder:7b",
+                "ollama/deepseek-r1:8b",
+                "ollama/starcoder2:7b",
+                "ollama/phi4:14b",
+                "ollama/llama3.2:3b",
+                "ollama/gemma3:12b"
+            ],
+            "auditors": [
+                "ollama/qwen2.5-coder:7b",
+                "ollama/deepseek-r1:8b",
+                "ollama/starcoder2:7b",
+                "ollama/phi4:14b",
+                "ollama/llama3.2:3b",
+                "ollama/gemma3:12b"
+            ],
+            "results": [
+                {
+                    "inspector": "ollama/qwen2.5-coder:7b",
+                    "findings": [
+                        "[INVALID] ### Finding: Injection Vulnerability\n**Risk Level**: Critical\n**Data Flow Path**: [JavaScript Snippets] -> [postMessage(String)] -> [Bridge Object]\n**Technical Description**: The `postMessage` method exposed by the WebView bridge accepts a string from JavaScript, which is directly passed to Java without any sanitization. This can lead to injection vulnerabilities if the input string contains malicious code that could be executed on the device or cause other security issues.\n**Evidence**: \n```javascript\n// Example of attacker-controlled input in JS:\npostMessage(\"maliciousCode();\");\n```\n\n**Researcher Note**: Mislabels a generic 'string passes the bridge unsanitised' as an injection vulnerability. `postMessage` is just a typed channel transport; the receiving Dart code is the only place injection can exist, and the inspector did not look at it. The example payload `postMessage(\"maliciousCode();\")` is a fabricated 'maliciousCode()' string \u2014 calling postMessage with that literal does not execute anything on the Java side.",
+                        "[PARTIAL] ### Finding: Unvalidated Origin\n**Risk Level**: High\n**Data Flow Path**: [JavaScript Snippets] -> [Event Listeners]\n**Technical Description**: There is no validation of the `event.origin` in the event listeners, which means that any JavaScript code from a different origin can interact with the WebView bridge. This could allow an attacker to control the WebView and potentially execute arbitrary actions.\n**Evidence**: \n```javascript\n// Example of missing origin validation:\nwindow.addEventListener('message', function(event) {\n    // No validation of event.origin\n    postMessage(event.data);\n});\n```\n\n**Researcher Note**: Origin validation is a real concern for `addWebMessageListener` channels but is conceptually inapplicable to a `JavaScriptChannel` (which is bound to a single named global in every frame regardless of origin). For the standard JavaScriptChannel API there is no `event.origin` to check; the inspector's code example is misattributed. The real mitigation (restricting the WebView to a trusted URL) is in fact in place in Yaga (login flow only).",
+                        "[INVALID] ### Finding: Intent Redirection via Message Injection\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript Snippets] -> [postMessage(String)] -> [Bridge Object]\n**Technical Description**: If an attacker can inject messages into the WebView, they could potentially trigger intent redirection by manipulating the `postMessage` method. This could lead to unintended navigation or actions within the app.\n**Evidence**: \n```javascript\n// Example of potential intent redirection:\npostMessage(\"intent://example.com\");\n```\n\n**Researcher Note**: The bridge does not consume the string as a URI nor pass it to `startActivity`. The 't2' class only relays the String back to Dart. No intent handling exists on this code path. The `intent://` example is a hypothetical with no supporting evidence in the callsite context.",
+                        "[INVALID] ### Finding: Potential File Path Traversal via Message Injection\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript Snippets] -> [postMessage(String)] -> [Bridge Object]\n**Technical Description**: If the input to `postMessage` is not properly sanitized, it could be used in file path operations. An attacker might be able to inject a path traversal attack by manipulating the message content.\n**Evidence**: \n```javascript\n// Example of potential file path traversal:\npostMessage(\"/etc/passwd\");\n```\n\n**Researcher Note**: `postMessage` does not touch the filesystem. The receiving Dart code in Yaga (login WebView) handles credentials, not paths. No file API is reachable from this bridge.",
+                        "[INVALID] ### Finding: Potential RCE via Message Injection\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript Snippets] -> [postMessage(String)] -> [Bridge Object]\n**Technical Description**: If the input to `postMessage` is not properly sanitized, it could be used in a way that leads to Remote Code Execution (RCE). An attacker might be able to inject code that is executed by the app.\n**Evidence**: \n```javascript\n// Example of potential RCE:\npostMessage(\"eval('alert(1)');\");\n```\n\n**Researcher Note**: There is no `eval`/reflection/code-loading sink on the Java side of `JavaScriptChannel.postMessage`. The example `eval('alert(1)')` only shows JS-in-JS; it has nothing to do with the Java bridge. Pure speculation.",
+                        "[PARTIAL] ### Finding: PII Leakage via Message Injection\n**Risk Level**: High\n**Data Flow Path**: [JavaScript Snippets] -> [postMessage(String)] -> [Bridge Object]\n**Technical Description**: If the input to `postMessage` contains sensitive information, it could be leaked if not properly sanitized. This could lead to privacy and security issues.\n**Evidence**: \n```javascript\n// Example of potential PII leakage:\npostMessage(\"user:password\");\n```\n\n**Researcher Note**: In Yaga the login WebView's onMessageReceived does receive sensitive data (the Nextcloud session token returned by `nc://login/...`), so PII flows through this exact API. However the finding mislabels the risk as 'injection' and the example `user:password` payload doesn't demonstrate a leak \u2014 the data moves Java\u2192Dart\u2192secure storage, which is the intended flow. Direction of concern is right; mechanism described is wrong.",
+                        "[INVALID] ### Finding: Limited Input Control\n**Risk Level**: Low\n**Data Flow Path**: [JavaScript Snippets] -> [postMessage(String)] -> [Bridge Object]\n**Technical Description**: The input to `postMessage` is limited to a single string, which means that the amount of attacker-controlled input is limited. However, this does not mitigate the risks associated with the injection and validation issues.\n**Evidence**: \n```javascript\n// Example of limited input:\npostMessage(\"safeInput\");\n```\n\n**Researcher Note**: Not a vulnerability finding. This is metadata about attack-surface size that the inspector itself acknowledges 'does not mitigate the risks'. Should not be in the findings list at all.",
+                        "[INVALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows found in the provided context. However, it's crucial to review the actual implementation and any other parts of the application to ensure that no additional vulnerabilities are present.\n**Evidence**: N/A\n\n**Researcher Note**: Self-contradicting \u2014 listed after seven prior 'findings' by the same inspector. Cannot be both 'no vulnerabilities' and the previous seven."
+                    ]
+                },
+                {
+                    "inspector": "ollama/deepseek-r1:8b",
+                    "findings": [
+                        "[VALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: The provided analysis of the WebView bridge callsite does not reveal any exploitable data flows, PII leakage, or insecure protocol usage. The bridge method `postMessage` is exposed but lacks concrete implementation details to assess potential vulnerabilities. The initiating method `i` is also exposed but does not appear to handle sensitive operations. Without access to the full Java implementation and JavaScript context, no vulnerabilities can be confirmed.  \n**Evidence**: N/A\n\n**Researcher Note**: Correct conclusion for the evidence in front of the inspector. The bridge implementation is in the plugin (not in app code), the JS snippets field is empty, and the initiating method `i(Long,Long)` is Pigeon channel-wiring, not a sensitive sink. Saying 'cannot confirm without Dart-side code' is the honest answer here."
+                    ]
+                },
+                {
+                    "inspector": "ollama/starcoder2:7b",
+                    "findings": []
+                },
+                {
+                    "inspector": "ollama/phi4:14b",
+                    "findings": []
+                },
+                {
+                    "inspector": "ollama/llama3.2:3b",
+                    "findings": [
+                        "[VALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows found in the provided context.\n**Evidence**: N/A\n\n**Researcher Note**: Same justification as deepseek-r1: with only the plugin-side bridge stub and an empty JS snippets section, declaring no exploitable flow is the correct call. Terse but not wrong."
+                    ]
+                },
+                {
+                    "inspector": "ollama/gemma3:12b",
+                    "findings": [
+                        "[INVALID] ### Finding: Uncontrolled postMessage allows arbitrary command execution\n**Risk Level**: Critical\n**Data Flow Path**: `JavaScript arbitrary input` -> `io.flutter.plugins.webviewflutter.t2.postMessage(Ljava/lang/String;)V` -> `Java side processing`\n**Technical Description**: The `postMessage` method allows arbitrary strings to be passed from JavaScript to the Java side. Without proper sanitization or validation on the Java side when processing this message, an attacker can inject malicious commands or data that could be interpreted as code, leading to remote code execution (RCE).  The initiating method `i(Ljava/lang/Long;Ljava/lang/Long;)V` suggests this message is being processed within some larger context, but the lack of information on what that context *does* with the message makes it highly dangerous. The 't2' object represents the WebViewFlutter interface, and passing a string directly to its `postMessage` without validation poses a significant threat.\n**Evidence**: `postMessage(Ljava/lang/String;)V` and `initiating method: .method public i(Ljava/lang/Long;Ljava/lang/Long;)V`\n\n**Researcher Note**: Calls a single MethodChannel relay 'arbitrary command execution / RCE'. The Java side of `JavaScriptChannel.postMessage` does not interpret, parse, or execute the string; it is delivered as a Dart `String` argument to a Dart callback. Calling this 'critical RCE' is a classic LLM hallucination of severity. The inspector even admits 'the lack of information ... makes it highly dangerous' \u2014 i.e. severity is asserted from missing evidence.",
+                        "[PARTIAL] ### Finding: Potential for Message Origin Spoofing\n**Risk Level**: Medium\n**Data Flow Path**: `JavaScript Arbitrary Origin` -> `WebView Listener`\n**Technical Description**:  The provided context doesn\u2019t mention any validation of the `message.origin` when the WebView receives `postMessage` calls. This opens the application up to cross-site messaging attacks. A malicious website can spoof the origin of messages and send commands to the WebView, potentially hijacking the application's functionality.  While not a direct vulnerability in the `postMessage` method itself, the lack of origin validation significantly amplifies the risk.\n**Evidence**: Lack of origin validation mentioned in the evaluation criteria (`Protocol & Origin Security`).\n\n**Researcher Note**: Same partial verdict as qwen's origin finding: the concept is real for `WebMessageListener`, but `JavaScriptChannel` (which `t2` actually is) has no per-message origin field to validate. The risk-mitigation framing is right (restrict the URL loaded into the WebView) but the technical attribution to `postMessage` of the channel API is wrong.",
+                        "[PARTIAL] ### Finding: Potential for Information Leakage via postMessage\n**Risk Level**: Medium\n**Data Flow Path**: `JavaScript calls -> postMessage -> Java Side`\n**Technical Description**: Although there is no direct PII leakage in the methods listed (e.g., `getDeviceId()`), if the Java code processing the `postMessage` calls does not sanitize the data it receives and relays it back to JavaScript, this could indirectly result in PII leakage. For example, if internal application states or data used internally are being processed and echoed back, they become exposed via the bridge.\n**Evidence**: `postMessage(Ljava/lang/String;)V`\n\n**Researcher Note**: Acknowledges the dependency on the Dart-side handler. In Yaga's case the handler does receive sensitive material (the login redirect), but it is the intended one-way trip into secure storage, not leakage. Direction of concern is plausible; mechanism described (echoing back to JS) is not present in this codebase.",
+                        "[VALID] ### Finding: Lack of Context for Java Side Processing\n**Risk Level**: Medium\n**Technical Description**: The vulnerability assessment is hampered by a lack of information about what happens to the data passed to the `postMessage` method on the Java side in method `i`.  Without knowing the implementation of `i`, it is impossible to fully assess the potential damage that can be caused. Further investigation of `i` is required.\n**Evidence**: `initiating method: .method public i(Ljava/lang/Long;Ljava/lang/Long;)V`\n\n**Researcher Note**: This is the most honest part of gemma's output. Calling out that the downstream method `i(Long,Long)` is unknown is the same observation deepseek and llama made, just phrased as a 'finding' rather than a conclusion. Substantively correct."
+                    ]
+                }
+            ],
+            "audits": {
+                "ollama/qwen2.5-coder:7b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.3
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.2
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 10,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.9
+                    }
+                },
+                "ollama/deepseek-r1:8b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.25,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.75
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
+                    }
+                },
+                "ollama/starcoder2:7b": {
+                    "ollama/qwen2.5-coder:7b": {},
+                    "ollama/deepseek-r1:8b": {},
+                    "ollama/starcoder2:7b": {},
+                    "ollama/phi4:14b": {},
+                    "ollama/llama3.2:3b": {},
+                    "ollama/gemma3:12b": {}
+                },
+                "ollama/phi4:14b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    }
+                },
+                "ollama/llama3.2:3b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 9,
+                        "attackSurfaceCoverage": 0.7
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 9,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.67
+                    }
+                },
+                "ollama/gemma3:12b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.8
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 10,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.7
+                    }
+                }
+            },
+            "researcherConclusion": {
+                "ollama/qwen2.5-coder:7b": {
+                    "hallucinationFrequency": 1.0,
+                    "technicalAccuracy": 4,
+                    "effectChainAwareness": 3,
+                    "attackSurfaceCoverage": 0.5
+                },
+                "ollama/deepseek-r1:8b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 8,
+                    "effectChainAwareness": 6,
+                    "attackSurfaceCoverage": 0.0
+                },
+                "ollama/starcoder2:7b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 0,
+                    "effectChainAwareness": 0,
+                    "attackSurfaceCoverage": 0.0
+                },
+                "ollama/phi4:14b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 0,
+                    "effectChainAwareness": 0,
+                    "attackSurfaceCoverage": 0.0
+                },
+                "ollama/llama3.2:3b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 7,
+                    "effectChainAwareness": 4,
+                    "attackSurfaceCoverage": 0.0
+                },
+                "ollama/gemma3:12b": {
+                    "hallucinationFrequency": 0.2,
+                    "technicalAccuracy": 5,
+                    "effectChainAwareness": 6,
+                    "attackSurfaceCoverage": 1.0
+                }
+            }
+        }
+    ]
+}

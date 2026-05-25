@@ -1,0 +1,340 @@
+{
+    "identifiedCallsiteID": "Intent-webview_new-116",
+    "context": "APP: com.github.trilinder.tapasclient_1\n\nBRIDGE:\nInterface '_cordovaNative' (Lorg/apache/cordova/engine/SystemExposedJsApi;) exposes: [METHOD 1] exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;\n  Readable: String exec(int, String, String, String, String)\n[METHOD 2] retrieveJsMessages(IZ)Ljava/lang/String;\n  Readable: String retrieveJsMessages(int, boolean)\n[METHOD 3] setNativeToJsBridgeMode(II)V\n  Readable: void setNativeToJsBridgeMode(int, int) | initiating method: exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge;)V",
+    "groundTruthNotes": {
+        "repository": "https://github.com/TriLinder/OpenTapasReader (Capacitor-based; if Cordova bridge is present at runtime it is the standard framework code from apache/cordova-android)",
+        "frameworkClass": "org.apache.cordova.engine.SystemExposedJsApi (apache/cordova-android)",
+        "frameworkSource": "https://github.com/apache/cordova-android/blob/master/framework/src/org/apache/cordova/engine/SystemExposedJsApi.java and CordovaBridge.java",
+        "analysis": "The three @JavascriptInterface methods are thin delegators to CordovaBridge.jsExec/jsRetrieveJsMessages/jsSetNativeToJsBridgeMode. ALL THREE FIRST CALL verifySecret(bridgeSecret) — a SecureRandom-generated int that JavaScript must possess to make the call succeed; mismatch returns null/false and disables the bridge (throwing IllegalAccessException). The secret is delivered to JS at cordova.js initialization, so same-origin app JS has it automatically; cross-origin or injected JS does NOT (unless XSS in trusted content or allowNavigation misconfiguration). exec() routes to PluginManager.exec(service, action, callbackId, arguments), which dispatches to plugins REGISTERED IN config.xml — NOT to Runtime.exec, NOT to a shell, NOT to arbitrary reflection on arbitrary classes. retrieveJsMessages() pops responses from NativeToJsMessageQueue that native plugins enqueued — the data flow is native-to-JS (queue drain), not JS-to-native exfiltration. setNativeToJsBridgeMode() only switches between POLL / ONLINE_EVENTS / EVAL bridge modes. The correct framework-level findings would be: (1) exec() is a high-reach plugin-dispatch surface whose effective security depends on which plugins are registered AND on bridge-secret protection AND on the WebView's content-origin policy; (2) the EVAL bridge mode does call evaluateJavascript on JS the native side composed, which is fine because the native side controls it. Pure-framework SQL injection, framework Runtime.exec RCE, framework path-traversal, PII from setNativeToJsBridgeMode, and Intent Redirection via integer-only setters are NOT possible. Every inspector missed the bridge-secret mitigation — a meaningful blind spot."
+    },
+    "permutations": [
+        {
+            "researcher": 0,
+            "inspectors": [
+                "ollama/qwen2.5-coder:7b",
+                "ollama/deepseek-r1:8b",
+                "ollama/starcoder2:7b",
+                "ollama/phi4:14b",
+                "ollama/llama3.2:3b",
+                "ollama/gemma3:12b"
+            ],
+            "auditors": [
+                "ollama/qwen2.5-coder:7b",
+                "ollama/deepseek-r1:8b",
+                "ollama/starcoder2:7b",
+                "ollama/phi4:14b",
+                "ollama/llama3.2:3b",
+                "ollama/gemma3:12b"
+            ],
+            "results": [
+                {
+                    "inspector": "ollama/qwen2.5-coder:7b",
+                    "findings": [
+                        "invalid: ### Finding: SQL Injection Vulnerability (Potential)\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> `_cordovaNative.exec()` -> Java Sink\n**Technical Description**: The `exec` method in the bridge interface is exposed to JavaScript and accepts arbitrary string inputs. This can be exploited for SQL Injection if the input is not properly sanitized before being used in a SQL query.\n**Evidence**: \n```java\npublic String exec(int id, String service, String action, String args, String callbackId) {\n    // Potential SQL Injection vulnerability here if args is directly used in a SQL query\n}\n```\n\n[VERDICT NOTE: Fabricated. The exec() path goes to CordovaBridge.jsExec -> PluginManager.exec(service, action, callbackId, arguments). No SQL is touched by the framework. The 'evidence' is a fabricated code snippet with a 'Potential ... if' comment — not actual code.]",
+                        "partial: ### Finding: Path Traversal Vulnerability (Potential)\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> `_cordovaNative.exec()` -> Java Sink\n**Technical Description**: Similar to the SQL injection, if the `args` parameter is used to construct file paths without proper validation or sanitization, it can lead to a path traversal vulnerability.\n**Evidence**: \n```java\npublic String exec(int id, String service, String action, String args, String callbackId) {\n    // Potential Path Traversal vulnerability here if args is directly used in a file path\n}\n```\n\n[VERDICT NOTE: Not a framework issue — CordovaBridge does not touch file paths. Could become real ONLY if a specific registered plugin (e.g., cordova-plugin-file) mishandles args. The finding is too generic and the 'evidence' is fabricated code, but the concern is at least architecturally plausible downstream. Marked partial.]",
+                        "partial: ### Finding: Intent Redirection Vulnerability (Potential)\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> `_cordovaNative.exec()` -> Java Sink\n**Technical Description**: If the `args` parameter is used to construct intent data or URIs, it can lead to intent redirection vulnerabilities if not properly validated.\n**Evidence**: \n```java\npublic String exec(int id, String service, String action, String args, String callbackId) {\n    // Potential Intent Redirection vulnerability here if args is directly used in an intent\n}\n```\n\n[VERDICT NOTE: Same as path traversal — the framework does not construct Intents from these args. Downstream plugins like cordova-plugin-inappbrowser do — but that's plugin-scoped, not bridge-scoped. Partial.]",
+                        "invalid: ### Finding: Remote Code Execution (RCE)\n**Risk Level**: Critical\n**Data Flow Path**: [JS Source] -> `_cordovaNative.exec()` -> Java Sink\n**Technical Description**: If the `args` parameter is used to execute shell commands via `Runtime.getRuntime().exec(args)` or similar, it can lead to Remote Code Execution (RCE) vulnerabilities if not properly sanitized.\n**Evidence**: \n```java\npublic String exec(int id, String service, String action, String args, String callbackId) {\n    // Potential RCE vulnerability here if args is used in a Runtime.exec() call\n}\n```\n\n[VERDICT NOTE: Fabricated. The Cordova framework never calls Runtime.getRuntime().exec on bridge args. The 'evidence' is a fictional comment in a stub method. Pure hallucination based on the misleading name 'exec'.]",
+                        "invalid: ### Finding: Cross-Site Scripting (XSS)\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> `_cordovaNative.retrieveJsMessages()` -> Java Sink\n**Technical Description**: If the `retrieveJsMessages` method returns data to JavaScript without proper sanitization, it can lead to Cross-Site Scripting (XSS) vulnerabilities.\n**Evidence**: \n```java\npublic String retrieveJsMessages(int id, boolean useCache) {\n    // Potential XSS vulnerability here if the returned data is not sanitized before being transmitted to JS\n}\n```\n\n[VERDICT NOTE: Incoherent. retrieveJsMessages pops messages from NativeToJsMessageQueue that the native side itself enqueued — there is no untrusted-input round-trip here that XSS would describe. The data flow is native -> queue -> JS, with the native side controlling content. XSS isn't applicable to this surface.]",
+                        "invalid: ### Finding: PII Exposure (Potential)\n**Risk Level**: Medium\n**Data Flow Path**: [JS Source] -> `_cordovaNative.retrieveJsMessages()` -> Java Sink\n**Technical Description**: If sensitive information such as device ID, accounts, location, or SIM serial number is exposed through the `retrieveJsMessages` method without proper validation, it can lead to PII exposure.\n**Evidence**: \n```java\npublic String retrieveJsMessages(int id, boolean useCache) {\n    // Potential PII exposure here if sensitive data is returned to JS\n}\n```\n\n[VERDICT NOTE: Framework code does not put PII in the queue. Whether PII appears depends entirely on what registered plugins choose to send back — that's plugin-side behavior, not a bridge vulnerability.]",
+                        "invalid: ### Finding: Protocol & Origin Security (Potential)\n**Risk Level**: Medium\n**Data Flow Path**: [JS Source] -> `_cordovaNative.retrieveJsMessages()` -> Java Sink\n**Technical Description**: If the JavaScript code does not validate the `origin` of messages, it can lead to security issues if the content is loaded over HTTP or if there are no validation checks.\n**Evidence**: \n```javascript\n// Potential protocol and origin security issue here if there is no validation of message.origin\n```\n\n[VERDICT NOTE: Conflates window.postMessage 'message.origin' validation (a browser API) with the Cordova native bridge. The bridge is not a postMessage handler. The legitimate Cordova-side analog would be config.xml allowNavigation/access policy — not addressed here.]",
+                        "partial: ### Finding: Reachability & Attacker Control (High)\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> `_cordovaNative.exec()` -> Java Sink\n**Technical Description**: All methods in the bridge interface are reachable by attacker-controlled JavaScript, and all inputs to these methods are potentially attacker-controlled.\n**Evidence**: \n```java\npublic void exposeJsInterface(WebView webView, CordovaBridge cordovaBridge) {\n    // All methods exposed to JS are reachable by an attacker\n}\n```\n\n[VERDICT NOTE: Correct in spirit (the methods ARE reachable to in-WebView JS), but completely misses the bridgeSecret check that CordovaBridge.verifySecret performs on every call. Inputs are only attacker-controlled if the attacker also has the SecureRandom secret OR is running in the same-origin context. Partial credit for naming the surface; demerit for missing the central mitigation.]",
+                        "invalid: ### Finding: Impact Chain & Privilege Escalation (Critical)\n**Risk Level**: Critical\n**Data Flow Path**: [JS Source] -> `_cordovaNative.exec()` -> Java Sink\n**Technical Description**: An attacker can exploit the RCE vulnerability to escalate privileges, leading to full control over the system.\n**Evidence**: \n```java\npublic String exec(int id, String service, String action, String args, String callbackId) {\n    // Potential privilege escalation here if args is used in a Runtime.exec() call\n}\n```\n\n[VERDICT NOTE: Predicated on the fabricated Runtime.exec RCE. The impact chain has no real anchor.]",
+                        "invalid: [prior 3 findings repeated 125 times]\n\n[VERDICT NOTE: This is a behavioral defect — degenerate looping output. Each repetition is one of the already-invalidated findings; collectively they inflate the apparent attack surface and severely degrade signal quality. Counted as 125 invalid repeats.]",
+                        "invalid: ### Finding: Protocol & Origin Security (Potential) [REPEAT]\n[VERDICT NOTE: Trailing duplicate from the loop tail — same verdict as the earlier instance.]",
+                        "partial: ### Finding: Reachability & Attacker Control (High) [REPEAT]\n[VERDICT NOTE: Trailing duplicate from the loop tail — same verdict as the earlier instance.]",
+                        "invalid: ### Finding: Impact Chain & Privilege Escalation (Critical) [REPEAT — truncated]\n[VERDICT NOTE: Trailing duplicate from the loop tail; also truncated mid-output, indicating the inspector ran into a context/length limit while looping. Same verdict as the earlier instance.]"
+                    ]
+                },
+                {
+                    "inspector": "ollama/deepseek-r1:8b",
+                    "findings": [
+                        "invalid: ### Finding: Potential Remote Code Execution (RCE) via exec Method\n**Risk Level**: Critical  \n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [exec method] -> [Runtime.exec()]  \n**Technical Description**: The `exec` method is exposed to JavaScript and takes multiple parameters. If this method internally uses `Runtime.exec()` or similar APIs to execute system commands, attackers can inject malicious commands via the string parameters, leading to arbitrary code execution. This is a critical vulnerability as it allows full control of the device.  \n**Evidence**: The `exec` method is called with attacker-controlled parameters (four strings and an integer). Without sanitization, inputs can directly trigger system commands.\n\n[VERDICT NOTE: Same fabrication as qwen — CordovaBridge.jsExec does NOT call Runtime.exec; it calls PluginManager.exec which dispatches to registered plugins. The 'if this method internally uses Runtime.exec()' framing makes the speculation explicit; the framework source proves it does not.]",
+                        "partial: ### Finding: Path Traversal in File Operations\n**Risk Level**: High  \n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [exec method] -> [File Path Construction]  \n**Technical Description**: If the `exec` method is used to construct file paths (e.g., via `File` or `Environment.getExternalStorageDirectory()`), unsanitized string inputs (e.g., the third parameter) could allow attackers to traverse to restricted directories (e.g., `/../../etc/passwd`). This exposes sensitive files.  \n**Evidence**: The third parameter is a string passed to `exec`. If it is directly used in file path construction without validation, path traversal is possible.\n\n[VERDICT NOTE: Same as qwen's path traversal — not a framework concern; only possible if a registered plugin (e.g., cordova-plugin-file) mishandles args. Partial because the architectural concern is downstream-plausible but the finding misattributes it to the bridge itself.]",
+                        "invalid: ### Finding: Sensitive Data Exposure via retrieveJsMessages\n**Risk Level**: High  \n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [retrieveJsMessages method] -> [Returning Sensitive Data]  \n**Technical Description**: The `retrieveJsMessages` method returns data (e.g., device identifiers, location, or accounts) to JavaScript. If this method exposes sensitive data (e.g., via `TelephonyManager.getDeviceId()`), attackers can retrieve PII stored in the app.  \n**Evidence**: The method returns a string based on an integer and boolean input. If it queries sensitive system APIs, data leaks occur.\n\n[VERDICT NOTE: The framework method jsRetrieveJsMessages calls jsMessageQueue.popAndEncode — it does not access TelephonyManager. Whether sensitive data ends up in the queue is a plugin-level decision, not a property of this bridge surface.]",
+                        "partial: ### Finding: Intent Redirection via exec Method\n**Risk Level**: High  \n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [exec method] -> [Intent Creation]  \n**Technical Description**: If `exec` is used to create Intents (e.g., via `Intent.ACTION_VIEW`), attacker-controlled inputs (e.g., the fourth parameter) could redirect users to malicious URLs or trigger unsafe actions (e.g., dialing numbers).  \n**Evidence**: The fourth parameter is a string passed to `exec`. If it is used to build Intents without validation, intent hijacking occurs.\n\n[VERDICT NOTE: Same downstream-plugin caveat as path traversal. cordova-plugin-inappbrowser or cordova-plugin-x-socialsharing could be vectors, but the framework code itself does not construct Intents from these args. Partial.]",
+                        "partial: ### Finding: Reflection-Based RCE via exec Method\n**Risk Level**: High  \n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [exec method] -> [Reflection API]  \n**Technical Description**: If `exec` uses reflection to invoke methods (e.g., via `Class.getMethod()`), attackers can craft inputs to call arbitrary methods or access restricted classes (e.g., `Runtime.exec()`). This bypasses normal security restrictions.  \n**Evidence**: The method\u2019s flexibility and lack of input sanitization enable reflection abuse.\n\n[VERDICT NOTE: Closest-to-truth finding from this inspector. Cordova DOES use reflection — PluginManager instantiates plugin classes by name on first use. BUT: it only resolves classes registered in res/xml/config.xml's <feature> entries, not arbitrary attacker-supplied class names. So 'arbitrary class' is overclaimed; 'reflection-based dispatch with attack surface bounded by the plugin registry' would be the accurate framing. Partial — the architectural awareness is correct, the threat scope is overstated.]",
+                        "invalid: ### Finding: PII Leakage via setNativeToJsBridgeMode\n**Risk Level**: Medium  \n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [setNativeToJsBridgeMode method] -> [Returning Sensitive Data]  \n**Technical Description**: If `setNativeToJsBridgeMode` retrieves and exposes device identifiers or other PII (e.g., via `TelephonyManager`), attackers can access this data via the first integer parameter.  \n**Evidence**: The method takes two integers and returns a string. If it queries sensitive APIs, data leaks occur.\n\n[VERDICT NOTE: Doubly wrong. (1) The method signature is `(II)V` — void return, not String, so it cannot 'return' anything. The inspector misread its own evidence. (2) The framework implementation only calls jsMessageQueue.setBridgeMode(value). No TelephonyManager, no PII, no String return.]",
+                        "partial: ### Finding: Lack of Origin Validation in WebView\n**Risk Level**: Medium  \n**Data Flow Path**: [Malicious Content] -> [WebView] -> [Bridge] -> [Native Code]  \n**Technical Description**: If the WebView loads external content (e.g., via `file://` or `http://`) and does not validate message origins (e.g., via `shouldOverrideUrlLoading`), attackers can inject malicious scripts to call bridge methods.  \n**Evidence**: No validation of `message.origin` in event listeners (e.g., `onMessage`). External scripts can trigger calls.\n\n[VERDICT NOTE: The architectural concern is legitimate for Cordova (allowNavigation / WebViewClient.shouldOverrideUrlLoading IS the right mitigation surface), but the 'evidence' fabricates an onMessage listener that doesn't exist in this context. Also still misses the bridgeSecret check that protects against cross-page exec calls. Partial — right concern, wrong evidence.]",
+                        "invalid: ### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: No exploitable data flows found in the provided context.  \n**Evidence**: N/A\n\n[VERDICT NOTE: Internally inconsistent with the seven preceding findings. The inspector contradicts itself.]"
+                    ]
+                },
+                {
+                    "inspector": "ollama/starcoder2:7b",
+                    "findings": []
+                },
+                {
+                    "inspector": "ollama/phi4:14b",
+                    "findings": [
+                        "partial: ### Finding: Vulnerable exec Method Leading to Arbitrary Code Execution\n**Risk Level**: Critical  \n**Data Flow Path**: [JavaScript] -> [_cordovaNative bridge object] -> [Java `exec` method]  \n**Technical Description**: The `exec` method allows JavaScript to execute arbitrary Java code via string inputs, posing a risk of remote code execution if inputs are not properly validated or sanitized. This can lead to unauthorized actions on the device and potential privilege escalation.  \n**Evidence**: Method name: `_cordovaNative.exec`\n\n[VERDICT NOTE: 'Arbitrary Java code' is overstated — exec routes to registered plugins, not arbitrary code. But the directional concern (exec is the central plugin-dispatch surface and is the most security-sensitive of the three methods) is broadly correct. Far less detailed and concrete than gemma3's equivalent finding. Misses the bridgeSecret protection. Partial.]",
+                        "invalid: ### Finding: Potential for PII Leakage Through Executable Code\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript] -> [_cordovaNative bridge object] -> [Java `exec` method] (potentially accessing sensitive methods)  \n**Technical Description**: If the string inputs to the `exec` method can be manipulated, they could potentially invoke Java methods that expose PII or interact with sensitive system components. While not directly indicated, this potential exists due to lack of input validation.  \n**Evidence**: Method name: `_cordovaNative.exec`\n\n[VERDICT NOTE: 'Method name only' as evidence is the giveaway — pure speculation. exec does not 'invoke arbitrary Java methods'; it dispatches to plugins registered in config.xml. The PII surface depends entirely on which plugins are registered.]",
+                        "partial: ### Finding: Insecure Content Loading and Origin Validation\n**Risk Level**: Medium  \n**Data Flow Path**: [JavaScript] -> WebView (potential for unsafe content loading)  \n**Technical Description**: If the app loads content without validating the origin or using secure protocols, it is vulnerable to man-in-the-middle attacks or unauthorized data access. Ensuring HTTPS and origin checks can mitigate these risks.  \n**Evidence**: Absence of protocol and origin validation details\n\nThese findings highlight critical vulnerabilities that require immediate attention to prevent potential exploitation. Implementing strict input validation for the `exec` method, securing content loading protocols, and validating message origins are essential steps in mitigating these risks.\n\n[VERDICT NOTE: The general Cordova concern is real (config.xml allowNavigation / network-security-config / cleartext policy directly determine bridge reachability for attacker content). But framed too generically to be actionable, and the 'evidence' is literally absence-as-evidence. Partial.]"
+                    ]
+                },
+                {
+                    "inspector": "ollama/llama3.2:3b",
+                    "findings": [
+                        "invalid: ### Finding: Insufficient Input Validation in exec Method\n**Risk Level**: High\n**Data Flow Path**: JS -> '_cordovaNative' -> Java (exec method)\n**Technical Description**: The `exec` method executes a shell command without validating the input parameters. This allows an attacker to inject malicious commands, potentially leading to RCE.\n**Evidence**: ```javascript\nexecuteCommand(\"rm -rf /\");\n```\n\n[VERDICT NOTE: 'Executes a shell command' is flatly wrong — exec is the plugin gateway, not a shell. The 'evidence' is a fabricated JS snippet calling a function `executeCommand` that does not exist in this context.]",
+                        "invalid: ### Finding: PII Leakage in retrieveJsMessages Method\n**Risk Level**: Medium\n**Data Flow Path**: JS -> '_cordovaNative' -> Java (retrieveJsMessages method)\n**Technical Description**: The `retrieveJsMessages` method returns a string containing sensitive data from the bridge. While the method name suggests it only retrieves messages, an attacker could potentially use this to leak PII by crafting malicious input.\n**Evidence**: ```javascript\nlet messages = _cordovaNative.retrieveJsMessages(1, true);\nconsole.log(messages.getDeviceId());\n```\n\n[VERDICT NOTE: The 'evidence' is impossible code — `messages` is a String returned from the bridge; Java/JS Strings have no `.getDeviceId()` method. This is a fabricated, type-incoherent snippet. The framework method only pops queued plugin responses.]",
+                        "invalid: ### Finding: Intent Redirection in setNativeToJsBridgeMode Method\n**Risk Level**: Critical\n**Data Flow Path**: JS -> '_cordovaNative' -> Java (setNativeToJsBridgeMode method)\n**Technical Description**: The `setNativeToJsBridgeMode` method allows an attacker to redirect the native intent to a custom implementation, potentially leading to Intent Redirection vulnerabilities.\n**Evidence**: ```javascript\n_cordovaNative.setNativeToJsBridgeMode(1, 0);\n```\n\n[VERDICT NOTE: Method signature is `(II)V` — two ints, void return. It cannot 'redirect intents'; it only sets the integer bridge-mode field on NativeToJsMessageQueue (POLL/ONLINE_EVENTS/EVAL). The Critical risk rating is unjustified. The 'evidence' is just an example invocation with no actual demonstration of harm.]",
+                        "invalid: ### Finding: No content validation in event listeners\n**Risk Level**: Low\n**Data Flow Path**: N/A (JS -> '_cordovaNative' -> Java)\n**Technical Description**: The provided context does not indicate any content loading over HTTPS or message origin validation in event listeners. However, this is not a critical finding as it may be a deliberate design choice.\n**Evidence**: N/A\n\n[VERDICT NOTE: No event listeners in the analyzed context. Speculation about absence of features not asked about.]",
+                        "invalid: ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows were found in the provided context.\n**Evidence**: N/A\n\n[VERDICT NOTE: Directly contradicts the four preceding findings from the same inspector.]"
+                    ]
+                },
+                {
+                    "inspector": "ollama/gemma3:12b",
+                    "findings": [
+                        "partial: ### Finding: Uncontrolled Exec Call via `exec`\n**Risk Level**: Critical\n**Data Flow Path**: [JavaScript call to `exec`] -> [`_cordovaNative.exec`] -> [Potential arbitrary OS command execution via reflection]\n**Technical Description**: The `exec` method in the `_cordovaNative` bridge interface allows JavaScript to call native functions. Without proper sanitization and validation within the native side, it presents a high risk of Remote Code Execution (RCE). The `exec` method\u2019s parameters (including method name and arguments) are directly passed to the native side. The Android WebView bridge often uses reflection to call native methods based on the provided method name. An attacker can manipulate the `method` parameter to target arbitrary native methods, potentially leading to arbitrary code execution on the device if the native code isn't properly secured.  Specifically, the arguments passed to the `exec` method can be manipulated to potentially trigger reflection-based calls leading to arbitrary code execution.  The exact reflection mechanism is not visible in the provided snippets, but the exposed `exec` method inherently carries this risk.\n**Evidence**: `_cordovaNative.exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;`  and the general nature of `exec` in WebView bridges.\n\n[VERDICT NOTE: Best-described exec finding across all inspectors. Correctly identifies that Cordova uses reflection in plugin dispatch (true: PluginManager.instantiatePlugin uses Class.forName). 'Arbitrary OS command' overclaims — reflection is constrained to plugins registered in config.xml's <feature> entries, not arbitrary class names. Still misses the bridgeSecret gate. The 'inherently carries this risk' framing acknowledges architectural concern without claiming specific evidence — that's honest hedging. Partial.]",
+                        "partial: ### Finding: Potential Information Leakage via `retrieveJsMessages`\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript call to `retrieveJsMessages`] -> [`_cordovaNative.retrieveJsMessages`] -> [Potential leakage of internal application state]\n**Technical Description**: The `retrieveJsMessages` method exposes the ability to retrieve messages originating from JavaScript.  While the purpose of these messages isn't immediately clear, they *could* contain sensitive information cached or passed between JavaScript components. The `boolean` parameter `Z` offers an attacker some control over the retrieved messages, allowing them to potentially filter or request specific message types. Although retrieving messages doesn't directly execute code, the extracted information could be used in subsequent attacks, such as crafting targeted exploits or identifying user activity patterns.\n**Evidence**: `_cordovaNative.retrieveJsMessages(IZ)Ljava/lang/String;`\n\n[VERDICT NOTE: Mostly cautious and well-hedged ('could', 'potentially'), avoiding the specific fabrications other inspectors made. One factual slip: the messages do NOT 'originate from JavaScript' — they originate from native plugins enqueueing responses for delivery to JS. The boolean is fromOnlineEvent, not a filter the attacker controls in any meaningful way. Still misses the bridgeSecret. Partial.]",
+                        "partial: ### Finding: Potential for Native to JS Bridge Mode Manipulation\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript call to indirectly trigger `setNativeToJsBridgeMode`] -> [`_cordovaNative.setNativeToJsBridgeMode`] -> [Possible manipulation of internal bridge settings, potentially affecting security policies]\n**Technical Description**:  The `setNativeToJsBridgeMode` method, exposed through the bridge, allows modification of the internal bridge mode.  While the method signature suggests simple integer parameters, the effect of these parameters is crucial. Modifying the bridge mode *could* affect how JavaScript and native code interact, potentially bypassing security restrictions or enabling unexpected functionality.  The initiating method, `exposeJsInterface`, is of particular interest as it sets up the initial bridge connection. Understanding the implications of different bridge modes is necessary to determine the full potential impact.\n**Evidence**: `_cordovaNative.setNativeToJsBridgeMode(II)V` and `exposeJsInterface(Landroid/webkit/WebView;Lorg/apache/cordova/CordovaBridge.java)V`\n\n[VERDICT NOTE: Only inspector that flagged setNativeToJsBridgeMode with appropriate caution rather than fabricating Intent redirection. The modes (POLL/ONLINE_EVENTS/EVAL) do meaningfully change message-delivery behavior; the EVAL mode in particular triggers evaluateJavascript on native-composed JS. The impact is not as dramatic as 'bypassing security restrictions' — it's a denial-of-service-ish nuisance at most given the secret gate — but the architectural awareness is correct. Partial.]",
+                        "invalid: ### Finding: Lack of Validation in `exec` - Path Traversal Potential\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript call to `exec`] -> [`_cordovaNative.exec`] -> [Native code accessing files based on attacker-controlled arguments]\n**Technical Description**:  Similar to the RCE risk, the `exec` method can be exploited for path traversal vulnerabilities if the method name invoked via reflection or direct call operates on file paths.  An attacker can craft a method name and arguments to include directory traversal sequences (e.g., \"..\") to access files outside of intended directories. The exact mechanism is dependent on how the invoked native method handles these parameters.\n**Evidence**: `_cordovaNative.exec(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;` and the possibility of reflection leading to file path manipulation.\n\n[VERDICT NOTE: Same downstream-plugin caveat as qwen/deepseek path traversal. Not a framework-bridge issue; only relevant if a specific registered plugin is vulnerable. Marked invalid (not partial) here because gemma3 already correctly handled the exec surface in its first finding; this is duplicative speculation about a plugin-scoped issue framed as a bridge-scoped one.]"
+                    ]
+                }
+            ],
+            "audits": {
+                "ollama/qwen2.5-coder:7b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.6
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.6
+                    }
+                },
+                "ollama/deepseek-r1:8b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucination_frequency": 0.0,
+                        "technical_accuracy": 10,
+                        "effect_chain_awareness": 5,
+                        "attack_surface_coverage": 0.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.29
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.67
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.4,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    }
+                },
+                "ollama/starcoder2:7b": {
+                    "ollama/qwen2.5-coder:7b": {},
+                    "ollama/deepseek-r1:8b": {},
+                    "ollama/starcoder2:7b": {},
+                    "ollama/phi4:14b": {},
+                    "ollama/llama3.2:3b": {},
+                    "ollama/gemma3:12b": {}
+                },
+                "ollama/phi4:14b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.2,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.8
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.67
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.25,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.75
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    }
+                },
+                "ollama/llama3.2:3b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.93
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.8
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.3,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.8
+                    }
+                },
+                "ollama/gemma3:12b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.2857,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.8571
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.8
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.8
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.8
+                    }
+                }
+            },
+            "researcherConclusion": {
+                "_methodology": "Ground truth: The three bridge methods are thin delegators to CordovaBridge methods, each gated by verifySecret(bridgeSecret). exec() routes to PluginManager.exec which dispatches to plugins registered in config.xml — it does NOT call Runtime.exec, does NOT touch SQL, does NOT directly construct Intents or file paths in framework code, and does NOT use unbounded reflection. retrieveJsMessages() pops native-enqueued plugin responses; setNativeToJsBridgeMode() switches between POLL/ONLINE_EVENTS/EVAL message-delivery modes. The legitimate framework-level concerns are: exec is the central plugin-dispatch surface (impact bounded by registered plugins); reflection-based plugin instantiation is constrained to config.xml entries; bridge-secret protection MUST be acknowledged for any reachability claim. The largest collective failure across all inspectors is that NONE mentioned verifySecret/bridgeSecret — a substantive blind spot. Each auditor is judged on whether it correctly rewards/penalizes the inspectors' relative quality: gemma3 produced the most cautious and architecturally-grounded findings (partials, no fabrications), phi4 was the most conservative (3 findings, 2 partials, 1 invalid), qwen produced massive looping garbage (130+ findings, mostly fabricated and repeated), llama3.2 produced fabricated code snippets and self-contradicting findings, deepseek produced one closest-to-truth reflection finding amid several fabrications, and starcoder produced nothing. A good auditor should score gemma3 and phi4 highest, qwen and llama3.2 lowest, and starcoder zero-or-NA.",
+                "ollama/qwen2.5-coder:7b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 4,
+                    "effectChainAwareness": 4,
+                    "attackSurfaceCoverage": 0.4,
+                    "_rationale": "Poor discrimination. Gave itself 9/10 accuracy and 1.0 surface coverage despite producing 130+ findings dominated by fabricated SQL injection, fictitious Runtime.exec RCE, and a 125-times repeated loop. Awarded starcoder (empty findings) 1.0 surface coverage and 5/10 effect-chain — internally inconsistent (cannot score surface coverage on no findings). Did not detect any hallucinations from any inspector — zero hallucinationFrequency across the board, including on qwen's own looping output and llama's invented `messages.getDeviceId()` snippet. Nearly uniform 8-9/10 ratings function as no-signal."
+                },
+                "ollama/deepseek-r1:8b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 6,
+                    "effectChainAwareness": 5,
+                    "attackSurfaceCoverage": 0.5,
+                    "_rationale": "Mixed but more discriminative than qwen. Uses inconsistent key casing for qwen ('hallucination_frequency' snake_case vs camelCase elsewhere) — schema-discipline failure. Notably gave qwen 10/10 technical accuracy and 0.0 surface coverage simultaneously, which is incoherent given qwen's 130+ findings. However, it was the only auditor besides phi4 to flag non-zero hallucinationFrequency on multiple inspectors (deepseek-self 0.33, phi4 0.33, llama3.2 0.4) — that's correct discrimination, even if the magnitudes are imperfect. Notably FAILED to flag qwen's massive looping hallucination (0.0) and rated gemma3 highest (9/10), which matches ground truth. Self-rating of 7/10 with 0.33 hallucination is honest. Better-than-average auditor."
+                },
+                "ollama/starcoder2:7b": {
+                    "hallucinationFrequency": "n/a",
+                    "technicalAccuracy": "n/a",
+                    "effectChainAwareness": "n/a",
+                    "attackSurfaceCoverage": "n/a",
+                    "_rationale": "Auditor produced no scores — all six audit slots returned empty objects. Cannot be evaluated."
+                },
+                "ollama/phi4:14b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 7,
+                    "effectChainAwareness": 6,
+                    "attackSurfaceCoverage": 0.7,
+                    "_rationale": "Strong auditor. Used consistent camelCase keys. Flagged deepseek (0.2) and llama3.2 (0.25) for hallucinations — both correctly identified. However, gave qwen 0.0 hallucinationFrequency and 1.0 attackSurfaceCoverage despite qwen's looping fabrications — a significant miss on the worst-performing inspector. Gave gemma3 the highest scores (9/10 accuracy, 1.0 coverage), which matches ground-truth. Self-rated 0.0 hallucination with 0.67 coverage — defensible for phi4's modest output. The clearest pattern across all of phi4's audits is calibrated discrimination of hallucination on mid-tier inspectors, blind spot on the worst inspector (qwen)."
+                },
+                "ollama/llama3.2:3b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 4,
+                    "effectChainAwareness": 4,
+                    "attackSurfaceCoverage": 0.3,
+                    "_rationale": "Very poor discrimination. Gave near-identical 9/10 accuracy and 8/10 effect-chain to ALL six inspectors regardless of output quality — including starcoder (zero findings), itself (fabricated code snippets), and qwen (130+ looping fabrications). Only flagged itself as a hallucinator (0.3), inconsistent with the actual fabrications in its own findings. Gave deepseek 0.93 surface coverage and qwen only 0.5 — actually inverted relative to ground truth (qwen produced more findings, more invalid, but deepseek had the single closest-to-truth reflection finding). Mostly noise."
+                },
+                "ollama/gemma3:12b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 7,
+                    "effectChainAwareness": 6,
+                    "attackSurfaceCoverage": 0.7,
+                    "_rationale": "Best overall auditor for this case. Gave starcoder (empty) 10/10 technical accuracy with 0.0 coverage — same incoherent pattern that several auditors fell into (cannot score accuracy on absent findings), but partially explainable as 'no false claims = high accuracy'. Correctly identified deepseek as having higher hallucinationFrequency than others (0.2857, ~2/7 fabricated findings, close to ground truth's invalid count). Gave gemma3-self a calibrated 8/10 with 0.0 hallucinationFrequency — slightly optimistic since one finding was duplicative-invalid, but defensible. Tied with phi4 for best discrimination; differs in scoring starcoder (gemma3 awards 10/10 accuracy for empty findings while phi4 only gives 9/10 — both wrong, but neither penalizes hard). Did NOT catch qwen's massive looping hallucination, scoring qwen 8/10 with 1.0 coverage — same widespread blind spot as the other auditors."
+                }
+            }
+        }
+    ]
+}

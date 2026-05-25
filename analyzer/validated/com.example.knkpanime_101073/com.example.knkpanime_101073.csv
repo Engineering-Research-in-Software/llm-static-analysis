@@ -1,0 +1,479 @@
+"Callsite","Inspector","Finding","Verdict","JS Call Place","Android Context"
+"Intent-webview_new-78","ollama/qwen2.5-coder:7b","### Finding: Injection Vulnerability via _callHandler Method
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> _callHandler(String, String, String) -> [Java Sink]
+**Technical Description**: The `_callHandler` method in the `flutter_inappwebview` bridge interface takes three string parameters and directly uses them without any sanitization or validation. This can lead to injection vulnerabilities if an attacker is able to control these inputs. For example, if the third parameter is used in a SQL query, it could lead to SQL Injection.
+
+**Evidence**: 
+```java
+_callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/qwen2.5-coder:7b","### Finding: Potential Path Traversal via _callHandler Method
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> _callHandler(String, String, String) -> [Java Sink]
+**Technical Description**: The `_callHandler` method accepts a file path as one of its parameters. If this parameter is derived from user input and not properly validated or sanitized, it could lead to a Path Traversal vulnerability where an attacker might be able to access files outside the intended directory.
+
+**Evidence**: 
+```java
+_callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/qwen2.5-coder:7b","### Finding: Potential Intent Redirection via _hideContextMenu Method
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> prepare()V -> _hideContextMenu()V -> [Java Sink]
+**Technical Description**: The `_hideContextMenu` method is called from the `prepare` method, which suggests that it might be used to prepare context for further actions. If this method involves creating an intent or manipulating a UI component in such a way that it could redirect an attacker to another activity or open sensitive data, it could lead to Intent Redirection vulnerabilities.
+
+**Evidence**: 
+```java
+.method public prepare()V
+.hideContextMenu()V
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/qwen2.5-coder:7b","### Finding: No PII & Permission Leakage Identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided code does not appear to involve methods that return sensitive data such as `getDeviceId()`, `getAccounts()`, `getLocation()`, or `getSimSerialNumber()`.
+
+**Evidence**: No PII-related methods found.","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/qwen2.5-coder:7b","### Finding: Reachability & Attacker Control
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> _callHandler(String, String, String) -> [Java Sink]
+**Technical Description**: Both `_callHandler` and `_hideContextMenu` methods can be reached by attacker-controlled JavaScript if the bridge interface is properly exposed. The first method has three parameters that are directly controlled by JS input, while the second might indirectly be influenced depending on the context in which it is called.
+
+**Evidence**: 
+```java
+.method public prepare()V
+.hideContextMenu()V
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/qwen2.5-coder:7b","### Finding: Impact Chain & Privilege Escalation
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> _callHandler(String, String, String) -> [Java Sink]
+**Technical Description**: If an attacker is able to control the parameters passed to `_callHandler`, they could potentially execute arbitrary code or manipulate data in a way that escalates their privileges. For example, if the first parameter involves executing shell commands (though this is not shown), it could lead to Remote Code Execution (RCE). Additionally, if the second method involves manipulating intents or UI components, it could lead to privilege escalation by allowing an attacker to redirect to sensitive activities.
+
+**Evidence**: 
+```java
+_callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+.hideContextMenu()V
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/qwen2.5-coder:7b","### Finding: Protocol & Origin Security
+**Risk Level**: Medium
+**Data Flow Path**: N/A
+**Technical Description**: The provided code does not include any validation of the `message.origin` in event listeners, which could expose it to cross-site scripting (XSS) attacks if content is loaded over `http://`.
+
+**Evidence**: No origin validation found.","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/deepseek-r1:8b","### Finding: Potential SQL Injection via _callHandler
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [JavaScriptBridgeInterface] -> [Java Sink (SQL Query)]
+**Technical Description**: If the `_callHandler` method is used to execute SQL queries without proper sanitization of the `data` parameter, an attacker could inject malicious SQL code. The attacker-controlled `data` parameter could be used to manipulate the SQL query, leading to unauthorized data access or manipulation.
+**Evidence**: `_callHandler(""executeQuery"", ""UNION SELECT ..."", ...)`","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/deepseek-r1:8b","### Finding: Potential Path Traversal via _callHandler
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [JavaScriptBridgeInterface] -> [Java Sink (File Path)]
+**Technical Description**: If the `_callHandler` method is used to access files on the device and the `data` parameter is not properly sanitized, an attacker could use path traversal sequences (e.g., `../../`) to access restricted files or directories.
+**Evidence**: `_callHandler(""accessFile"", ""../../../../etc/passwd"", ...)`","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/deepseek-r1:8b","### Finding: Potential Intent Tampering via _callHandler
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [JavaScriptBridgeInterface] -> [Java Sink (Intent Creation)]
+**Technical Description**: If the `_callHandler` method is used to create or modify Intents with user-controlled data, an attacker could craft malicious Intents to redirect the app to unintended destinations or perform unauthorized actions.
+**Evidence**: `_callHandler(""startActivity"", ""malicious_intent_url"", ...)`","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/deepseek-r1:8b","### Finding: Potential Command Injection via _callHandler
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [JavaScriptBridgeInterface] -> [Java Sink (Runtime.exec)]
+**Technical Description**: If the `_callHandler` method is used to execute system commands via `Runtime.exec()` and the `data` parameter is not properly sanitized, an attacker could inject and execute arbitrary commands on the device.
+**Evidence**: `_callHandler(""executeCommand"", ""; rm -rf /"", ...)`","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/deepseek-r1:8b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/phi4:14b","### Finding: Potential Injection Vulnerabilities via `_callHandler`
+**Risk Level**: High
+**Data Flow Path**: [JavaScript] -> [`_callHandler`](Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) -> [Java Sinks]
+**Technical Description**: The `_callHandler` method accepts three string parameters from JavaScript, which could be used unsafely in Java operations such as SQL queries or file path manipulations, leading to vulnerabilities like SQL Injection or Path Traversal.
+**Evidence**: Method `_callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V`","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/phi4:14b","### Finding: Lack of Origin Validation
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> [WebView Message Listener] -> [Java Sinks]
+**Technical Description**: The absence of validation for `message.origin` in message listeners could allow messages from untrusted origins to be processed, potentially leading to cross-origin attacks.
+**Evidence**: Context implies no origin check; specific JavaScript event listener code not provided.","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/phi4:14b","### Finding: Potential Protocol Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: [Network] -> [WebView Content Loading]
+**Technical Description**: If content is loaded over HTTP instead of HTTPS, it could be intercepted or tampered with by attackers.
+**Evidence**: Context does not specify protocol used; specific network configuration code not provided.
+
+### Conclusion
+
+These findings highlight potential vulnerabilities and areas that require further investigation. Implementing proper input validation, origin checks, and secure protocols can mitigate these risks.","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/gemma3:12b","### Finding: Unvalidated JavaScript Bridge Call - Potential RCE via `_callHandler`
+**Risk Level**: Critical
+**Data Flow Path**: [JavaScript (attacker-controlled call to `_callHandler`)] -> [JavaScriptBridgeInterface._callHandler] -> [Potentially Arbitrary Java Code]
+**Technical Description**: The `_callHandler` method on the `JavaScriptBridgeInterface` is exposed and appears to accept three string arguments.  The method signature `void _callHandler(String, String, String)` suggests these strings are passed directly to some Java code without apparent validation.  An attacker controlling the JavaScript can craft malicious strings that, when passed to `_callHandler`, could lead to arbitrary code execution within the Java environment. The exact nature of the vulnerable Java code being called *by* `_callHandler` isn’t apparent from the provided snippet, but the lack of validation makes it a critical risk.  This is a direct bridge call, bypassing typical sanitization that might be present in other contexts.
+**Evidence**: `_callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` (Method signature indicates unvalidated String arguments)","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/gemma3:12b","### Finding: Context Menu Manipulation – Potential for XSS/UI Redefinition via `_hideContextMenu`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript (attacker-controlled call to `_hideContextMenu`)] -> [JavaScriptBridgeInterface._hideContextMenu] -> [WebView UI/State]
+**Technical Description**: The `_hideContextMenu` method is called within the `prepare()` method, implying it's tied to the WebView's context menu.  While hiding a context menu is seemingly benign, attacker-controlled JavaScript could exploit this. The attacker could trigger repeated calls to `_hideContextMenu` as a denial-of-service. While less direct, it's plausible that manipulating the context menu (or its state) through repeated calls could reveal internal WebView state or even contribute to a UI-based attack (e.g., tricking the user into performing unintended actions). This is particularly concerning if the context menu display or functionality isn't properly sanitized.
+**Evidence**: `_hideContextMenu()V` (Method callable from JS; Linked to `prepare()` method)","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/gemma3:12b","### Finding: Lack of Origin Validation – Potential for Cross-Site Scripting (XSS)
+**Risk Level**: Medium
+**Technical Description**: The provided snippets do not mention origin validation when handling messages passed through the bridge.  If the bridge is used to receive and process messages from arbitrary origins without validation, an attacker can craft malicious webpages on a different domain that can then inject JavaScript into the WebView, effectively performing XSS. The `_callHandler` method could become a vector for this, as it receives strings which might originate from untrusted sources if proper origin checks are missing.
+**Evidence**: Lack of mention of `message.origin` validation in provided snippets.","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/gemma3:12b","### Finding: Potential PII Exposure via Internal Java Methods (Unspecified)
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> [JavaScriptBridgeInterface._callHandler (potentially)] -> [Unspecified Java Methods (e.g., getDeviceId(), getAccounts())]
+**Technical Description**: While no specific Java methods are listed as being called by `_callHandler`, the possibility exists that those strings could be passed as parameters to methods that retrieve potentially sensitive data, such as device ID, accounts, location or SIM serial number. If `_callHandler` is used to dynamically trigger these data retrieval methods without proper sanitization or authorization checks, it could lead to unauthorized access and disclosure of PII.
+**Evidence**:  Interface description suggests `_callHandler` accepts arbitrary strings; Known methods like `getDeviceId()`, `getAccounts()`, `getLocation()`, `getSimSerialNumber()` are listed as potential PII sources.","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-78","ollama/gemma3:12b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The limited provided code snippet doesn't reveal the inner workings of the calls made within `_callHandler`. Without more context of how these string arguments are processed in the Java code, it's impossible to confirm specific vulnerabilities. Further investigation of the code surrounding `_callHandler` and its associated Java calls is necessary to definitively rule out malicious behavior.
+**Evidence**: N/A","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: .method public prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: SQL Injection Vulnerability
+**Risk Level**: Critical
+**Data Flow Path**: JavaScript -> `JavaScriptBridgeInterface`._callHandler(String, String, String)
+**Technical Description**: The method `_callHandler` takes three string parameters that are directly passed from JavaScript to Java without any sanitization or validation. This makes it vulnerable to SQL Injection attacks if an attacker can control these inputs.
+**Evidence**: 
+```java
+public void _callHandler(String handlerName, String methodName, String args) {
+    // No validation or sanitization of the inputs
+}
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: Path Traversal Vulnerability
+**Risk Level**: High
+**Data Flow Path**: JavaScript -> `JavaScriptBridgeInterface`._callHandler(String, String, String)
+**Technical Description**: Similar to the SQL Injection vulnerability, the method `_callHandler` accepts user-supplied input without proper validation. This could be used for Path Traversal attacks if an attacker can control the input, potentially leading to the leakage or modification of files on the device.
+**Evidence**: 
+```java
+public void _callHandler(String handlerName, String methodName, String args) {
+    // No validation or sanitization of the inputs
+}
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: Intent Redirection Vulnerability
+**Risk Level**: High
+**Data Flow Path**: JavaScript -> `JavaScriptBridgeInterface`._callHandler(String, String, String)
+**Technical Description**: The method `_callHandler` accepts user-supplied input without proper validation. This could be used to initiate intent redirection if an attacker can control the input, potentially leading to privilege escalation or other malicious actions.
+**Evidence**: 
+```java
+public void _callHandler(String handlerName, String methodName, String args) {
+    // No validation or sanitization of the inputs
+}
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: Runtime.exec() Vulnerability
+**Risk Level**: High
+**Data Flow Path**: JavaScript -> `JavaScriptBridgeInterface`._callHandler(String, String, String)
+**Technical Description**: The method `_callHandler` accepts user-supplied input without proper validation. This could be used to execute arbitrary commands on the device if an attacker can control the input, leading to Remote Code Execution (RCE).
+**Evidence**: 
+```java
+public void _callHandler(String handlerName, String methodName, String args) {
+    // No validation or sanitization of the inputs
+}
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: Reflection Vulnerability
+**Risk Level**: High
+**Data Flow Path**: JavaScript -> `JavaScriptBridgeInterface`._callHandler(String, String, String)
+**Technical Description**: The method `_callHandler` accepts user-supplied input without proper validation. This could be used to perform reflection-based attacks if an attacker can control the input, leading to arbitrary code execution.
+**Evidence**: 
+```java
+public void _callHandler(String handlerName, String methodName, String args) {
+    // No validation or sanitization of the inputs
+}
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: PII & Permission Leakage
+**Risk Level**: Medium
+**Data Flow Path**: JavaScript -> `JavaScriptBridgeInterface`._callHandler(String, String, String)
+**Technical Description**: The method `_callHandler` does not explicitly mention any operations that directly involve sensitive data like device ID, accounts, location, or SIM serial number. However, if the inputs to this method include such data and are used without proper sanitization, there could be a risk of leakage.
+**Evidence**: 
+```java
+public void _callHandler(String handlerName, String methodName, String args) {
+    // No validation or sanitization of the inputs
+}
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: Reachability & Attacker Control
+**Risk Level**: High
+**Data Flow Path**: JavaScript -> `JavaScriptBridgeInterface`._callHandler(String, String, String)
+**Technical Description**: The method `_callHandler` is exposed to any JavaScript code running in the WebView. If an attacker has control over the JavaScript environment, they can call this method with arbitrary input.
+**Evidence**: 
+```java
+public void _callHandler(String handlerName, String methodName, String args) {
+    // No validation or sanitization of the inputs
+}
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: Impact Chain & Privilege Escalation
+**Risk Level**: High
+**Data Flow Path**: JavaScript -> `JavaScriptBridgeInterface`._callHandler(String, String, String)
+**Technical Description**: Given the vulnerabilities identified above (SQL Injection, Path Traversal, Intent Redirection, Runtime.exec(), Reflection), an attacker could potentially chain these calls to escalate privileges or execute arbitrary code on the device.
+**Evidence**: 
+```java
+public void _callHandler(String handlerName, String methodName, String args) {
+    // No validation or sanitization of the inputs
+}
+```","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: Protocol & Origin Security
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided context does not include any information about how messages are received from JavaScript and processed in Java. However, if there is no validation of `message.origin` in event listeners, it could be vulnerable to Cross-Site Scripting (XSS) attacks.
+**Evidence**: 
+```java
+// No evidence of origin validation provided
+```","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: 
+```java
+// No evidence of vulnerabilities found
+```","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/deepseek-r1:8b","### Finding: SQL Injection via _callHandler
+**Risk Level**: High  
+**Data Flow Path**: [JavaScript] -> [Bridge] -> [Java Sink (if the Java method uses the first two arguments to build a SQL query without sanitization)]  
+**Technical Description**: If the `_callHandler` method is used to call a database query and the arguments are not properly sanitized, an attacker could inject SQL commands. This could lead to unauthorized data access, modification, or deletion.  
+**Evidence**: The `_callHandler` method is exposed and takes three strings. If the Java code uses these strings to build a SQL query, then without proper escaping, SQL Injection is possible.  
+
+---","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/deepseek-r1:8b","### Finding: Path Traversal via _callHandler
+**Risk Level**: High  
+**Data Flow Path**: [JavaScript] -> [Bridge] -> [Java Sink (if the Java method uses the first argument to build a file path without sanitization)]  
+**Technical Description**: If the `_callHandler` method is used to access files on the device and the first argument is used as part of the file path without sanitization, an attacker could traverse to sensitive files.  
+**Evidence**: The `_callHandler` method takes three strings. If the Java code uses these to construct a file path, then without proper validation, Path Traversal is possible.  
+
+---","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/deepseek-r1:8b","### Finding: RCE via _callHandler
+**Risk Level**: Critical  
+**Data Flow Path**: [JavaScript] -> [Bridge] -> [Java Sink (if the Java method uses the first two arguments to call Runtime.exec)]  
+**Technical Description**: If the `_callHandler` method is used to execute system commands, an attacker could inject arbitrary commands. This could lead to full system compromise.  
+**Evidence**: The `_callHandler` method takes three strings. If the Java code uses these to call `Runtime.exec`, then without proper sanitization, RCE is possible.  
+
+---","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/deepseek-r1:8b","### Finding: Intent Redirection via _callHandler
+**Risk Level**: High  
+**Data Flow Path**: [JavaScript] -> [Bridge] -> [Java Sink (if the Java method uses the first argument to set an intent action or data)]  
+**Technical Description**: If the `_callHandler` method is used to create and start an intent, an attacker could redirect the app to malicious activities.  
+**Evidence**: The `_callHandler` method takes three strings. If the Java code uses these to set intent data, then without proper validation, Intent Redirection is possible.  
+
+---","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/deepseek-r1:8b","### Finding: PII Exposure via _callHandler
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> [Bridge] -> [Java Sink (if the Java method returns sensitive information)]  
+**Technical Description**: If the `_callHandler` method is used to call a method that returns sensitive information (like device ID, location, etc.), then this information could be leaked to JavaScript.  
+**Evidence**: The `_callHandler` method is exposed. If the Java code calls a method like `getDeviceId()` or `getLocation()`, then without proper restrictions, PII could be exposed.  
+
+---","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/deepseek-r1:8b","### Finding: Origin Security Issue
+**Risk Level**: Medium  
+**Data Flow Path**: N/A  
+**Technical Description**: If the WebView does not validate the origin of JavaScript messages, an attacker might be able to inject malicious scripts from different origins.  
+**Evidence**: The provided context does not show the WebView configuration. We should check if the WebView is set to block third-party scripts and validate the origin of messages.  
+
+---","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/deepseek-r1:8b","### Finding: No vulnerabilities identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: No exploitable data flows found in the provided context.  
+**Evidence**: N/A","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/phi4:14b","### Finding: Insecure Data Handling in _callHandler
+**Risk Level**: High  
+**Data Flow Path**: [JavaScript Input] -> [_callHandler Method] -> [Java Sink]  
+**Technical Description**: The `_callHandler` method accepts three strings from JavaScript, which may be controlled by an attacker. If these inputs are used unsanitized with Java methods that perform dangerous operations (e.g., SQL execution, file manipulation), it could lead to serious vulnerabilities such as SQL Injection or RCE.  
+**Evidence**: ""_callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V""","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/phi4:14b","### Finding: Potential PII Exposure
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript Input] -> [_callHandler Method] -> [Sensitive Java Methods like getDeviceId()]  
+**Technical Description**: If the `_callHandler` method invokes sensitive methods such as `getDeviceId()` without proper validation or restrictions, it could lead to leakage of personally identifiable information.  
+**Evidence**: ""_callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V""","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/phi4:14b","### Finding: Lack of Origin Validation in JavaScript
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript Event Listener] -> [_callHandler Method]  
+**Technical Description**: If the application does not validate `message.origin` in JavaScript event listeners, it might be susceptible to XSS or unauthorized access from different origins.  
+**Evidence**: JavaScript code handling message events without origin checks","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/phi4:14b","### Finding: Insecure Content Loading
+**Risk Level**: Medium  
+**Data Flow Path**: [WebView Content] -> [_callHandler Method]  
+**Technical Description**: Loading content over `http://` without proper security checks can expose the application to man-in-the-middle attacks. Ensure all resources are loaded securely and validate origins.  
+**Evidence**: JavaScript or WebView settings loading content over HTTP","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/phi4:14b","### Finding: No vulnerabilities identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: If no exploitable data flows or insecure methods are found after a thorough review, then there may be minimal risk associated with the bridge callsite.  
+**Evidence**: N/A
+
+These findings highlight potential security issues based on the provided context and criteria. Further investigation into the actual implementation of these methods is recommended to confirm vulnerabilities.","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/llama3.2:3b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/gemma3:12b","### Finding: Arbitrary Code Execution via _callHandler
+**Risk Level**: Critical
+**Data Flow Path**: [JavaScript: `window.flutterInAppWebView.callHandler.call(method, arg1, arg2)`] -> [JavaScriptBridgeInterface::_callHandler(String, String, String)] -> [Likely native code invoked by _callHandler (unspecified)]
+**Technical Description**: The `_callHandler` method allows JavaScript code to invoke a native Java method by passing a method name and arguments as strings. While the exact native code invoked isn’t visible from the provided context, this presents a high risk of Remote Code Execution (RCE). An attacker could potentially craft a malicious method name and arguments that, when executed on the Java side, would execute arbitrary code on the device. The lack of input sanitization in the JavaScript and potentially the Java side (based on the lack of visibility) exacerbates this risk.  Depending on the implementation in the native code, an attacker could gain full control of the application’s process.
+**Evidence**: `window.flutterInAppWebView.callHandler.call(method, arg1, arg2)`","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/gemma3:12b","### Finding: Potential Context Menu Manipulation (Limited Scope)
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript: `window.flutterInAppWebView.callHandler._hideContextMenu()`] -> [JavaScriptBridgeInterface::_hideContextMenu()] -> [WebView Preparation (unspecified, potentially influencing UI behavior)]
+**Technical Description**:  The `_hideContextMenu` method is exposed and seemingly linked to `prepare()` internally.  While hiding the context menu itself doesn't directly lead to data leakage or RCE, it could be part of a larger attack chain.  An attacker could use this method to remove protections or subtly manipulate the user experience, potentially creating a path for other attacks. The impact depends heavily on what the `prepare()` method does and what else is tied to the context menu.
+**Evidence**: `window.flutterInAppWebView.callHandler._hideContextMenu()`","INVALID","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/gemma3:12b","### Finding: No PII Leakage Detected (Based on Provided Snippet)
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided snippets do not directly expose calls to methods that retrieve Personal Identifiable Information (PII) like device ID, account information, location, or SIM serial number. It’s important to note that this analysis is limited to the visible bridge interface and snippets. Other parts of the application might expose such sensitive information.
+**Evidence**: N/A","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/gemma3:12b","### Finding: No Origin Validation Observed
+**Risk Level**: Medium
+**Technical Description**: There’s no indication of origin validation within the provided bridge interface. This means that if this WebView is intended to receive messages from external sources, a malicious website could potentially spoof the origin and inject malicious JavaScript or data, leading to cross-site scripting (XSS) or other attacks.  This would be a significant concern if the WebView loads content from untrusted origins.
+**Evidence**: N/A (No validation shown in the snippet)","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"
+"Intent-webview_new-79","ollama/gemma3:12b","### Finding: No Obvious Data Flow to SQL Queries/File Paths/Intent Creation/Reflection
+**Risk Level**: Low
+**Technical Description**: The methods exposed do not directly appear to map to sinks associated with SQL queries, file path manipulation, intent creation, or reflection.  However, the `_callHandler` method's flexibility means that the native code it invokes *could* potentially perform these actions.
+**Evidence**: N/A (No direct call observed in the presented methods)","PARTIAL","","Interface 'flutter_inappwebview' (Lcom/pichillilorenzo/flutter_inappwebview_android/webview/JavaScriptBridgeInterface;) exposes: [METHOD 1] _callHandler(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void _callHandler(String, String, String)
+[METHOD 2] _hideContextMenu()V
+  Readable: void _hideContextMenu() | initiating method: prepare()V"

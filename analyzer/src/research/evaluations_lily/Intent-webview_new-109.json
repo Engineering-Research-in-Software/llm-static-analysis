@@ -1,0 +1,357 @@
+{
+  "identifiedCallsiteID": "Intent-webview_new-109",
+  "context": "APP: com.github.samotari.paynoway_20100\n\nBRIDGE:\nInterface 'cordova_iab' (Lorg/apache/cordova/inappbrowser/InAppBrowser$7$1JsObject;) exposes: [METHOD 1] postMessage(Ljava/lang/String;)V\n  Readable: void postMessage(String) | initiating method: run()V\n\nJS SNIPPETS:\n",
+  "permutations": [
+    {
+      "researcher": 0,
+      "inspectors": [
+        "ollama/qwen2.5-coder:7b",
+        "ollama/deepseek-r1:8b",
+        "ollama/starcoder2:7b",
+        "ollama/phi4:14b",
+        "ollama/llama3.2:3b",
+        "ollama/gemma3:12b"
+      ],
+      "auditors": [
+        "ollama/qwen2.5-coder:7b",
+        "ollama/deepseek-r1:8b",
+        "ollama/starcoder2:7b",
+        "ollama/phi4:14b",
+        "ollama/llama3.2:3b",
+        "ollama/gemma3:12b"
+      ],
+      "results": [
+        {
+          "inspector": "ollama/qwen2.5-coder:7b",
+          "findings": [
+            "[PARTIAL] ### Finding: Lack of Message Origin Validation\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: The `postMessage` method in the JavaScript snippet does not validate the origin of the message before processing it. This can lead to Cross-Site Scripting (XSS) attacks where an attacker can inject malicious messages into the application.\n**Evidence**: \n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No validation of message.origin\n    cordova_iab.postMessage('message');\n}\n```",
+            "[INVALID] ### Finding: Potential Path Traversal via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: The `postMessage` method in the Java side accepts a `String` parameter. If this string is not properly sanitized before being used, it could potentially lead to Path Traversal attacks if it is used to construct file paths.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential Path Traversal vulnerability\n    File file = new File(\"/path/to/\" + message);\n}\n```",
+            "[INVALID] ### Finding: Lack of Sensitive Data Handling in JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The JavaScript snippets do not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    cordova_iab.postMessage('sensitiveData');\n}\n```",
+            "[INVALID] ### Finding: Potential Intent Redirection via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: The `postMessage` method in the Java side could be used to construct and send intents, potentially leading to Intent Redirection attacks if the message is not properly validated.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential Intent Redirection vulnerability\n    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(message));\n    startActivity(intent);\n}\n```",
+            "[INVALID] ### Finding: Lack of Protocol Validation for Content Loading\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method in the Java side does not validate the protocol used to load content. If an attacker can inject a URL with a different protocol (e.g., `http://`), it could lead to security vulnerabilities such as Mixed Content or Cross-Site Scripting.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Lack of protocol validation\n    WebSettings webSettings = webView.getSettings();\n    webSettings.setJavaScriptEnabled(true);\n}\n```",
+            "[PARTIAL] ### Finding: Reachability by Attacker-Controlled JavaScript\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method is reachable by attacker-controlled JavaScript, and it accepts arbitrary input. This means that an attacker could use this method to call the Java sink with malicious data.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // Arbitrary input from JavaScript\n    cordova_iab.postMessage(userInput);\n}\n```",
+            "[INVALID] ### Finding: Impact Chain & Privilege Escalation Potential\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If an attacker can inject malicious data into the `postMessage` method, it could lead to various vulnerabilities such as SQL Injection, File Paths, Intent Creation, Runtime.exec(), or Reflection. These vulnerabilities could be chained together to escalate privileges within the application.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential for chaining vulnerabilities\n    if (message.equals(\"malicious\")) {\n        // Code that performs sensitive operations\n    }\n}\n```",
+            "[INVALID] ### Finding: Protocol & Origin Security Issue\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method in the Java side does not validate the origin of the message. This could lead to Cross-Site Scripting (XSS) attacks where an attacker can inject malicious messages into the application.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Lack of message.origin validation\n    webView.evaluateJavascript(\"javascript:postMessage('\" + message + \"')\");\n}\n```",
+            "[INVALID] ### Finding: Potential SQL Injection via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used in an SQL query without proper sanitization, it could lead to SQL Injection attacks.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential SQL Injection vulnerability\n    String sql = \"SELECT * FROM users WHERE username = '\" + message + \"'\";\n}\n```",
+            "[INVALID] ### Finding: Potential RCE via Java Sink\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used in a way that allows execution of arbitrary code, it could lead to Remote Code Execution (RCE).\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential RCE vulnerability\n    Runtime.getRuntime().exec(message);\n}\n```",
+            "[INVALID] ### Finding: Potential Reflection Vulnerability via Java Sink\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to invoke methods using reflection, it could lead to Reflection vulnerabilities.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential Reflection vulnerability\n    Class<?> clazz = Class.forName(message);\n    Method method = clazz.getMethod(\"someMethod\");\n    method.invoke(clazz.newInstance());\n}\n```",
+            "[INVALID] ### Finding: Potential File I/O Operations via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to construct file paths for input/output operations, it could lead to File I/O vulnerabilities.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential File I/O vulnerability\n    File file = new File(message);\n    BufferedReader reader = new BufferedReader(new FileReader(file));\n}\n```",
+            "[INVALID] ### Finding: Potential Network Communication Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to construct network URLs, it could lead to Network Communication vulnerabilities.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential Network Communication vulnerability\n    URL url = new URL(message);\n    HttpURLConnection connection = (HttpURLConnection) url.openConnection();\n}\n```",
+            "[INVALID] ### Finding: Potential Local Storage Usage in JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    localStorage.setItem('sensitiveData', 'data');\n}\n```",
+            "[INVALID] ### Finding: Potential External Data Transmission in JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    fetch('https://example.com/data', {\n        method: 'POST',\n        body: JSON.stringify({ sensitiveData: 'data' })\n    });\n}\n```",
+            "[INVALID] ### Finding: Potential Data Exposure via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to construct data that is then transmitted or stored, it could lead to data exposure vulnerabilities.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data exposure vulnerability\n    Log.d(\"SensitiveData\", message);\n}\n```",
+            "[INVALID] ### Finding: Potential Data Modification via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to modify data in a way that could lead to unexpected behavior, it could be vulnerable to data modification vulnerabilities.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data modification vulnerability\n    String modifiedData = message.replace(\"old\", \"new\");\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption/Decryption Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to encrypt or decrypt data, it could lead to vulnerabilities if the encryption/decryption process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data encryption/decryption vulnerability\n    Cipher cipher = Cipher.getInstance(\"AES\");\n    byte[] encryptedData = cipher.doFinal(message.getBytes());\n}\n```",
+            "[INVALID] ### Finding: Potential Data Compression/Decompression Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to compress or decompress data, it could lead to vulnerabilities if the compression/decompression process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data compression/decompression vulnerability\n    GZIPInputStream gzipIn = new GZIPInputStream(new ByteArrayInputStream(message.getBytes()));\n}\n```",
+            "[INVALID] ### Finding: Potential Data Serialization/Deserialization Vulnerability via Java Sink\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to serialize or deserialize data, it could lead to vulnerabilities if the serialization/deserialization process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data serialization/deserialization vulnerability\n    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(message.getBytes()));\n    Object obj = ois.readObject();\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Management Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to manage encryption keys, it could lead to vulnerabilities if the key management process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data encryption key management vulnerability\n    SecretKeySpec secretKey = new SecretKeySpec(message.getBytes(), \"AES\");\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Verification Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to verify signatures, it could lead to vulnerabilities if the signature verification process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data signature verification vulnerability\n    Signature sig = Signature.getInstance(\"SHA256withRSA\");\n    sig.initVerify(publicKey);\n    sig.update(message.getBytes());\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to perform integrity checks, it could lead to vulnerabilities if the integrity check process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data integrity check vulnerability\n    MessageDigest md = MessageDigest.getInstance(\"SHA-256\");\n    byte[] hash = md.digest(message.getBytes());\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Vulnerability via Java Sink\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to control access to sensitive data, it could lead to vulnerabilities if the access control process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data access control vulnerability\n    if (message.equals(\"admin\")) {\n        // Access to sensitive data\n    }\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Algorithm Selection Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to select encryption algorithms, it could lead to vulnerabilities if the algorithm selection process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data encryption algorithm selection vulnerability\n    Cipher cipher = Cipher.getInstance(message);\n}\n```",
+            "[INVALID] ### Finding: Potential Data Compression Algorithm Selection Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to select compression algorithms, it could lead to vulnerabilities if the algorithm selection process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data compression algorithm selection vulnerability\n    GZIPOutputStream gzipOut = new GZIPOutputStream(new FileOutputStream(message));\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Generation Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to generate encryption keys, it could lead to vulnerabilities if the key generation process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data encryption key generation vulnerability\n    KeyPairGenerator keyGen = KeyPairGenerator.getInstance(\"RSA\");\n    keyGen.initialize(2048);\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Generation Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to generate signatures, it could lead to vulnerabilities if the signature generation process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data signature generation vulnerability\n    Signature sig = Signature.getInstance(\"SHA256withRSA\");\n    sig.initSign(privateKey);\n    sig.update(message.getBytes());\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Algorithm Selection Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to select integrity check algorithms, it could lead to vulnerabilities if the algorithm selection process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data integrity check algorithm selection vulnerability\n    MessageDigest md = MessageDigest.getInstance(message);\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Algorithm Selection Vulnerability via Java Sink\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to select access control algorithms, it could lead to vulnerabilities if the algorithm selection process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data access control algorithm selection vulnerability\n    AccessControlContext acc = AccessController.getContext();\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Storage Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to store encryption keys, it could lead to vulnerabilities if the key storage process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data encryption key storage vulnerability\n    KeyStore ks = KeyStore.getInstance(\"JKS\");\n    ks.load(new FileInputStream(message), \"password\".toCharArray());\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Storage Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to store signatures, it could lead to vulnerabilities if the signature storage process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data signature storage vulnerability\n    Signature sig = Signature.getInstance(\"SHA256withRSA\");\n    sig.initSign(privateKey);\n    sig.update(message.getBytes());\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Storage Vulnerability via Java Sink\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to store integrity checks, it could lead to vulnerabilities if the storage process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data integrity check storage vulnerability\n    MessageDigest md = MessageDigest.getInstance(\"SHA-256\");\n    byte[] hash = md.digest(message.getBytes());\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Storage Vulnerability via Java Sink\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method) -> Java Sink (run() method)\n**Technical Description**: If the `message` parameter is used to store access control information, it could lead to vulnerabilities if the storage process is not properly implemented.\n**Evidence**:\n```java\n// Java Side\npublic void postMessage(String message) {\n    // Potential data access control storage vulnerability\n    AccessControlContext acc = AccessController.getContext();\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    sendEncryptedData('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    sendSignedData('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    sendIntegrityCheck('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    sendAccessControlInfo('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    sendEncryptedKey('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    sendSignature('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    sendIntegrityCheck('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    sendAccessControlInfo('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Storage Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    storeEncryptedKey('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Storage Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    storeSignature('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Storage Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    storeIntegrityCheck('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Storage Vulnerability via JavaScript Snippets\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    storeAccessControlInfo('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    distributeEncryptedKey('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    distributeSignature('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    distributeIntegrityCheck('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    distributeAccessControlInfo('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    transmitEncryptedKey('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    transmitSignature('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    transmitIntegrityCheck('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    transmitAccessControlInfo('data');\n}\n```",
+            "[INVALID] [prior 12 findings repeated 22 times]",
+            "[INVALID] ### Finding: Potential Data Encryption Key Storage Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    storeEncryptedKey('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Storage Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    storeSignature('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Storage Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    storeIntegrityCheck('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Storage Vulnerability via JavaScript Snippets\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    storeAccessControlInfo('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    distributeEncryptedKey('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    distributeSignature('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    distributeIntegrityCheck('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Distribution Vulnerability via JavaScript Snippets\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    distributeAccessControlInfo('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Encryption Key Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    transmitEncryptedKey('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Signature Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    transmitSignature('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Integrity Check Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: Medium\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical Description**: The `postMessage` method does not handle sensitive data such as device ID, accounts, location, or SIM serial number. If this data is being passed to the Java side through `postMessage`, it could be vulnerable to interception and misuse.\n**Evidence**:\n```javascript\n// JavaScript Snippet\nfunction run() {\n    // No handling of sensitive data\n    transmitIntegrityCheck('data');\n}\n```",
+            "[INVALID] ### Finding: Potential Data Access Control Transmission Vulnerability via JavaScript Snippets\n**Risk Level**: High\n**Data Flow Path**: JavaScript Snippets -> Bridge Object (postMessage method)\n**Technical"
+          ]
+        },
+        {
+          "inspector": "ollama/deepseek-r1:8b",
+          "findings": [
+            "[VALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: The analysis of the provided context reveals no exploitable data flows, sensitive data exposure, insecure communication patterns, or potential for privilege escalation. The exposed method `postMessage` lacks any direct interaction with dangerous sinks (e.g., SQL queries, file paths, intents, or system commands). There are no indications of PII leakage, insecure protocol usage, or attacker-controlled input leading to critical vulnerabilities.  \n**Evidence**: N/A"
+          ]
+        },
+        {
+          "inspector": "ollama/starcoder2:7b",
+          "findings": []
+        },
+        {
+          "inspector": "ollama/phi4:14b",
+          "findings": [
+            "[VALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: This section is reserved in case no exploitable paths or issues are found upon deeper inspection.\n**Evidence**: N/A\n\nThis report outlines the potential security vulnerabilities based on the provided context and should guide further detailed code review and testing."
+          ]
+        },
+        {
+          "inspector": "ollama/llama3.2:3b",
+          "findings": [
+            "[PARTIAL] ### Finding: PostMessage Vulnerability\n**Risk Level**: Critical\n**Data Flow Path**: [JS Source] -> postMessage method on InAppBrowser object -> run() method\n**Technical Description**: The postMessage method allows an attacker to send malicious messages, which can be executed by the JavaScript engine. An attacker can exploit this vulnerability by sending a message with arbitrary input to the run() method.\n**Evidence**: `postMessage(String message)`",
+            "[INVALID] ### Finding: SQL Injection Vulnerability\n**Risk Level**: Critical\n**Data Flow Path**: [JS Source] -> postMessage method on InAppBrowser object -> method that performs SQL query\n**Technical Description**: An attacker can inject malicious SQL queries by sending a message with an SQL injection payload to the postMessage method. This can lead to unauthorized data access or modification.\n**Evidence**: `postMessage(String sqlQuery)`",
+            "[INVALID] ### Finding: Path Traversal Vulnerability\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> postMessage method on InAppBrowser object -> method that loads file path\n**Technical Description**: An attacker can exploit this vulnerability by sending a message with an arbitrary file path, which can lead to unauthorized access to sensitive files.\n**Evidence**: `postMessage(String filePath)`",
+            "[INVALID] ### Finding: Intent Redirection Vulnerability\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> postMessage method on InAppBrowser object -> method that creates intent\n**Technical Description**: An attacker can redirect the user's intent to a malicious URL by sending a message with an arbitrary intent URI.\n**Evidence**: `postMessage(String intentURI)`",
+            "[VALID] ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows found in the provided context.\n**Evidence**: N/A"
+          ]
+        },
+        {
+          "inspector": "ollama/gemma3:12b",
+          "findings": [
+            "[INVALID] ### Finding: Arbitrary JavaScript Execution via `postMessage`\n**Risk Level**: Critical\n**Data Flow Path**: [JavaScript] -> [cordova_iab.postMessage] -> [Java - potentially InAppBrowser implementation]\n**Technical Description**: The `postMessage` method on the `cordova_iab` bridge interface allows arbitrary strings to be sent from JavaScript to the Java side. Without proper sanitization or validation on the Java side, this could potentially be exploited to trigger unintended behavior or even arbitrary code execution.  The specifics of how this `postMessage` is handled within the `InAppBrowser` implementation within the `com.github.samotari.paynoway_20100` application is not provided.  However, if the receiving Java code processes the `postMessage` data unsafely, vulnerabilities such as arbitrary code execution or XSS are possible. If, for example, the received string is used to construct a command line string or database query without proper escaping, it could lead to RCE or SQL injection respectively.\n**Evidence**: `cordova_iab.postMessage(Ljava/lang/String;)V` - JavaScript method call exposes the ability to send arbitrary strings."
+          ]
+        }
+      ],
+      "audits": {
+        "ollama/qwen2.5-coder:7b": {
+          "ollama/qwen2.5-coder:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 10,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 10,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 8,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 1.0
+          }
+        },
+        "ollama/deepseek-r1:8b": {
+          "ollama/qwen2.5-coder:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 1
+          },
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 6,
+            "effectChainAwareness": 5,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 3,
+            "effectChainAwareness": 2,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 4,
+            "effectChainAwareness": 3,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 0.8,
+            "technicalAccuracy": 6,
+            "effectChainAwareness": 4,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 6,
+            "attackSurfaceCoverage": 1.0
+          }
+        },
+        "ollama/starcoder2:7b": {
+          "ollama/qwen2.5-coder:7b": {},
+          "ollama/deepseek-r1:8b": {},
+          "ollama/starcoder2:7b": {},
+          "ollama/phi4:14b": {},
+          "ollama/llama3.2:3b": {},
+          "ollama/gemma3:12b": {}
+        },
+        "ollama/phi4:14b": {
+          "ollama/qwen2.5-coder:7b": {},
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 9,
+            "effectChainAwareness": 8,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 1,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 10,
+            "effectChainAwareness": 10,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 1.0,
+            "technicalAccuracy": 2,
+            "effectChainAwareness": 0,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 9,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 1.0
+          }
+        },
+        "ollama/llama3.2:3b": {
+          "ollama/qwen2.5-coder:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 9,
+            "effectChainAwareness": 8,
+            "attackSurfaceCoverage": 0.5
+          },
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 6,
+            "attackSurfaceCoverage": 0.5
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 6,
+            "attackSurfaceCoverage": 0.67
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 9,
+            "attackSurfaceCoverage": 0.5
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 6,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 0.8
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 9,
+            "attackSurfaceCoverage": 0.5
+          }
+        },
+        "ollama/gemma3:12b": {
+          "ollama/qwen2.5-coder:7b": {},
+          "ollama/deepseek-r1:8b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 3,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/starcoder2:7b": {
+            "hallucinationFrequency": 1.0,
+            "technicalAccuracy": 1,
+            "effectChainAwareness": 1,
+            "attackSurfaceCoverage": 0.0
+          },
+          "ollama/phi4:14b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 5,
+            "attackSurfaceCoverage": 1.0
+          },
+          "ollama/llama3.2:3b": {
+            "hallucinationFrequency": 0.4,
+            "technicalAccuracy": 6,
+            "effectChainAwareness": 5,
+            "attackSurfaceCoverage": 0.6
+          },
+          "ollama/gemma3:12b": {
+            "hallucinationFrequency": 0.0,
+            "technicalAccuracy": 8,
+            "effectChainAwareness": 7,
+            "attackSurfaceCoverage": 1.0
+          }
+        }
+      },
+      "researcherConclusion": {
+        "ollama/qwen2.5-coder:7b": {
+          "hallucinationFrequency": 1.0,
+          "technicalAccuracy": 1.1,
+          "effectChainAwareness": 3,
+          "attackSurfaceCoverage": 1.0
+        },
+        "ollama/deepseek-r1:8b": {
+          "hallucinationFrequency": 0.0,
+          "technicalAccuracy": 10.0,
+          "effectChainAwareness": 4,
+          "attackSurfaceCoverage": 0.0
+        },
+        "ollama/starcoder2:7b": {
+          "hallucinationFrequency": 0.0,
+          "technicalAccuracy": 0,
+          "effectChainAwareness": 0,
+          "attackSurfaceCoverage": 0.0
+        },
+        "ollama/phi4:14b": {
+          "hallucinationFrequency": 0.0,
+          "technicalAccuracy": 10.0,
+          "effectChainAwareness": 2,
+          "attackSurfaceCoverage": 0.0
+        },
+        "ollama/llama3.2:3b": {
+          "hallucinationFrequency": 0.05,
+          "technicalAccuracy": 3.6,
+          "effectChainAwareness": 3,
+          "attackSurfaceCoverage": 1.0
+        },
+        "ollama/gemma3:12b": {
+          "hallucinationFrequency": 0.02,
+          "technicalAccuracy": 1.0,
+          "effectChainAwareness": 6,
+          "attackSurfaceCoverage": 1.0
+        }
+      }
+    }
+  ]
+}

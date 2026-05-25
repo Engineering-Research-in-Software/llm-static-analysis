@@ -1,0 +1,1541 @@
+"Callsite","Inspector","Finding","Verdict","JS Call Place","Android Context"
+"Intent-webview_new-87","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified  
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: No exploitable data flows found in the provided context.  
+**Evidence**: N/A  
+
+The bridge interface methods exposed by `SnapdropAndroid` do not appear to be directly vulnerable based on the provided information. Here’s a breakdown of why:
+
+1. **Data Flow & Sink Analysis**:
+   - None of the methods involve SQL queries, file paths, intent creation, or methods that could lead to remote code execution (RCE).
+   
+2. **PII & Permission Leakage**:
+   - The interface does not include methods that return sensitive data like `getDeviceId()`, `getAccounts()`, `getLocation()`, or `getSimSerialNumber`.
+
+3. **Reachability & Attacker Control**:
+   - All methods are exposed via a WebView bridge, which can be reached by attacker-controlled JavaScript if the origin of the JS is not properly validated.
+   
+4. **Impact Chain & Privilege Escalation**:
+   - Individual method calls do not seem to escalate privileges or lead to severe outcomes on their own.
+
+5. **Protocol & Origin Security**:
+   - If the WebView does not validate the `message.origin` of events, there could be a risk of Cross-Site Scripting (XSS) if attacker-controlled JavaScript is loaded.
+
+However, it's crucial to note that while this assessment indicates no immediate vulnerabilities based on the provided context, the lack of origin validation in the WebView setup can pose a risk. It is highly recommended to ensure proper origin validation to mitigate potential XSS attacks.","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/deepseek-r1:8b","### Finding: Clipboard Access with Sensitive Data
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> [SnapdropAndroid.copyToClipboard] -> [Clipboard]  
+**Technical Description**: The `copyToClipboard` method allows JavaScript to copy arbitrary strings to the clipboard. If an attacker can control the input, they can exfiltrate sensitive data (e.g., copied credentials or tokens) by copying it to the clipboard and reading it elsewhere. This is especially dangerous if the app handles sensitive data.  
+**Evidence**: `copyToClipboard(""attacker-controlled-string"");`
+
+---","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/deepseek-r1:8b","### Finding: File Creation with Path Traversal Risk
+**Risk Level**: High  
+**Data Flow Path**: [JavaScript] -> [SnapdropAndroid.newFile] -> [File System]  
+**Technical Description**: The `newFile` method creates a new file with three parameters. If any of these parameters (especially the file path) is attacker-controlled and not properly sanitized, it could enable path traversal attacks (e.g., `../../`). This allows attackers to overwrite critical files or write files to restricted directories, leading to arbitrary file write or data leakage.  
+**Evidence**: `newFile(""fileContent"", ""fileName"", ""attacker-controlled-path"");`
+
+---","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/deepseek-r1:8b","### Finding: Unsanitized Data in File Operations
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> [SnapdropAndroid.saveDownloadFileName] -> [File System]  
+**Technical Description**: The `saveDownloadFileName` method saves a file with two parameters (likely file name and path). If the file name or path is attacker-controlled, it could lead to path traversal or overwrite sensitive system files. This method lacks input validation, amplifying the risk.  
+**Evidence**: `saveDownloadFileName(""fileName"", ""attacker-controlled-path"");`
+
+---","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/deepseek-r1:8b","### Finding: Potential Intent Manipulation
+**Risk Level**: Medium  
+**Data Flow Path**: [JavaScript] -> [SnapdropAndroid.newFile] -> [Intent?] and [JavaScript] -> [SnapdropAndroid.saveDownloadFileName] -> [Intent?]  
+**Technical Description**: While not explicitly confirmed, methods like `newFile` and `saveDownloadFileName` may interact with Android Intents (e.g., file sharing). If attacker-controlled data is passed to these methods, it could redirect Intents to malicious receivers (e.g., via `Intent.ACTION_SEND`) or inject arbitrary data into shared content, enabling intent-based attacks.  
+**Evidence**: `newFile(""fileContent"", ""fileName"", ""malicious-file-path"");`
+
+---","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/deepseek-r1:8b","### Finding: Exposed Methods Enable Cross-Domain Attacks
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: The bridge exposes methods like `vibrate`, `dialogShown`, and `dialogHidden`, which could be manipulated by cross-domain scripts if the WebView allows it. While not inherently dangerous, this violates the same-origin policy if the WebView configuration permits cross-origin calls, enabling basic UI manipulation.  
+**Evidence**: N/A (methods are low-risk but expose the app to cross-domain abuse if misconfigured).
+
+---","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/deepseek-r1:8b","### Finding: No Vulnerabilities Identified
+**Risk Level**: Low  
+**Data Flow Path**: N/A  
+**Technical Description**: No exploitable data flows (e.g., SQL injection, RCE, path traversal) were found in the provided methods. The identified risks (clipboard, file operations, intents) are mitigated by proper sanitization or configuration in the actual app.  
+**Evidence**: N/A","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/phi4:14b","### Finding: Clipboard Injection Vulnerability
+**Risk Level**: Medium  
+**Data Flow Path**: JavaScript calls `copyToClipboard()` -> Java method `copyToClipboard`  
+**Technical Description**: An attacker can inject malicious content into the clipboard by controlling input to this method.  
+**Evidence**: Method name `copyToClipboard`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/phi4:14b","### Finding: File Path Traversal Vulnerability
+**Risk Level**: High  
+**Data Flow Path**: JavaScript calls `newFile()` -> Java method `newFile`  
+**Technical Description**: The method can be exploited for file path traversal if input is not sanitized, allowing access or modification of files outside the intended directory.  
+**Evidence**: Method name `newFile`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/phi4:14b","### Finding: PII Leakage via Upload Intent
+**Risk Level**: Medium  
+**Data Flow Path**: JavaScript calls `getTextFromUploadIntent()` -> Java method `getTextFromUploadIntent`  
+**Technical Description**: Sensitive data from an upload intent could be returned and misused if not properly handled.  
+**Evidence**: Method name `getTextFromUploadIntent`
+
+These findings highlight the importance of input validation, proper origin checks, and careful handling of sensitive data to mitigate potential security risks in Android WebView bridge callsites.","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/llama3.2:3b","### Finding: Potential SQL Injection Vulnerability - copyToClipboard(String)
+**Risk Level**: Critical
+**Data Flow Path**: [JS Source] -> SnapdropAndroid.copyToClipboard(String) -> File I/O Operations (Java)
+**Technical Description**: The `copyToClipboard` method takes a user-inputted string as an argument, which is not sanitized or validated. An attacker could potentially inject malicious SQL code by crafting a carefully designed input string.
+**Evidence**: `SnapdropAndroid.copyToClipboard(""SELECT * FROM users;"")`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/llama3.2:3b","### Finding: Potential Path Traversal Vulnerability - newFile(String, String, String)
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> SnapdropAndroid.newFile(String, String, String) -> File System Operations (Java)
+**Technical Description**: The `newFile` method takes three arguments, including a potentially user-controlled filename. An attacker could exploit this by providing a specially crafted filename that traverses the file system.
+**Evidence**: `SnapdropAndroid.newFile(""/etc/passwd"", ""temp.txt"", ""Hello World!"")`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/llama3.2:3b","### Finding: Potential Intent Redirection Vulnerability - onBytes(String)
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> SnapdropAndroid.onBytes(String) -> Intent Creation (Java)
+**Technical Description**: The `onBytes` method takes a user-inputted string as an argument, which is not validated or sanitized. An attacker could potentially inject malicious intent data by crafting a carefully designed input string.
+**Evidence**: `SnapdropAndroid.onBytes(""Intent.createAction('android.intent.action.VIEW')"")`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/llama3.2:3b","### Finding: Potential PII Leakage - getDeviceId()
+**Risk Level**: Low
+**Data Flow Path**: [JS Source] -> SnapdropAndroid.getDeviceId() -> Device Information (Java)
+**Technical Description**: The `getDeviceId` method returns the device ID, which may contain sensitive information. This data is not explicitly marked as PII, but it could potentially be used in a phishing attack.
+**Evidence**: `SnapdropAndroid.getDeviceId()`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/llama3.2:3b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows or potential vulnerabilities were found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/gemma3:12b","### Finding: Uncontrolled Data in `copyToClipboard` leading to potential information leakage
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> `SnapdropAndroid.copyToClipboard(String)` -> Android Clipboard
+**Technical Description**: The `copyToClipboard(String)` method takes a string directly from JavaScript and copies it to the Android clipboard. This string is potentially attacker-controlled. An attacker could craft a malicious JavaScript snippet to copy sensitive information (e.g., passwords, API keys, or personally identifiable information) to the clipboard, which could then be accessed by other applications or the user without their knowledge or consent.  While not direct code execution, this represents a significant information leakage risk.
+**Evidence**: `SnapdropAndroid.copyToClipboard(Ljava/lang/String;)V`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/gemma3:12b","### Finding: Potential Path Traversal in `newFile`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> `SnapdropAndroid.newFile(String, String, String)` -> File System
+**Technical Description**: The `newFile` method receives three string arguments, which are likely used to construct a file path. The strings represent filename, directory and a file identifier.  If proper sanitization and validation are *not* performed on these inputs, an attacker might be able to craft malicious strings containing directory traversal sequences (e.g., `../`) to access or modify files outside the intended directory. This could lead to unauthorized file access or modification, potentially affecting the app's functionality or data integrity.
+**Evidence**: `SnapdropAndroid.newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/gemma3:12b","### Finding: Uncontrolled Data in `onBytes`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> `SnapdropAndroid.onBytes(String)` -> Unknown (Potentially Internal Processing)
+**Technical Description**: The `onBytes` method receives a string parameter directly from JavaScript.  The description doesn't specify what happens to this string on the Java side, but given the method name, it likely represents binary data received during a file transfer. Without knowing precisely how `onBytes` processes this data, a potential vulnerability exists where attacker-controlled binary data could cause issues. For example, an attacker could craft a specially designed data stream that triggers an unexpected exception or buffer overflow in the Java code.
+**Evidence**: `SnapdropAndroid.onBytes(Ljava/lang/String;)V`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/gemma3:12b","### Finding: Possible Information Leakage via `getTextFromUploadIntent`
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript] -> `SnapdropAndroid.getTextFromUploadIntent()` -> Exposed Text
+**Technical Description**: The `getTextFromUploadIntent()` method retrieves text from an upload intent. Depending on the context of how this intent is created and what kind of data it contains, there is potential for sensitive information to be exposed.  If the intent originates from an external source or contains user-provided data, an attacker could manipulate the intent (e.g., through a malicious app or website) to include sensitive information which is then revealed through this bridge method.
+**Evidence**: `SnapdropAndroid.getTextFromUploadIntent()Ljava/lang/String;`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/gemma3:12b","### Finding: Potential Denial of Service via `vibrate()`
+**Risk Level**: Low
+**Data Flow Path**: [JavaScript] -> `SnapdropAndroid.vibrate()` -> Device Vibration
+**Technical Description**: Although not directly exploitable for gaining control, the `vibrate()` method can be abused to cause a denial of service. An attacker could repeatedly call this method from JavaScript, causing the device to vibrate continuously and potentially annoy or disrupt the user. While not a serious security vulnerability, it could be used to harass users.
+**Evidence**: `SnapdropAndroid.vibrate()V`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-87","ollama/gemma3:12b","### Finding: `shouldOpenSendTextDialog()` might be exploitable for UI manipulation
+**Risk Level**: Low
+**Data Flow Path**: [JavaScript] -> `SnapdropAndroid.shouldOpenSendTextDialog()` -> UI Interaction
+**Technical Description**: The `shouldOpenSendTextDialog()` method returns a boolean which likely influences the user interface. Although it's presented as a simple boolean check, manipulation of the conditions used to determine this value through crafted JavaScript could lead to unexpected UI behavior or manipulation of the user's workflow.  The actual impact would depend on how this return value is used within the application.
+**Evidence**: `SnapdropAndroid.shouldOpenSendTextDialog()Z`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 2] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 3] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String)
+[METHOD 7] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 8] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 9] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 10] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 11] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 12] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 13] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 14] vibrate()V
+  Readable: void vibrate() | initiating method: onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential SQL Injection Risk
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `onBytes` method is called from JavaScript with a string parameter. Although this parameter is used to call another method, it does not appear that the string is sanitized or validated before being used in any context that could be vulnerable to SQL injection. If `onBytes` forwards the input to a database query without proper sanitization, an attacker could inject malicious SQL.
+**Evidence**: 
+```java
+.method protected onBytes(Ljava/lang/String;)V
+    .locals 0
+
+    invoke-virtual {p1}, Lcom/fmsys/snapdrop/SnapdropAndroid;->onBytes(Ljava/lang/String;)V
+    return-void
+.end method
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential Path Traversal Risk
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `newFile` method is called from JavaScript with three string parameters. If any of these parameters include user-controlled input, an attacker could potentially create or manipulate files in unexpected directories, leading to path traversal vulnerabilities.
+**Evidence**: 
+```java
+.method protected newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    .locals 0
+
+    invoke-virtual {p1}, Lcom/fmsys/snapdrop/SnapdropAndroid;->newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    return-void
+.end method
+```","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential Intent Redirection Risk
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `getTextFromUploadIntent` method is called from JavaScript. If the data returned by this method is used to create or manipulate intents, an attacker could potentially redirect users to malicious sites or perform other unintended actions.
+**Evidence**: 
+```java
+.method protected getTextFromUploadIntent()Ljava/lang/String;
+    .locals 0
+
+    invoke-virtual {p1}, Lcom/fmsys/snapdrop/SnapdropAndroid;->getTextFromUploadIntent()Ljava/lang/String;
+    return-object v0
+.end method
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential PII Leakage Risk
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `getVersionId` method is called from JavaScript. Although it does not directly return PII, if this method is used in conjunction with other methods that could leak PII (e.g., methods returning device information), an attacker might be able to infer or extract sensitive data.
+**Evidence**: 
+```java
+.method protected getVersionId()I
+    .locals 0
+
+    invoke-virtual {p1}, Lcom/fmsys/snapdrop/SnapdropAndroid;->getVersionId()I
+    return-int v0
+.end method
+```","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential LocalStorage Cache of PII Risk
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `copyToClipboard` and `saveDownloadFileName` methods are called from JavaScript. If these methods store any user data in localStorage, an attacker could potentially access this cached data if they have control over the device.
+**Evidence**: 
+```java
+.method protected copyToClipboard(Ljava/lang/String;)V
+    .locals 0
+
+    invoke-virtual {p1}, Lcom/fmsys/snapdrop/SnapdropAndroid;->copyToClipboard(Ljava/lang/String;)V
+    return-void
+.end method
+
+.method protected saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+    .locals 0
+
+    invoke-virtual {p1}, Lcom/fmsys/snapdrop/SnapdropAndroid;->saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+    return-void
+.end method
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential Protocol & Origin Security Risk
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: There is no validation of the `message.origin` in event listeners. If an attacker can inject malicious code, they could bypass this origin check and execute arbitrary JavaScript on a different origin.
+**Evidence**: 
+```java
+# No evidence provided to verify if message.origin is validated
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential Impact Chain & Privilege Escalation Risk
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: If an attacker can control the input to any of these methods, they could potentially escalate privileges. For example, calling `vibrate`, `resetUploadIntent`, or `ignoreClickedListener` could be used in a chain to perform unintended actions on the device.
+**Evidence**: 
+```java
+# No evidence provided to verify if there are any chained calls that could escalate privileges
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential Reachability & Attacker Control Risk
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: All methods exposed via the `SnapdropAndroid` interface can be reached by attacker-controlled JavaScript. The input to each method is either attacker-controlled or indirectly controlled through other methods.
+**Evidence**: 
+```java
+# No evidence provided to verify if there are any methods that are not reachable by attacker-controlled JavaScript
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential Protocol & Origin Security Risk
+**Risk Level**: Medium
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: There is no validation of the `message.origin` in event listeners. If an attacker can inject malicious code, they could bypass this origin check and execute arbitrary JavaScript on a different origin.
+**Evidence**: 
+```java
+# No evidence provided to verify if message.origin is validated
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential Impact Chain & Privilege Escalation Risk
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: If an attacker can control the input to any of these methods, they could potentially escalate privileges. For example, calling `vibrate`, `resetUploadIntent`, or `ignoreClickedListener` could be used in a chain to perform unintended actions on the device.
+**Evidence**: 
+```java
+# No evidence provided to verify if there are any chained calls that could escalate privileges
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: Potential Reachability & Attacker Control Risk
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: All methods exposed via the `SnapdropAndroid` interface can be reached by attacker-controlled JavaScript. The input to each method is either attacker-controlled or indirectly controlled through other methods.
+**Evidence**: 
+```java
+# No evidence provided to verify if there are any methods that are not reachable by attacker-controlled JavaScript
+```","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/qwen2.5-coder:7b","### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/phi4:14b","### Finding: Path Traversal via newFile and saveDownloadFileName
+**Risk Level**: High  
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]  
+**Technical Description**: Method inputs are potentially unsanitized, allowing for path traversal attacks.  
+**Evidence**: `newFile(String, String, String)`, `saveDownloadFileName(String, String)`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/phi4:14b","### Finding: Clipboard Manipulation via copyToClipboard
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]  
+**Technical Description**: Allows attacker-controlled input to be copied to the clipboard.  
+**Evidence**: `copyToClipboard(String)`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/phi4:14b","### Finding: Intent Redirection Vulnerability via getTextFromUploadIntent
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]  
+**Technical Description**: May leak sensitive data or redirect intents if input is not validated.  
+**Evidence**: `getTextFromUploadIntent()`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/phi4:14b","### Finding: Potential RCE via onBytes
+**Risk Level**: High  
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]  
+**Technical Description**: Unsanitized binary data handling may lead to remote code execution.  
+**Evidence**: `onBytes(String)`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/phi4:14b","### Finding: Injection Vulnerability in getYouAreKnownAsTranslationString
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]  
+**Technical Description**: Lack of input validation can lead to injection attacks.  
+**Evidence**: `getYouAreKnownAsTranslationString(String)`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/phi4:14b","### Finding: Origin Validation Missing in Event Listeners
+**Risk Level**: Medium  
+**Data Flow Path**: [JS Source] -> [Bridge Object]  
+**Technical Description**: Absence of origin checks could lead to XSS or similar vulnerabilities.  
+**Evidence**: No specific JS snippet provided; general concern
+
+These findings outline potential risks and emphasize the importance of input validation, sanitization, and secure communication protocols in WebView bridge callsites.
+
+### Conclusion
+Further analysis with actual JavaScript snippets would provide more precise insights into reachability and control by attackers. However, based on typical patterns, these vulnerabilities represent significant security concerns for the application's bridge interface.","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/gemma3:12b","### Finding: Unvalidated File Name in `newFile` - Path Traversal
+**Risk Level**: High
+**Data Flow Path**: [JavaScript: `newFile(filename)`] -> [SnapdropAndroid.newFile(filename, type, hint)] -> [Java: (Potential file creation/handling)]
+**Technical Description**: The `newFile` method receives a filename directly from JavaScript. This filename is not validated or sanitized before being used, potentially leading to a path traversal vulnerability. An attacker could craft a filename containing directory traversal sequences (e.g., ""../../../"") to write files to arbitrary locations on the device’s storage, bypassing intended restrictions. This could lead to arbitrary code execution or data compromise. The `type` and `hint` parameters also exist, and their lack of validation alongside the filename creates a wider attack surface.
+**Evidence**: `newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V` & JavaScript: `newFile(filename)`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/gemma3:12b","### Finding: Unvalidated Input in `onBytes` - Potential Code Execution
+**Risk Level**: High
+**Data Flow Path**: [JavaScript: `onBytes(data)`] -> [SnapdropAndroid.onBytes(data)] -> [Java: (Potential Processing of data string, leading to possible code execution)]
+**Technical Description**: The `onBytes` method directly receives a string `data` from JavaScript.  The description doesn't detail *how* this data is used within the Java code, but the lack of input validation or sanitization of the `data` string is concerning. Depending on how this string is processed (e.g., if it's used to construct commands, file names, or SQL queries), an attacker could potentially inject malicious content to achieve arbitrary code execution.
+**Evidence**: `onBytes(Ljava/lang/String;)V` & JavaScript: `onBytes(data)`","INVALID","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/gemma3:12b","### Finding: Potential Clipboard Manipulation Vulnerability – Command Injection
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript: `copyToClipboard(text)`] -> [SnapdropAndroid.copyToClipboard(text)] -> [Java: (Clipboard interaction)]
+**Technical Description**: The `copyToClipboard` method copies data received from JavaScript to the device's clipboard. While seemingly benign, if the content of the `text` parameter is not properly sanitized, it could potentially contain commands or scripts that are executed when the clipboard content is pasted into another application. This could lead to unintended actions or even code execution depending on the destination application's behaviour.
+**Evidence**: `copyToClipboard(Ljava/lang/String;)V` & JavaScript: `copyToClipboard(text)`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/gemma3:12b","### Finding: Lack of Origin Validation – Cross-Site Scripting (XSS)
+**Risk Level**: High
+**Technical Description**: The bridge interface exposes several methods that could be triggered by external JavaScript. The provided context does *not* mention any origin validation checks when these methods are called from JavaScript. This allows a malicious website to execute arbitrary JavaScript code within the context of the `com.fmsys.snapdrop_45` application, potentially stealing user data or performing unauthorized actions. This is a classic Cross-Site Scripting (XSS) vulnerability, but within the scope of a WebView bridge.
+**Evidence**:  Exposure of multiple bridge methods and lack of `message.origin` validation.","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/gemma3:12b","### Finding: `getTextFromUploadIntent` – Potential Intent Redirection
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript: `getTextFromUploadIntent()`] -> [SnapdropAndroid.getTextFromUploadIntent()] -> [Java: (Intent handling)]
+**Technical Description**: `getTextFromUploadIntent` retrieves text from an upload intent. If the intent itself is not properly validated, an attacker could potentially craft a malicious intent that, when processed by the Java code, redirects to a different application or triggers unintended behaviour.
+**Evidence**: `getTextFromUploadIntent()Ljava/lang/String;`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"
+"Intent-webview_new-88","ollama/gemma3:12b","### Finding: `saveDownloadFileName` - Potential Path Traversal
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript: `saveDownloadFileName(filename, type)`] -> [SnapdropAndroid.saveDownloadFileName(filename, type)] -> [Java: (File Saving Operation)]
+**Technical Description**: This method receives a filename from Javascript and passes it to Java's file saving mechanism.  Similar to `newFile`, if the `filename` parameter is not thoroughly sanitized, an attacker could use path traversal sequences to write files outside the intended download directory. This could lead to overwriting critical system files or data. The `type` parameter raises the same concern.
+**Evidence**: `saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V` & Javascript: `saveDownloadFileName(filename, type)`","PARTIAL","","Interface 'SnapdropAndroid' (Lcom/fmsys/snapdrop/JavaScriptInterface;) exposes: [METHOD 1] setProgress(F)V
+  Readable: void setProgress(float)
+[METHOD 2] newFile(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void newFile(String, String, String)
+[METHOD 3] vibrate()V
+  Readable: void vibrate()
+[METHOD 4] getTextFromUploadIntent()Ljava/lang/String;
+  Readable: String getTextFromUploadIntent()
+[METHOD 5] getVersionId()I
+  Readable: int getVersionId()
+[METHOD 6] dialogHidden()V
+  Readable: void dialogHidden()
+[METHOD 7] copyToClipboard(Ljava/lang/String;)V
+  Readable: void copyToClipboard(String)
+[METHOD 8] resetUploadIntent()V
+  Readable: void resetUploadIntent()
+[METHOD 9] dialogShown()V
+  Readable: void dialogShown()
+[METHOD 10] saveDownloadFileName(Ljava/lang/String;Ljava/lang/String;)V
+  Readable: void saveDownloadFileName(String, String)
+[METHOD 11] shouldOpenSendTextDialog()Z
+  Readable: boolean shouldOpenSendTextDialog()
+[METHOD 12] ignoreClickedListener()V
+  Readable: void ignoreClickedListener()
+[METHOD 13] onBytes(Ljava/lang/String;)V
+  Readable: void onBytes(String)
+[METHOD 14] getYouAreKnownAsTranslationString(Ljava/lang/String;)Ljava/lang/String;
+  Readable: String getYouAreKnownAsTranslationString(String) | initiating method: .method protected onCreate(Landroid/os/Bundle;)V"

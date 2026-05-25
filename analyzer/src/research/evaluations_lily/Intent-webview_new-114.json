@@ -1,0 +1,315 @@
+{
+    "identifiedCallsiteID": "Intent-webview_new-114",
+    "context": "APP: com.github.trilinder.tapasclient_1\n\nBRIDGE:\nInterface 'CapacitorHttpAndroidInterface' () exposes:  | initiating method: .method public load()V\n\nJS SNIPPETS:\n",
+    "groundTruthNotes": {
+        "repository": "https://github.com/TriLinder/OpenTapasReader",
+        "frameworkClass": "com.getcapacitor.plugin.CapacitorHttp (CapacitorHttpAndroidInterface is the @JavascriptInterface inner-class bridge)",
+        "frameworkSource": "https://github.com/ionic-team/capacitor (commit d4047cfa introduces CapacitorHttp in Capacitor 4.3.0)",
+        "analysis": "The exposed method has signature 'load()V' — zero parameters, void return. In Capacitor, load() is the standard Plugin lifecycle hook called once at plugin initialization (see capacitorjs.com/docs/plugins/android — 'The load() method is the proper place to initialize the class instance with the Capacitor bridge object'). It does NOT accept any URL, path, or other JavaScript-controlled input. The native-bridge.js only ever calls CapacitorHttpAndroidInterface.isEnabled() (a boolean check); actual HTTP requests flow through cap.nativePromise('CapacitorHttp', 'request', ...) via the standard plugin message channel, NOT through this @JavascriptInterface surface. The JS SNIPPETS field is empty, confirming no in-app JS reaches this bridge directly with attacker-controllable data. Therefore, any finding that posits load() loading attacker-controlled URLs, reading files via path traversal, executing JavaScript from a URL, or leaking PII as a function of arguments to load() is fabricated — the method takes no arguments. 'No vulnerability' is the correct verdict for this callsite given the context provided."
+    },
+    "permutations": [
+        {
+            "researcher": 0,
+            "inspectors": [
+                "ollama/qwen2.5-coder:7b",
+                "ollama/deepseek-r1:8b",
+                "ollama/starcoder2:7b",
+                "ollama/phi4:14b",
+                "ollama/llama3.2:3b",
+                "ollama/gemma3:12b"
+            ],
+            "auditors": [
+                "ollama/qwen2.5-coder:7b",
+                "ollama/deepseek-r1:8b",
+                "ollama/starcoder2:7b",
+                "ollama/phi4:14b",
+                "ollama/llama3.2:3b",
+                "ollama/gemma3:12b"
+            ],
+            "results": [
+                {
+                    "inspector": "ollama/qwen2.5-coder:7b",
+                    "findings": [
+                        "valid: ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows found in the provided context.\n**Evidence**: N/A\n\n---\n\nThe provided context does not reveal any direct or obvious security vulnerabilities within the `CapacitorHttpAndroidInterface` method. The `load()` method appears to initiate some operation but lacks details on what it does with inputs from JavaScript. However, without further information about how this method interacts with other parts of the application, no vulnerabilities can be conclusively identified based on the given snippets alone."
+                    ]
+                },
+                {
+                    "inspector": "ollama/deepseek-r1:8b",
+                    "findings": []
+                },
+                {
+                    "inspector": "ollama/starcoder2:7b",
+                    "findings": []
+                },
+                {
+                    "inspector": "ollama/phi4:14b",
+                    "findings": [
+                        "partial: ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows found in the provided context.\n**Evidence**: N/A\n\nThis analysis highlights potential security issues that should be addressed by validating inputs, securing sensitive data handling, enforcing origin checks, and using secure protocols.\n\n[VERDICT NOTE: Core conclusion is valid — load()V has no parameter surface so no exploitable flow exists. However, the trailing boilerplate sentence about 'potential security issues' and 'origin checks' contradicts the 'no vulnerabilities' verdict and is generic filler not grounded in the bridge context. Marked partial because the conclusion is right but the justification is internally inconsistent.]"
+                    ]
+                },
+                {
+                    "inspector": "ollama/llama3.2:3b",
+                    "findings": [
+                        "valid: ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows or vulnerabilities were found in the provided context.\n**Evidence**: N/A"
+                    ]
+                },
+                {
+                    "inspector": "ollama/gemma3:12b",
+                    "findings": [
+                        "invalid: ### Finding: Unvalidated URL Load via `load()`\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript] -> [CapacitorHttpAndroidInterface.load()] -> [Android URL Loading]\n**Technical Description**: The `load()` method on the `CapacitorHttpAndroidInterface` is exposed.  Without knowing the exact implementation of `load()` in the Java code, it's possible that JavaScript-controlled input could be directly used to construct and load URLs. This could lead to arbitrary URL loading, potentially accessing unintended resources on the device or external servers. The lack of origin validation is a potential concern in this context, as malicious websites could inject javascript and potentially redirect the user to a malicious URL.\n**Evidence**:  \".method public load()V\" (indicates a potentially vulnerable method exposed to JavaScript).  Without more code, we must assume arbitrary URL loading is possible.\n\n[VERDICT NOTE: Hallucinated. The signature load()V means zero parameters and void return. There is no string/URL argument that JavaScript could supply. In the Capacitor framework, load() is the Plugin lifecycle hook called once at init — not a URL loader. The model invented a vulnerable behavior from the method name alone.]",
+                        "invalid: ### Finding: Potential for Information Disclosure via `CapacitorHttpAndroidInterface`\n**Risk Level**: Low\n**Data Flow Path**: [JavaScript] -> [CapacitorHttpAndroidInterface.load()] -> [Potentially Sensitive Data]\n**Technical Description**: Depending on how the `CapacitorHttpAndroidInterface.load()` method is implemented, it might be possible to access data that should be considered sensitive. For instance, if `load()` fetches content from a local file, an attacker could potentially trigger the retrieval of files outside the intended directory via URL manipulation.\n**Evidence**:  \".method public load()V\" (indicates potential access to local resources via URL manipulation). Requires code review of the Java implementation to confirm.\n\n[VERDICT NOTE: Hallucinated. Same root error — load()V takes no arguments, so 'URL manipulation' is impossible at this bridge surface. The framework load() lifecycle hook does not fetch files.]",
+                        "invalid: ### Finding: Lack of Origin Validation in Event Listeners (Potential)\n**Risk Level**: Medium\n**Data Flow Path**: [Malicious Website] -> [WebView] -> [JavaScript] -> [Bridge] -> [Java code]\n**Technical Description**: The context doesn't mention origin validation. If the WebView is configured to allow cross-origin requests without proper validation, a malicious website could potentially inject JavaScript into the WebView and use the bridge to execute arbitrary Java code. This is a common attack vector.\n**Evidence**:  No mention of `window.postMessage` origin validation.\n\n[VERDICT NOTE: Hallucinated. The context contains no postMessage handler, no event listener, and no JS snippet at all. The finding cites the absence of something as evidence of its insecurity — speculation about code that is not in the analyzed surface. Out of scope for this callsite.]",
+                        "invalid: ### Finding: Potential JavaScript Injection and Code Execution via `load()`\n**Risk Level**: High\n**Data Flow Path**: [Malicious Website] -> [WebView] -> [JavaScript] -> [CapacitorHttpAndroidInterface.load()] -> [Android Runtime]\n**Technical Description**:  If the `load()` method accepts a URL as input and this URL is then interpreted and executed as JavaScript code (unlikely but possible in some WebView configurations or with poorly implemented plugins), this could lead to arbitrary code execution on the device.  This is particularly concerning if the URL is not properly sanitized.\n**Evidence**: \".method public load()V\" combined with potential lack of URL sanitization. Requires further inspection of the `load()` implementation.\n\n[VERDICT NOTE: Hallucinated. The model openly conditions the finding on 'if the load() method accepts a URL' — but the signature load()V proves it does not. The model even acknowledged this is 'unlikely'. Pure speculation graded High severity with no factual basis.]",
+                        "invalid: ### Finding: Possible PII Leakage Depending on Java Implementation\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript] -> [CapacitorHttpAndroidInterface.load()] -> [Android Device Information Methods]\n**Technical Description**: While no direct PII exposure methods are listed in the interface, the `load()` method *could* be used internally to trigger calls to other Android methods that retrieve sensitive device information. For example, if the data being loaded in the WebView is used to construct a URL with device identifiers, that data could be leaked.\n**Evidence**:  Lack of information about the internal implementation of `load()`.\n\n[VERDICT NOTE: Hallucinated. Same fabrication — no parameter surface, no data 'being loaded'. The model explicitly cites 'lack of information' as evidence, which is the inverse of evidence.]",
+                        "valid: ### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: The `load()` method is exposed to the JavaScript environment, but without complete knowledge of its functionality or the overall application architecture, there is a lack of evidence to suggest more than potential vulnerabilities.\n**Evidence**: N/A\n---\n\n**Important Considerations & Next Steps:**\n\n*   **Code Review:** A thorough code review of the `CapacitorHttpAndroidInterface` Java class, especially the `load()` method and any internal calls it makes, is crucial.\n*   **WebView Configuration:** Examine the WebView's configuration, including settings related to JavaScript execution, origin validation, and URL loading.\n*   **Input Validation:**  Assess how the `load()` method validates user-provided input.  Is it properly sanitized?\n*   **Dependency Analysis:** Determine if the `CapacitorHttpAndroidInterface` utilizes any external libraries or dependencies that could introduce vulnerabilities.\n*   **Dynamic Analysis:** Conduct dynamic analysis using tools like Frida or objection to observe the runtime behavior of the app and identify any unexpected data flows or method calls.\n\n[VERDICT NOTE: Conclusion is valid (no vulnerabilities). Internally inconsistent with the five preceding fabricated findings from the same inspector, but evaluated on its own merits the conclusion matches ground truth.]"
+                    ]
+                }
+            ],
+            "audits": {
+                "ollama/qwen2.5-coder:7b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 10,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 10,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 0.5
+                    }
+                },
+                "ollama/deepseek-r1:8b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 10,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
+                    }
+                },
+                "ollama/starcoder2:7b": {
+                    "ollama/qwen2.5-coder:7b": {},
+                    "ollama/deepseek-r1:8b": {},
+                    "ollama/starcoder2:7b": {},
+                    "ollama/phi4:14b": {},
+                    "ollama/llama3.2:3b": {},
+                    "ollama/gemma3:12b": {}
+                },
+                "ollama/phi4:14b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.2,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
+                    }
+                },
+                "ollama/llama3.2:3b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 9,
+                        "attackSurfaceCoverage": 0.5
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 9,
+                        "effectChainAwareness": 8,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 7,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 9,
+                        "attackSurfaceCoverage": 0.83
+                    }
+                },
+                "ollama/gemma3:12b": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.2
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 1,
+                        "attackSurfaceCoverage": 0.0
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.1
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 8,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 1.0
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": 0.1,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.6
+                    }
+                }
+            },
+            "researcherConclusion": {
+                "_methodology": "Ground truth: the analyzed bridge method is load()V (Capacitor Plugin lifecycle hook — zero parameters, void return). No attacker-controllable input reaches it from JavaScript, and the JS SNIPPETS field is empty. The only correct verdict for this callsite is 'no vulnerability'. AUDITOR evaluation criteria below judge how well each auditor's scoring of the six inspectors aligns with this ground truth: a good auditor should reward inspectors who returned 'no vulnerability' (qwen, phi4, llama, deepseek-empty, starcoder-empty) and penalize the inspector who hallucinated five fabricated findings (gemma3).",
+                "ollama/qwen2.5-coder:7b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 8,
+                    "effectChainAwareness": 7,
+                    "attackSurfaceCoverage": 0.7,
+                    "_rationale": "Solid auditor. Gave qwen and llama (correct 'no vuln' inspectors) high accuracy scores. Did NOT punish gemma3 for hallucinating — gave it 8/10 accuracy and 0.5 surface coverage, which is overly generous given five fabricated findings. Slightly too lenient on hallucinators, but otherwise reasonable."
+                },
+                "ollama/deepseek-r1:8b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 5,
+                    "effectChainAwareness": 4,
+                    "attackSurfaceCoverage": 0.4,
+                    "_rationale": "Inconsistent auditor. Rated itself (empty findings) 3/10 accuracy with 0 coverage — self-assessment is harsh but defensible since no findings were returned. Gave starcoder (also empty) 10/10 accuracy — directly contradicts its own deepseek self-rating for the same behavior. Gave gemma3 (5 hallucinations) 8/10 accuracy and 1.0 surface coverage — completely misreads hallucinations as coverage. The auditor does not detect fabricated findings."
+                },
+                "ollama/starcoder2:7b": {
+                    "hallucinationFrequency": "n/a",
+                    "technicalAccuracy": "n/a",
+                    "effectChainAwareness": "n/a",
+                    "attackSurfaceCoverage": "n/a",
+                    "_rationale": "Auditor produced no scores at all — all six audit slots returned empty objects. Cannot be evaluated as an auditor for this case."
+                },
+                "ollama/phi4:14b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 6,
+                    "effectChainAwareness": 4,
+                    "attackSurfaceCoverage": 0.5,
+                    "_rationale": "Mixed performance. Gave the two empty-finding inspectors (deepseek, starcoder) 10/10 technical accuracy with 0 coverage — internally inconsistent (you cannot score accuracy on no findings). However, this auditor was the ONLY one to flag gemma3's hallucination frequency (0.2) — the others either ignored it or rewarded it. Effect-chain scoring is consistently low which fits the actual data (the case has no real effect chain to be aware of). Partial credit for detecting gemma3's hallucination, demerits for inflated empty-finding scores."
+                },
+                "ollama/llama3.2:3b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 4,
+                    "effectChainAwareness": 3,
+                    "attackSurfaceCoverage": 0.3,
+                    "_rationale": "Generous-to-everyone auditor. Gave nearly identical 8–9/10 scores across all six inspectors regardless of whether they produced correct minimal findings, no findings, or five hallucinations. Most damningly, gave gemma3 0.83 surface coverage and 0.0 hallucinationFrequency — failing entirely to detect that gemma3 fabricated findings about a parameterless lifecycle method. This auditor provides almost no discriminative signal."
+                },
+                "ollama/gemma3:12b": {
+                    "hallucinationFrequency": 0.0,
+                    "technicalAccuracy": 6,
+                    "effectChainAwareness": 5,
+                    "attackSurfaceCoverage": 0.6,
+                    "_rationale": "Best discriminator of the six. Correctly identified hallucination in deepseek (1.0) and starcoder (1.0) — though arguably wrong since empty findings cannot be 'hallucinations' — but the underlying instinct to flag low-quality output is correct. Self-rated 0.1 hallucinationFrequency, which is honest acknowledgment of its own fabricated findings (still under-counts the five invalid findings, but at least flags some). Most differentiated scoring spread of all auditors. The classification of 'no findings = hallucination' is technically wrong per the definition ('makes up findings'), but functionally the auditor was the most willing to assign low scores where warranted."
+                }
+            }
+        }
+    ]
+}

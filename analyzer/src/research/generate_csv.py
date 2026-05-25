@@ -3,23 +3,24 @@ import csv
 import re
 import os
 from collections import defaultdict
+from typing import Any
 
 
 def generate_csvs(results_path: str, output_dir: str) -> None:
-    with open(results_path) as f:
+    with open(results_path, encoding="utf-8-sig", newline="") as f:
         records = json.load(f)
 
-    app_rows = defaultdict(list)
+    app_rows = defaultdict[Any,list[Any]](list[Any])
 
     for record in records:
         callsite_id = record["identifiedCallsiteID"]
-        app_match = re.search(r"^APP:\s*(.+)$", record["context"], re.MULTILINE)
+        app_match = re.search(r"^APP:/s*(.+)$", record["context"], re.MULTILINE)
         app = app_match.group(1).strip() if app_match else "unknown"
 
-        bridge_match = re.search(r"BRIDGE:\s*\n(.+?)(?=\n\n|\Z)", record["context"], re.DOTALL)
+        bridge_match = re.search(r"BRIDGE:/s*/n(.+?)(?=/n/n|/Z)", record["context"], re.DOTALL)
         android_context = bridge_match.group(1).strip() if bridge_match else ""
 
-        js_match = re.search(r"JS SNIPPETS:\s*\n(.+?)(?=\n\n[A-Z]|\Z)", record["context"], re.DOTALL)
+        js_match = re.search(r"JS SNIPPETS:/s*/n(.+?)(?=/n/n[A-Z]|/Z)", record["context"], re.DOTALL)
         js_call_place = js_match.group(1).strip() if js_match else ""
 
         for permutation in record.get("permutations", []):
@@ -41,6 +42,6 @@ def generate_csvs(results_path: str, output_dir: str) -> None:
 
 if __name__ == "__main__":
     generate_csvs(
-        results_path="/Users/joaocardoso/Documents/SDU/repos/llm-static-analysis/analyzer/results/callsite_results_bina.json",
+        results_path="./callsite_results_lily.json",
         output_dir="csv_output",
     )
