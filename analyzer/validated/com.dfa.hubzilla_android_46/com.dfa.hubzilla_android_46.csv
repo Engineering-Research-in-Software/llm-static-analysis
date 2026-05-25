@@ -1,0 +1,111 @@
+Callsite,Inspector,Finding,Verdict,JS Call Place,Android Context
+Intent-webview_new-24,ollama/qwen2.5-coder:7b,"### Finding: Content Sharing Method Exposure
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> `AndroidBridge` -> `contentHasBeenShared()`
+**Technical Description**: The `contentHasBeenShared()` method is directly exposed to JavaScript, allowing attacker-controlled JavaScript to invoke this method. If the input passed to this method is not properly validated or sanitized, it could lead to unintended side effects or data leaks within the application.
+**Evidence**:
+```java
+[METHOD 1] contentHasBeenShared()V
+```",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/qwen2.5-coder:7b,"### Finding: User Profile Setting Method Exposure
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> `AndroidBridge` -> `setUserProfile(Ljava/lang/String;)`
+**Technical Description**: The `setUserProfile(String)` method is directly exposed to JavaScript, allowing attacker-controlled JavaScript to invoke this method with any string input. If the input passed to this method is not properly validated or sanitized, it could lead to unintended side effects such as data corruption, injection attacks, or other vulnerabilities.
+**Evidence**:
+```java
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+```",PARTIAL,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/qwen2.5-coder:7b,"### Finding: No PII & Permission Leakage Identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided context does not include any methods that return sensitive data such as `getDeviceId()`, `getAccounts()`, `getLocation()`, or `getSimSerialNumber()`.
+**Evidence**: N/A",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/qwen2.5-coder:7b,"### Finding: Reachability & Attacker Control
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> `AndroidBridge` -> `[contentHasBeenShared(), setUserProfile()]`
+**Technical Description**: Both the `contentHasBeenShared()` and `setUserProfile(String)` methods are directly exposed to JavaScript. This means that an attacker-controlled script can invoke these methods with any input, potentially leading to unintended behavior or security issues.
+**Evidence**:
+```java
+[METHOD 1] contentHasBeenShared()V
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+```",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/qwen2.5-coder:7b,"### Finding: Impact Chain & Privilege Escalation
+**Risk Level**: High
+**Data Flow Path**: [JS Source] -> `AndroidBridge` -> `[contentHasBeenShared(), setUserProfile()]`
+**Technical Description**: Both methods are directly exposed to JavaScript and can be invoked with arbitrary input. If the input is not properly validated, this could lead to unintended side effects or security vulnerabilities.
+**Evidence**:
+```java
+[METHOD 1] contentHasBeenShared()V
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+```",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/qwen2.5-coder:7b,"### Finding: Protocol & Origin Security
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided context does not include any information about the protocol or origin of the content being loaded.
+**Evidence**: N/A",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/llama3.2:3b,"### Finding: Potential PII Leak
+**Risk Level**: Medium
+**Data Flow Path**: JS -> AndroidBridge -> setUserProfile() | (Potential) LocalStorage caching or external transmission
+**Technical Description**: The `setUserProfile()` method is initiating a `run()` method, which could lead to unexpected behavior if not properly secured.
+**Evidence**: setUserProfile(String) JavaScript function call in provided context.",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/llama3.2:3b,"### Finding: Potential Privilege Escalation
+**Risk Level**: Medium
+**Data Flow Path**: JS -> AndroidBridge -> setUserProfile() | (Potential) Chaining of method calls with arbitrary input
+**Technical Description**: The `setUserProfile()` method could potentially lead to privilege escalation if chained with malicious input.
+**Evidence**: setUserProfile(String) JavaScript function call chain in provided context.",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/llama3.2:3b,"### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/gemma3:12b,"### Finding: Uncontrolled User Profile Setting via JavaScript
+**Risk Level**: High
+**Data Flow Path**: `setUserProfile(String)` (JavaScript) -> `AndroidBridge.setUserProfile(String)` (Java)
+**Technical Description**: The `setUserProfile` method in the `AndroidBridge` interface allows JavaScript to directly set the user profile. This method takes a string as input, which is attacker-controlled.  There is no apparent sanitization or validation of this input on the Java side. This could lead to arbitrary data being injected into the user profile, potentially affecting other parts of the application or even leading to privilege escalation if the profile data is used for authentication or authorization elsewhere in the app. While the impact is likely limited to profile modification, it represents a significant vulnerability due to the direct, unvalidated data flow.
+**Evidence**: `setUserProfile(Ljava/lang/String;)V` and the JavaScript entry point for `setUserProfile`.  The method signature `void setUserProfile(String)` indicates a string parameter received directly from JavaScript.",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/gemma3:12b,"### Finding: Potential for Cross-Site Scripting (XSS) via `contentHasBeenShared()`
+**Risk Level**: Medium
+**Data Flow Path**: `contentHasBeenShared()` (JavaScript) -> `AndroidBridge.contentHasBeenShared()` (Java)
+**Technical Description**: While `contentHasBeenShared()` doesn't directly expose a sink point for input, it's crucial to examine the Java code *called* by this method.  If `contentHasBeenShared()` triggers an action that displays data containing content received from JavaScript (even indirectly), a malicious script could potentially inject XSS payloads. This is a more indirect risk but needs to be investigated further by examining the Java side code called by `contentHasBeenShared`.  Lack of context makes a definitive assessment impossible but warrants further investigation.
+**Evidence**: `contentHasBeenShared()V` exposes a function that is likely triggered by JavaScript actions and may cause subsequent actions that display data which could be XSS vulnerable.",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"
+Intent-webview_new-24,ollama/gemma3:12b,"### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A",INVALID,,"Interface 'AndroidBridge' (Lcom/dfa/hubzilla_android/activity/DiasporaStreamFragment$JavaScriptInterface;) exposes: [METHOD 1] contentHasBeenShared()V
+  Readable: void contentHasBeenShared()
+[METHOD 2] setUserProfile(Ljava/lang/String;)V
+  Readable: void setUserProfile(String) | initiating method: run()V"

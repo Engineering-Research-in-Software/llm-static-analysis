@@ -1,0 +1,66 @@
+Callsite,Inspector,Finding,Verdict,JS Call Place,Android Context
+Intent-webview_new-25,ollama/qwen2.5-coder:7b,"### Finding: setSwipeRefreshEnabled Method Vulnerability
+**Risk Level**: Low
+**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]
+**Technical Description**: The `setSwipeRefreshEnabled` method accepts a boolean value from JavaScript and forwards it to the Java side. There is no evidence of SQL queries, file paths, intent creation, runtime execution, or reflection being used within this method, nor does it return any sensitive data that could be leaked to JavaScript. Additionally, there is no indication that this method can be chained to escalate privileges. The input to this method is not attacker-controlled as it is a simple boolean value, making it difficult for an attacker to exploit through this method alone.
+**Evidence**: `.method private setupSwipeToRefreshForActivity()V`
+- `setSwipeRefreshEnabled(Z)V`",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: .method private setupSwipeToRefreshForActivity()V"
+Intent-webview_new-25,ollama/deepseek-r1:8b,"### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The provided context includes a single WebView bridge method (`setSwipeRefreshEnabled`) with a boolean input, which is a safe type and unlikely to enable injection or sensitive data exposure. No dangerous sinks (e.g., SQL, file, intent, or exec) were identified, and no PII leakage or protocol issues were detected. The method's limited functionality and lack of implementation details prevent conclusive vulnerability identification.
+**Evidence**: N/A",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: .method private setupSwipeToRefreshForActivity()V"
+Intent-webview_new-25,ollama/phi4:14b,"### Finding: No critical direct vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The `setSwipeRefreshEnabled(Z)V` method does not lead to direct exploitation via SQL Injection, RCE, or PII leakage. It only alters UI behavior by enabling/disabling swipe-to-refresh functionality.
+**Evidence**: N/A
+
+### Recommendation
+While no critical vulnerabilities are directly tied to this method call, the general security posture of WebViews should include:
+- Ensuring content is loaded over HTTPS.
+- Validating `message.origin` in all message handlers to prevent cross-site scripting attacks.
+- Limiting JavaScript execution capabilities and ensuring proper input validation/sanitization for any exposed methods.
+
+Implementing these recommendations will help mitigate broader risks associated with Android WebView usage.",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: .method private setupSwipeToRefreshForActivity()V"
+Intent-webview_new-25,ollama/gemma3:12b,"### Finding: Swipe Refresh Control Manipulation
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript: `webappInterface.setSwipeRefreshEnabled(true/false)`](javascript) -> [AndroidInterface.setSwipeRefreshEnabled(Z)](java) -> [setupSwipeToRefreshForActivity()] (java)
+**Technical Description**: The `setSwipeRefreshEnabled(boolean)` method in the `AndroidInterface` allows JavaScript to directly control the state of a swipe refresh indicator. While not directly exploitable for data exfiltration or RCE, this function could be used for denial-of-service (DoS) or UI manipulation. An attacker could repeatedly enable and disable the refresh functionality, potentially disrupting the user experience or causing unexpected behavior.  The `setupSwipeToRefreshForActivity()` method's impact is unclear without further context but could conceivably be leveraged if it interacts with sensitive data or critical functionality, making the UI manipulation a more significant issue.
+**Evidence**: `webappInterface.setSwipeRefreshEnabled(true/false)` and `AndroidInterface.setSwipeRefreshEnabled(Z)`",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: .method private setupSwipeToRefreshForActivity()V"
+Intent-webview_new-26,ollama/qwen2.5-coder:7b,"### Finding: setSwipeRefreshEnabled() Method Vulnerability
+**Risk Level**: Medium
+**Data Flow Path**: JavaScript -> [Bridge Object] -> AndroidInterface.setSwipeRefreshEnabled(Z)V
+**Technical Description**: The `setSwipeRefreshEnabled` method in the `AndroidInterface` class is exposed to JavaScript. This method takes a boolean value as an argument and sets the swipe-to-refresh functionality of the WebView based on this value. However, since no input validation or sanitization is performed on the boolean parameter, an attacker could inject arbitrary JavaScript that calls this method with malicious parameters, potentially leading to unexpected behavior or performance issues.
+**Evidence**: `AndroidInterface.setSwipeRefreshEnabled(Z)V`",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: setupSwipeToRefreshForActivity()V"
+Intent-webview_new-26,ollama/qwen2.5-coder:7b,"### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: No exploitable data flows found in the provided context.
+**Evidence**: N/A",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: setupSwipeToRefreshForActivity()V"
+Intent-webview_new-26,ollama/deepseek-r1:8b,"### Finding: No vulnerabilities identified
+**Risk Level**: Low
+**Data Flow Path**: N/A
+**Technical Description**: The exposed method `setSwipeRefreshEnabled(boolean)` is a configuration setter with limited input (a boolean). It does not interact with sensitive sinks (e.g., SQL, files, intents, `Runtime.exec()`) or handle sensitive data (e.g., PII). The method's reachability is limited to controlling a UI feature (swipe-to-refresh), which does not lead to privilege escalation or data leakage. No insecure protocols or origin validation issues were identified in the provided context.
+**Evidence**: N/A",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: setupSwipeToRefreshForActivity()V"
+Intent-webview_new-26,ollama/phi4:14b,"### Finding: Insecure Protocol & Origin Handling
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript Snippet] -> [WebView Bridge Object (AndroidInterface)] -> [Java Method (setSwipeRefreshEnabled)]
+**Technical Description**: The potential lack of validation for message origins in event listeners and the absence of secure protocol enforcement may allow an attacker to execute arbitrary JavaScript within the WebView context, potentially leading to unauthorized actions or information disclosure.
+**Evidence**: Lack of `message.origin` validation and unspecified content loading protocols.
+
+If additional context is available regarding CSP settings, intent handling, or other methods exposed by the bridge interface, a more thorough evaluation can be conducted. Otherwise, no direct vulnerabilities related to data flow or PII leakage are identified with the current method exposure.",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: setupSwipeToRefreshForActivity()V"
+Intent-webview_new-26,ollama/gemma3:12b,"### Finding: Uncontrolled Swipe Refresh Enablement
+**Risk Level**: Medium
+**Data Flow Path**: [JavaScript (unspecified)] -> `WebAppInterface.setSwipeRefreshEnabled(boolean)` -> `setupSwipeToRefreshForActivity()`
+**Technical Description**: The `setSwipeRefreshEnabled(boolean)` method allows JavaScript to directly control the swipe refresh functionality of the activity. While seemingly innocuous, an attacker could leverage this to potentially induce denial of service (DoS) by repeatedly triggering the refresh, consuming resources and potentially impacting user experience or even crashing the app. The scope of the impact depends on how the swipe refresh is implemented in `setupSwipeToRefreshForActivity()`.  If it involves network requests or complex operations, frequent triggering could have a significant impact.  The attacker would need to find a way to call this method, which depends on how the WebView is configured and whether the JavaScript interface is enabled.
+**Evidence**: `setSwipeRefreshEnabled(Z)` | initiating method: `setupSwipeToRefreshForActivity()V`",INVALID,,"Interface 'AndroidInterface' (Lcom/doubleangels/nextdnsmanagement/webview/WebAppInterface;) exposes: [METHOD 1] setSwipeRefreshEnabled(Z)V
+  Readable: void setSwipeRefreshEnabled(boolean) | initiating method: setupSwipeToRefreshForActivity()V"

@@ -1,0 +1,34 @@
+{
+  "researcher": {
+    "ollama/qwen2.5-coder:7b": {
+      "hallucinationFrequency": 0.25,
+      "technicalAccuracy": 7,
+      "effectChainAwareness": 5,
+      "attackSurfaceCoverage": 0.54
+    },
+    "ollama/deepseek-r1:8b": {
+      "hallucinationFrequency": 0.0,
+      "technicalAccuracy": 8,
+      "effectChainAwareness": 6,
+      "attackSurfaceCoverage": 0.61
+    },
+    "ollama/phi4:14b": {
+      "hallucinationFrequency": 0.20,
+      "technicalAccuracy": 8,
+      "effectChainAwareness": 7,
+      "attackSurfaceCoverage": 0.70
+    },
+    "ollama/llama3.2:3b": {
+      "hallucinationFrequency": 0.27,
+      "technicalAccuracy": 7,
+      "effectChainAwareness": 6,
+      "attackSurfaceCoverage": 0.63
+    },
+    "ollama/gemma3:12b": {
+      "hallucinationFrequency": 0.27,
+      "technicalAccuracy": 8,
+      "effectChainAwareness": 7,
+      "attackSurfaceCoverage": 0.53
+    }
+  }
+}
