@@ -270,40 +270,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": 0.67,
-                        "technicalAccuracy": 3,
-                        "effectChainAwareness": 2,
-                        "attackSurfaceCoverage": 0.0
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": 0.45,
-                        "technicalAccuracy": 5,
-                        "effectChainAwareness": 4,
-                        "attackSurfaceCoverage": 0.25
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": 0.0,
-                        "technicalAccuracy": 0,
-                        "effectChainAwareness": 0,
-                        "attackSurfaceCoverage": 0.0
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": 0.0,
-                        "technicalAccuracy": 7,
-                        "effectChainAwareness": 5,
-                        "attackSurfaceCoverage": 0.5
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": 0.0,
-                        "technicalAccuracy": 0,
-                        "effectChainAwareness": 0,
-                        "attackSurfaceCoverage": 0.0
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": 0.0,
-                        "technicalAccuracy": 6,
-                        "effectChainAwareness": 5,
-                        "attackSurfaceCoverage": 0.25
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     }
                 }
             }
@@ -651,40 +651,946 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": 0.99,
-                        "technicalAccuracy": 2,
-                        "effectChainAwareness": 2,
-                        "attackSurfaceCoverage": 0.01
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": 0.31,
-                        "technicalAccuracy": 7,
-                        "effectChainAwareness": 6,
-                        "attackSurfaceCoverage": 0.69
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": 0.0,
-                        "technicalAccuracy": 0,
-                        "effectChainAwareness": 0,
-                        "attackSurfaceCoverage": 0.0
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": 0.17,
-                        "technicalAccuracy": 8,
-                        "effectChainAwareness": 7,
-                        "attackSurfaceCoverage": 0.83
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": 0.99,
-                        "technicalAccuracy": 2,
-                        "effectChainAwareness": 2,
-                        "attackSurfaceCoverage": 0.01
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": 0.27,
-                        "technicalAccuracy": 8,
-                        "effectChainAwareness": 7,
-                        "attackSurfaceCoverage": 0.73
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "identifiedCallsiteID": "Intent-webview_new-75",
+        "context": "APP: com.example.deeplviewer_46\n\nBRIDGE:\nInterface 'Android' (Lcom/example/deeplviewer/webview/WebAppInterface;) exposes: [METHOD 1] copyClipboard(Ljava/lang/String;)V\n  Readable: void copyClipboard(String)\n[METHOD 2] stringToBase64String(Ljava/lang/String;)Ljava/lang/String;\n  Readable: String stringToBase64String(String)\n[METHOD 3] getAssetsText(Ljava/lang/String;)Ljava/lang/String;\n  Readable: String getAssetsText(String) | initiating method: .method public final onCreate(Landroid/os/Bundle;)V\n\nJS SNIPPETS:\n",
+        "permutations": [
+            {
+                "researcher": 0,
+                "inspectors": [
+                    "ollama/qwen2.5-coder:7b",
+                    "ollama/deepseek-r1:8b",
+                    "ollama/starcoder2:7b",
+                    "ollama/phi4:14b",
+                    "ollama/llama3.2:3b",
+                    "ollama/gemma3:12b"
+                ],
+                "auditors": [
+                    "ollama/qwen2.5-coder:7b",
+                    "ollama/deepseek-r1:8b",
+                    "ollama/starcoder2:7b",
+                    "ollama/phi4:14b",
+                    "ollama/llama3.2:3b",
+                    "ollama/gemma3:12b"
+                ],
+                "results": [
+                    {
+                        "inspector": "ollama/qwen2.5-coder:7b",
+                        "findings": [
+                            "### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: No exploitable data flows found in the provided context. The bridge interface methods `copyClipboard`, `stringToBase64String`, and `getAssetsText` do not involve SQL queries, file paths, intent creation, or any other potential security risks as per the evaluation criteria.\n\n**Evidence**: N/A"
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/deepseek-r1:8b",
+                        "findings": [
+                            "### Finding: Path Traversal Vulnerability in getAssetsText()\n**Risk Level**: High\n**Data Flow Path**: [JavaScript] -> [WebAppInterface] -> [getAssetsText] -> [File Read]\n**Technical Description**: The `getAssetsText` method accepts an arbitrary file path from JavaScript. If the method does not properly sanitize or validate the input, it may enable path traversal attacks (e.g., using `../../`) to access unauthorized files. This could expose sensitive data like configuration files or credentials stored in the app's assets.\n**Evidence**: `WebAppInterface.getAssetsText(Ljava/lang/String;)Ljava/lang/String;` exposes `String getAssetsText(String)` to JavaScript. The input is attacker-controlled, and without input validation, path traversal is possible.\n\n---",
+                            "### Finding: Clipboard Hijacking in copyClipboard()\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript] -> [WebAppInterface] -> [copyClipboard] -> [Clipboard]\n**Technical Description**: The `copyClipboard` method allows JavaScript to write arbitrary strings to the device's clipboard. Attackers can exploit this to overwrite sensitive data (e.g., copied passwords, credentials) with malicious content, leading to session hijacking or phishing attacks.\n**Evidence**: `WebAppInterface.copyClipboard(Ljava/lang/String;)V` exposes `void copyClipboard(String)` to JavaScript, with full control over the input.\n\n---",
+                            "### Finding: Insufficient Input Validation in stringToBase64String()\n**Risk Level**: Low\n**Data Flow Path**: [JavaScript] -> [WebAppInterface] -> [stringToBase64String] -> [Base64 Output]\n**Technical Description**: While base64 encoding itself is not inherently dangerous, the method `stringToBase64String` lacks input validation. If combined with insecure storage or transmission (e.g., localStorage), it could facilitate data leakage. However, without context, this is a low-risk issue.\n**Evidence**: `WebAppInterface.stringToBase64String(Ljava/lang/String;)Ljava/lang/String;` exposes `String stringToBase64String(String)` to JavaScript with no input sanitization.\n\n---",
+                            "### Finding: No Vulnerabilities Identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: The provided analysis did not identify SQL injection, intent redirection, or RCE risks. The `onCreate` method initializes the bridge but does not expose dangerous sinks directly.\n**Evidence**: N/A"
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/starcoder2:7b",
+                        "findings": []
+                    },
+                    {
+                        "inspector": "ollama/phi4:14b",
+                        "findings": [
+                            "### Finding: Directory Traversal via `getAssetsText`\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript] -> [WebView Android Interface] -> [getAssetsText(String)]  \n**Technical Description**: If an attacker can control the input to `getAssetsText`, they might exploit directory traversal vulnerabilities to access unauthorized files in the app's assets.  \n**Evidence**: Method: `getAssetsText(Ljava/lang/String;)Ljava/lang/String;`",
+                            "### Finding: Potential Phishing via `copyClipboard`\n**Risk Level**: Medium  \n**Data Flow Path**: [JavaScript] -> [WebView Android Interface] -> [copyClipboard(String)]  \n**Technical Description**: An attacker could exploit this method to copy malicious content or phishing URLs to the clipboard, potentially deceiving users into taking harmful actions.  \n**Evidence**: Method: `copyClipboard(Ljava/lang/String;)V`",
+                            "### Finding: Base64 Encoding Misuse\n**Risk Level**: Low  \n**Data Flow Path**: [JavaScript] -> [WebView Android Interface] -> [stringToBase64String(String)]  \n**Technical Description**: While generally safe, if sensitive data is passed to this method without proper checks, it could lead to information exposure.  \n**Evidence**: Method: `stringToBase64String(Ljava/lang/String;)Ljava/lang/String;`\n\n### Conclusion\nThe primary concern lies with the `getAssetsText` method due to its potential for directory traversal attacks. Additional precautions should be taken to ensure input validation and control access to sensitive methods like `copyClipboard`."
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/llama3.2:3b",
+                        "findings": [
+                            "### Finding: Cross-Site Scripting (XSS)\n**Risk Level**: High\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The `stringToBase64String` method does not sanitize user input, allowing an attacker to inject malicious Base64 encoded strings, potentially leading to XSS attacks.\n**Evidence**: `.method public final stringToBase64String(Ljava/lang/String;)Ljava/lang/String;`",
+                            "### Finding: Intent Redirection\n**Risk Level**: Medium\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The `copyClipboard` method can be used to inject malicious intent data, allowing an attacker to redirect the user's device to a malicious URL.\n**Evidence**: `.method public final void copyClipboard(Ljava/lang/String;)V`",
+                            "### Finding: Data Flow Leakage\n**Risk Level**: Low\n**Data Flow Path**: [JS Source] -> [Bridge Object] -> [Java Sink]\n**Technical Description**: The `getAssetsText` method returns sensitive data, potentially leaking information about the device's assets.\n**Evidence**: `.method public final String getAssetsText(Ljava/lang/String;)Ljava/lang/String;`",
+                            "### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows found in the provided context.\n**Evidence**: N/A\n\nNote that this analysis focuses on the specific bridge interface and JavaScript snippets provided, but a more comprehensive security assessment would require examining additional code paths and potential attack vectors."
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/gemma3:12b",
+                        "findings": [
+                            "### Finding: Uncontrolled Clipboard Access via copyClipboard\n**Risk Level**: High\n**Data Flow Path**: [JavaScript (unspecified)] -> `WebAppInterface.copyClipboard(String)` -> Android Clipboard\n**Technical Description**: The `copyClipboard(String)` method allows arbitrary JavaScript to directly manipulate the Android clipboard. An attacker could inject malicious data into the clipboard, which could then be pasted into other applications, potentially leading to data theft, malware execution, or other unintended consequences. The lack of input validation or sanitization on the JavaScript side means any malicious string passed via the bridge is directly copied to the clipboard.\n**Evidence**: `WebAppInterface.copyClipboard(Ljava/lang/String;)V`",
+                            "### Finding: Base64 Encoding Potential for Malicious Payload\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript (unspecified)] -> `WebAppInterface.stringToBase64String(String)` -> Java String\n**Technical Description**: While `stringToBase64String` itself doesn't present a direct vulnerability, the Base64 encoding could be exploited if used subsequently. An attacker might encode a malicious string (e.g., containing shell commands or format string vulnerabilities) using this method, and then pass the encoded string to another part of the application for further processing without proper decoding and sanitization. The resulting \"decoded\" string could then be used in an exploitable manner. The utility of this depends on how the output of `stringToBase64String` is subsequently used.\n**Evidence**: `WebAppInterface.stringToBase64String(Ljava/lang/String;)Ljava/lang/String;`",
+                            "### Finding: Potential Asset File Information Disclosure\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript (unspecified)] -> `WebAppInterface.getAssetsText(String)` -> Java String\n**Technical Description**:  The `getAssetsText(String)` method retrieves text from Android assets. If the path provided by JavaScript is attacker-controlled and not properly validated, it could allow an attacker to read arbitrary files from the application's asset folder. While assets are generally intended for read-only data, sensitive configuration files or other data might be present, leading to information disclosure.  The \"initiating method: .method public final onCreate(Landroid/os/Bundle;)V\" suggests this is initialized early in the application lifecycle, widening its potential exposure.\n**Evidence**: `WebAppInterface.getAssetsText(Ljava/lang/String;)Ljava/lang/String;` and \".method public final onCreate(Landroid/os/Bundle;)V\""
+                        ]
+                    }
+                ],
+                "audits": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 10,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 5,
+                            "effectChainAwareness": 4,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 4,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.75,
+                            "technicalAccuracy": 5,
+                            "effectChainAwareness": 3,
+                            "attackSurfaceCoverage": 0.33
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    },
+                    "ollama/starcoder2:7b": {
+                        "ollama/qwen2.5-coder:7b": {},
+                        "ollama/deepseek-r1:8b": {},
+                        "ollama/starcoder2:7b": {},
+                        "ollama/phi4:14b": {},
+                        "ollama/llama3.2:3b": {},
+                        "ollama/gemma3:12b": {}
+                    },
+                    "ollama/phi4:14b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 0.33
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 1,
+                            "effectChainAwareness": 1,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.25,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 0.75
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    },
+                    "ollama/llama3.2:3b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 0.5
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 0.8
+                        },
+                        "ollama/starcoder2:7b": {},
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 0.5
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 0.83
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 0.5
+                        }
+                    },
+                    "ollama/gemma3:12b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 2,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 1,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    }
+                },
+                "researcherConclusion": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "identifiedCallsiteID": "Intent-webview_new-76",
+        "context": "APP: com.example.deeplviewer_46\n\nBRIDGE:\nInterface 'Android' (Lcom/example/deeplviewer/webview/WebAppInterface;) exposes: [METHOD 1] copyClipboard(Ljava/lang/String;)V\n  Readable: void copyClipboard(String)\n[METHOD 2] getAssetsText(Ljava/lang/String;)Ljava/lang/String;\n  Readable: String getAssetsText(String)\n[METHOD 3] stringToBase64String(Ljava/lang/String;)Ljava/lang/String;\n  Readable: String stringToBase64String(String) | initiating method: s(Landroid/content/Intent;Landroid/os/Bundle;)V\n\nJS SNIPPETS:\n",
+        "permutations": [
+            {
+                "researcher": 0,
+                "inspectors": [
+                    "ollama/qwen2.5-coder:7b",
+                    "ollama/deepseek-r1:8b",
+                    "ollama/starcoder2:7b",
+                    "ollama/phi4:14b",
+                    "ollama/llama3.2:3b",
+                    "ollama/gemma3:12b"
+                ],
+                "auditors": [
+                    "ollama/qwen2.5-coder:7b",
+                    "ollama/deepseek-r1:8b",
+                    "ollama/starcoder2:7b",
+                    "ollama/phi4:14b",
+                    "ollama/llama3.2:3b",
+                    "ollama/gemma3:12b"
+                ],
+                "results": [
+                    {
+                        "inspector": "ollama/qwen2.5-coder:7b",
+                        "findings": [
+                            "### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows found in the provided context.\n**Evidence**: N/A\n\n---\n\nThe provided context does not include any direct evidence of security vulnerabilities such as SQL Injection, File Paths, Intent Creation, Runtime.exec() or Reflection, or the return of sensitive data like PII. The bridge methods are relatively simple and do not appear to involve operations that could be exploited by an attacker with control over JavaScript input.\n\nHowever, it's important to note that this assessment is based on the provided context only. In a real-world scenario, additional analysis would be required to fully evaluate the security of the WebView bridge in its entirety."
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/deepseek-r1:8b",
+                        "findings": []
+                    },
+                    {
+                        "inspector": "ollama/starcoder2:7b",
+                        "findings": []
+                    },
+                    {
+                        "inspector": "ollama/phi4:14b",
+                        "findings": [
+                            "### Finding: Potential Path Traversal via `getAssetsText()`\n**Risk Level**: Medium  \n**Data Flow Path**: [JavaScript] -> `Android.getAssetsText()` -> Java String (Asset File)  \n**Technical Description**: If the input to `getAssetsText(String)` is not properly sanitized, it may allow reading arbitrary files from the app's assets directory. This could lead to unauthorized access to sensitive data stored within these files.\n**Evidence**: Method signature: `String getAssetsText(String)`\n\n#",
+                            "### Finding: Unauthorized Clipboard Manipulation via `copyClipboard()`\n**Risk Level**: Medium  \n**Data Flow Path**: [JavaScript] -> `Android.copyClipboard()` -> Clipboard (Java)  \n**Technical Description**: This method allows JavaScript to copy arbitrary strings to the clipboard. If uncontrolled input is accepted, it may lead to unauthorized or malicious content being copied without user awareness.\n**Evidence**: Method signature: `void copyClipboard(String)`\n\n### Conclusion\n\n- No critical vulnerabilities like RCE are identified in this assessment; however, medium-risk issues exist that could potentially be exploited under certain conditions. Proper input validation and access control should be implemented for the bridge methods to mitigate these risks.",
+                            "### Finding: No additional vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: Beyond the outlined potential path traversal and clipboard manipulation, no further exploitable data flows or direct vulnerabilities were found in the provided context.\n**Evidence**: N/A"
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/llama3.2:3b",
+                        "findings": []
+                    },
+                    {
+                        "inspector": "ollama/gemma3:12b",
+                        "findings": [
+                            "### Finding: Uncontrolled Clipboard Access via `copyClipboard`\n**Risk Level**: High\n**Data Flow Path**: [JavaScript - `webappInterface.copyClipboard(maliciousString)`](javascript) -> [WebAppInterface.copyClipboard(String)](#METHOD1)\n**Technical Description**: The `copyClipboard` method in the `WebAppInterface` exposes a direct call to native clipboard functionality. An attacker could craft malicious JavaScript to inject arbitrary strings into the clipboard via this method. This allows for potential information theft (e.g., copying sensitive data from the device clipboard) or phishing attacks (e.g., overwriting the clipboard with a malicious link). There's no input validation or sanitization performed on the string passed to the `copyClipboard` function, meaning an attacker can pass any arbitrary data.\n**Evidence**: `webappInterface.copyClipboard(maliciousString)`",
+                            "### Finding: Potential Asset File Disclosure via `getAssetsText`\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript - `webappInterface.getAssetsText(assetPath)`](javascript) -> [WebAppInterface.getAssetsText(String)](#METHOD2)\n**Technical Description**: The `getAssetsText` method retrieves the content of a file from the application's assets folder. If the `assetPath` parameter is attacker-controlled, an attacker could potentially enumerate and retrieve arbitrary files from the assets folder. While assets folders often contain non-critical data, depending on the application's setup, sensitive resources like configuration files or API keys could be present. Lack of validation on the `assetPath` could lead to path traversal vulnerabilities if an attacker can manipulate the path to access files outside the intended assets folder.\n**Evidence**: `webappInterface.getAssetsText(assetPath)`",
+                            "### Finding: Potential for Base64 Encoding Manipulation via `stringToBase64String`\n**Risk Level**: Low\n**Data Flow Path**: [JavaScript - `webappInterface.stringToBase64String(inputString)`](javascript) -> [WebAppInterface.stringToBase64String(String)](#METHOD3)\n**Technical Description**:  The `stringToBase64String` method encodes a string into a Base64 representation. While Base64 itself isn't inherently exploitable, it can be misused if the encoded string is subsequently used in contexts requiring specific formatting or decryption.  The attacker\u2019s control is limited to manipulating the input string.  If the resulting Base64 string is used to construct a URL, for example, and that URL is subsequently interpreted, there's a remote possibility of manipulating the appearance of content if the URL contains characters the base64 encoding inadvertently generates. The `initiating method: s(Landroid/content/Intent;Landroid/os/Bundle;)V` note suggests that further analysis of `s` is needed to understand how `stringToBase64String`\u2019s output might be utilized.\n**Evidence**: `webappInterface.stringToBase64String(inputString)`",
+                            "### Finding: Lack of Origin Validation\n**Risk Level**: Medium\n**Technical Description**: The provided context doesn\u2019t mention origin validation in event listeners. If the WebView allows for postMessage or other cross-origin communication, the lack of validation could enable a malicious website to inject JavaScript into the WebView and execute arbitrary code, leading to privilege escalation or data leakage. Without origin checking, a malicious site can effectively impersonate the legitimate web application.\n**Evidence**: No mention of `window.postMessage` origin validation.",
+                            "### Finding: Potential Information Leakage via getAssetsText & WebView Navigation\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript - `webappInterface.getAssetsText(assetPath)`] -> [WebAppInterface.getAssetsText(String)] -> [WebView content]\n**Technical Description**: If the `getAssetsText` method returns a string containing sensitive information (e.g., API keys, internal URLs), and this string is then displayed within a WebView, it can be inadvertently exposed to the user.  Furthermore, if this string is used in constructing URLs or other navigatable content within the WebView, an attacker could potentially exploit this information to gain unauthorized access to internal resources. This depends heavily on how the retrieved assets are processed and displayed.\n**Evidence**: `webappInterface.getAssetsText(assetPath)`"
+                        ]
+                    }
+                ],
+                "audits": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 0.3
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 7,
+                            "effectChainAwareness": 4,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 4,
+                            "effectChainAwareness": 4,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 4,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 0.667
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 4,
+                            "effectChainAwareness": 3,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.5,
+                            "technicalAccuracy": 7,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 0.6
+                        }
+                    },
+                    "ollama/starcoder2:7b": {
+                        "ollama/qwen2.5-coder:7b": {},
+                        "ollama/deepseek-r1:8b": {},
+                        "ollama/starcoder2:7b": {},
+                        "ollama/phi4:14b": {},
+                        "ollama/llama3.2:3b": {},
+                        "ollama/gemma3:12b": {}
+                    },
+                    "ollama/phi4:14b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 0.5
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 7,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 0.67
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 5,
+                            "effectChainAwareness": 2,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    },
+                    "ollama/llama3.2:3b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 0.5
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 9,
+                            "attackSurfaceCoverage": 0.5
+                        },
+                        "ollama/llama3.2:3b": {},
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.2,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 0.8
+                        }
+                    },
+                    "ollama/gemma3:12b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 7,
+                            "effectChainAwareness": 3,
+                            "attackSurfaceCoverage": 0.5
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 1,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 1,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 1.0,
+                            "technicalAccuracy": 1,
+                            "effectChainAwareness": 1,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 0.8
+                        }
+                    }
+                },
+                "researcherConclusion": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "identifiedCallsiteID": "Intent-webview_new-77",
+        "context": "APP: com.example.deeplviewer_46\n\nBRIDGE:\nInterface 'Android' (Lcom/example/deeplviewer/webview/WebAppInterface;) exposes: [METHOD 1] copyClipboard(Ljava/lang/String;)V\n  Readable: void copyClipboard(String)\n[METHOD 2] stringToBase64String(Ljava/lang/String;)Ljava/lang/String;\n  Readable: String stringToBase64String(String)\n[METHOD 3] getAssetsText(Ljava/lang/String;)Ljava/lang/String;\n  Readable: String getAssetsText(String) | initiating method: .method public final s(Landroid/content/Intent;Landroid/os/Bundle;)V\n\nJS SNIPPETS:\n",
+        "permutations": [
+            {
+                "researcher": 0,
+                "inspectors": [
+                    "ollama/qwen2.5-coder:7b",
+                    "ollama/deepseek-r1:8b",
+                    "ollama/starcoder2:7b",
+                    "ollama/phi4:14b",
+                    "ollama/llama3.2:3b",
+                    "ollama/gemma3:12b"
+                ],
+                "auditors": [
+                    "ollama/qwen2.5-coder:7b",
+                    "ollama/deepseek-r1:8b",
+                    "ollama/starcoder2:7b",
+                    "ollama/phi4:14b",
+                    "ollama/llama3.2:3b",
+                    "ollama/gemma3:12b"
+                ],
+                "results": [
+                    {
+                        "inspector": "ollama/qwen2.5-coder:7b",
+                        "findings": [
+                            "### Finding: No vulnerabilities identified\n**Risk Level**: Low\n**Data Flow Path**: N/A\n**Technical Description**: No exploitable data flows found in the provided context.\n**Evidence**: N/A"
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/deepseek-r1:8b",
+                        "findings": [
+                            "### Finding: Potential SQL Injection via Database Query Execution\n**Risk Level**: Critical  \n**Data Flow Path**: [JavaScript call to WebAppInterface method] -> [Java sink in database query]  \n**Technical Description**: The JavaScript interface allows arbitrary database queries via the `getAssetsText` method, which may construct SQL queries using untrusted input. If the method is used to query a database without proper sanitization, attackers could inject malicious SQL code to extract sensitive data or manipulate the database.  \n**Evidence**: `WebAppInterface.getAssetsText(Ljava/lang/String;)Ljava/lang/String;` | `.method public final s(Landroid/content/Intent;Landroid/os/Bundle;)V` (suggests potential use in constructing unsafe queries).",
+                            "### Finding: Path Traversal via Asset Access\n**Risk Level**: High  \n**Data Flow Path**: [JavaScript call to WebAppInterface method] -> [Java sink in asset access]  \n**Technical Description**: The `getAssetsText` method accepts an arbitrary file path from JavaScript and uses it to access assets. If the method does not sanitize the input, attackers could traverse to restricted files or system directories via `../` or absolute paths, leading to unauthorized data exposure.  \n**Evidence**: `WebAppInterface.getAssetsText(Ljava/lang/String;)Ljava/lang/String;` (input is attacker-controlled).",
+                            "### Finding: Clipboard Data Exposure\n**Risk Level**: Medium  \n**Data Flow Path**: [JavaScript call to WebAppInterface method] -> [Java sink in clipboard access]  \n**Technical Description**: The `copyClipboard` method allows JavaScript to write arbitrary data to the clipboard. While not inherently dangerous, this could be exploited in phishing attacks or credential theft if combined with other vulnerabilities.  \n**Evidence**: `WebAppInterface.copyClipboard(Ljava/lang/String;)V` (input is attacker-controlled).",
+                            "### Finding: Base64 Encoding Misuse\n**Risk Level**: Low  \n**Technical Description**: The `stringToBase64String` method converts strings to Base64, which is generally safe for data encoding but could be misused to obfuscate malicious payloads. However, without further context, this does not directly lead to a critical vulnerability.  \n**Evidence**: `WebAppInterface.stringToBase64String(Ljava/lang/String;)Ljava/lang/String;` (output is Base64-encoded, but input is sanitized by the caller).",
+                            "### Finding: No vulnerabilities identified\n**Risk Level**: Low  \n**Data Flow Path**: N/A  \n**Technical Description**: The provided analysis did not identify exploitable data flows in the provided context.  \n**Evidence**: N/A"
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/starcoder2:7b",
+                        "findings": []
+                    },
+                    {
+                        "inspector": "ollama/phi4:14b",
+                        "findings": [
+                            "### Finding: Clipboard Manipulation Vulnerability\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript] -> [WebAppInterface.copyClipboard] -> [Android Clipboard]\n**Technical Description**: An attacker-controlled JavaScript can call `copyClipboard`, allowing manipulation of clipboard contents, potentially leading to phishing or information disclosure.\n**Evidence**: Method: copyClipboard\n\n#### Method 2: `stringToBase64String(String)`\n\n- **Data Flow & Sink Analysis**: Converts a string to its Base64 representation.\n  - **Potential Vulnerability**: This method doesn't directly pose security risks unless combined with other methods that misuse the output.\n\n- **Reachability & Attacker Control**:\n  - **Attacker Reachability**: JavaScript can call this method, and the input is fully under attacker control.\n\n- **Impact Chain & Privilege Escalation**:\n  - **Worst-case Outcome**: If used inappropriately with other methods, it could facilitate encoding of harmful data for transmission or execution.",
+                            "### Finding: Base64 Encoding Abuse Potential\n**Risk Level**: Low\n**Data Flow Path**: [JavaScript] -> [WebAppInterface.stringToBase64String] -> [Base64 Encoded String]\n**Technical Description**: While `stringToBase64String` itself is safe, its misuse in encoding data for other dangerous operations could pose risks.\n**Evidence**: Method: stringToBase64String\n\n#### Method 3: `getAssetsText(String)`\n\n- **Data Flow & Sink Analysis**: Retrieves text from application assets.\n  - **Potential Vulnerability**: If asset paths are under attacker control, this can lead to information disclosure of sensitive files stored in the app's assets.\n\n- **Reachability & Attacker Control**:\n  - **Attacker Reachability**: JavaScript can call this method with a string argument representing an asset path. The entire path is controlled by the attacker.\n\n- **Impact Chain & Privilege Escalation**:\n  - **Worst-case Outcome**: An attacker could access and disclose sensitive files or configuration data stored within the app's assets.",
+                            "### Finding: Asset Path Disclosure Vulnerability\n**Risk Level**: High\n**Data Flow Path**: [JavaScript] -> [WebAppInterface.getAssetsText] -> [Asset File Content]\n**Technical Description**: Allowing JavaScript to control asset paths can lead to unauthorized disclosure of sensitive files.\n**Evidence**: Method: getAssetsText\n\n### Conclusion\nThe bridge callsite presents multiple potential vulnerabilities, primarily around the `getAssetsText` method due to its ability to disclose sensitive information if misused. The `copyClipboard` function also poses risks related to phishing and data manipulation. It is crucial to implement origin validation for all JavaScript messages and restrict or sanitize inputs where feasible.\n\n### Summary of Findings\n- **Finding 1: Clipboard Manipulation Vulnerability**\n  - **Risk Level**: Medium\n  \n- **Finding 2: Base64 Encoding Abuse Potential**\n  - **Risk Level**: Low\n\n- **Finding 3: Asset Path Disclosure Vulnerability**\n  - **Risk Level**: High\n\nThese findings should guide further mitigation strategies, such as input validation, access control mechanisms, and ensuring secure communication protocols."
+                        ]
+                    },
+                    {
+                        "inspector": "ollama/llama3.2:3b",
+                        "findings": []
+                    },
+                    {
+                        "inspector": "ollama/gemma3:12b",
+                        "findings": [
+                            "### Finding: Uncontrolled Clipboard Access via `copyClipboard`\n**Risk Level**: High\n**Data Flow Path**: [JavaScript: `webappInterface.copyClipboard(...)`] -> [Android: `WebAppInterface.copyClipboard(String)`]\n**Technical Description**: The `copyClipboard` method allows JavaScript to directly copy arbitrary strings to the device's clipboard. This poses a risk because a malicious website loaded within the WebView could trick the user into executing this method with malicious content, potentially leading to data exfiltration or malware installation if the copied content is later pasted into a sensitive application (e.g., a banking app, password manager).  While copy/paste actions don't directly cause RCE, they can contribute to broader attack chains.\n**Evidence**: `webappInterface.copyClipboard(...)`",
+                            "### Finding: Potential for Sensitive Data Exposure via `stringToBase64String`\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript: `webappInterface.stringToBase64String(...)`] -> [Android: `WebAppInterface.stringToBase64String(String)`]\n**Technical Description**:  The `stringToBase64String` method encodes a string into Base64. While Base64 itself is not encryption, it can be used to obfuscate data, and if the original string contains sensitive information (e.g., API keys, user identifiers), this obfuscation might be perceived as security by those developing the app, leading to it being handled carelessly. An attacker could potentially reconstruct the original string, though trivial. The larger risk is that an attacker can gain information about the types of data the app is handling.\n**Evidence**: `webappInterface.stringToBase64String(...)`",
+                            "### Finding: Potential Information Leakage via `getAssetsText`\n**Risk Level**: Medium\n**Data Flow Path**: [JavaScript: `webappInterface.getAssetsText(...)`] -> [Android: `WebAppInterface.getAssetsText(String)`]\n**Technical Description**: The `getAssetsText` method retrieves the content of files from the application's assets directory.  If the assets directory contains sensitive information (e.g., configuration files containing API keys, database credentials, or other sensitive data), an attacker could potentially access it via JavaScript, leading to information leakage.  The `s` method, which initiates this call, being triggered by an intent, might indicate this method is intended for external communication or a more privileged context, increasing its potential for misuse.\n**Evidence**: `webappInterface.getAssetsText(...)` and `.method public final s(Landroid/content/Intent;Landroid/os/Bundle;)V`",
+                            "### Finding: Lack of Origin Validation\n**Risk Level**: Medium\n**Technical Description**: The provided context doesn't mention any origin validation for the WebView. This means that any website can potentially access the bridge methods if they are loaded in the WebView. This represents a significant risk, as a malicious website can easily load JavaScript that calls these methods and compromises the application's security.\n**Evidence**: N/A (Implied by the lack of origin validation information)"
+                        ]
+                    }
+                ],
+                "audits": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 0.6
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 10,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 0.4
+                        }
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 2,
+                            "effectChainAwareness": 3,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.6,
+                            "technicalAccuracy": 7,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 0.67
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 1,
+                            "effectChainAwareness": 1,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 6,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 0.2
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    },
+                    "ollama/starcoder2:7b": {
+                        "ollama/qwen2.5-coder:7b": {},
+                        "ollama/deepseek-r1:8b": {},
+                        "ollama/starcoder2:7b": {},
+                        "ollama/phi4:14b": {},
+                        "ollama/llama3.2:3b": {},
+                        "ollama/gemma3:12b": {}
+                    },
+                    "ollama/phi4:14b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 5,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    },
+                    "ollama/llama3.2:3b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.5,
+                            "technicalAccuracy": 6,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 0.8
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 9,
+                            "attackSurfaceCoverage": 0.95
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 9,
+                            "effectChainAwareness": 8,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 0.7
+                        }
+                    },
+                    "ollama/gemma3:12b": {
+                        "ollama/qwen2.5-coder:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 3,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/deepseek-r1:8b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 6,
+                            "attackSurfaceCoverage": 0.8
+                        },
+                        "ollama/starcoder2:7b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 10,
+                            "effectChainAwareness": 1,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/phi4:14b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        },
+                        "ollama/llama3.2:3b": {
+                            "hallucinationFrequency": 1.0,
+                            "technicalAccuracy": 1,
+                            "effectChainAwareness": 1,
+                            "attackSurfaceCoverage": 0.0
+                        },
+                        "ollama/gemma3:12b": {
+                            "hallucinationFrequency": 0.0,
+                            "technicalAccuracy": 8,
+                            "effectChainAwareness": 7,
+                            "attackSurfaceCoverage": 1.0
+                        }
+                    }
+                },
+                "researcherConclusion": {
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
                     }
                 }
             }
@@ -959,42 +1865,42 @@
                     }
                 },
                 "researcherConclusion": {
-                       "ollama/qwen2.5-coder:7b": {
-                            "hallucinationFrequency": 0.72,
-                            "technicalAccuracy": 5,
-                            "effectChainAwareness": 4,
-                            "attackSurfaceCoverage": 0.11
-                        },
-                        "ollama/deepseek-r1:8b": {
-                            "hallucinationFrequency": 0.75,
-                            "technicalAccuracy": 5,
-                            "effectChainAwareness": 5,
-                            "attackSurfaceCoverage": 0.08
-                        },
-                        "ollama/starcoder2:7b": {
-                            "hallucinationFrequency": 0.0,
-                            "technicalAccuracy": 0,
-                            "effectChainAwareness": 0,
-                            "attackSurfaceCoverage": 0.0
-                        },
-                        "ollama/phi4:14b": {
-                            "hallucinationFrequency": 0.63,
-                            "technicalAccuracy": 7,
-                            "effectChainAwareness": 6,
-                            "attackSurfaceCoverage": 0.25
-                        },
-                        "ollama/llama3.2:3b": {
-                            "hallucinationFrequency": 0.0,
-                            "technicalAccuracy": 2,
-                            "effectChainAwareness": 2,
-                            "attackSurfaceCoverage": 0.0
-                        },
-                        "ollama/gemma3:12b": {
-                            "hallucinationFrequency": 0.5,
-                            "technicalAccuracy": 7,
-                            "effectChainAwareness": 6,
-                            "attackSurfaceCoverage": 0.2
-                        }
+                    "ollama/qwen2.5-coder:7b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/deepseek-r1:8b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/starcoder2:7b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/phi4:14b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/llama3.2:3b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    },
+                    "ollama/gemma3:12b": {
+                        "hallucinationFrequency": "undefined",
+                        "technicalAccuracy": "undefined",
+                        "effectChainAwareness": "undefined",
+                        "attackSurfaceCoverage": "undefined"
+                    }
                 }
             }
         ]
