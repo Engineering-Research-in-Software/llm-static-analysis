@@ -1,0 +1,6 @@
+metric,r,p
+hallucinationFrequency,-0.075,0.0
+technicalAccuracy,0.056,0.0001
+effectChainAwareness,0.021,0.1302
+attackSurfaceCoverage,0.038,0.0058
+TS_equal,0.059,0.0
