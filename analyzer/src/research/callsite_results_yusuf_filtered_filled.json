@@ -270,40 +270,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.67,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.45,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.25
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.25
                     }
                 }
             }
@@ -651,40 +651,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.73,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.6
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.6
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.95,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.8
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.6
                     }
                 }
             }
@@ -955,40 +955,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.4
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.6
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.6
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.6
                     }
                 }
             }
@@ -1251,40 +1251,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.2,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -1557,40 +1557,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.4
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.2,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.6
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.25,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.6
                     }
                 }
             }
@@ -1866,40 +1866,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.62,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.67,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.67
                     }
                 }
             }
@@ -2188,40 +2188,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.71,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.4,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -2478,40 +2478,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.89,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.5
                     }
                 }
             }
@@ -2776,40 +2776,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.67,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.67,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -3086,40 +3086,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.73,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.83,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.67
                     }
                 }
             }
@@ -3389,40 +3389,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.83,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.67,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -3712,40 +3712,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.88,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -4011,40 +4011,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -4309,40 +4309,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     }
                 }
             }
@@ -4624,40 +4624,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.17
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.5
                     }
                 }
             }
@@ -4933,40 +4933,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.6
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.8
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.17,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -5230,40 +5230,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -5535,40 +5535,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.33
                     }
                 }
             }
@@ -5829,40 +5829,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     }
                 }
             }
@@ -6123,40 +6123,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -6441,40 +6441,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.67,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -6758,40 +6758,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.83,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.67,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.88,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.4,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -7056,40 +7056,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     }
                 }
             }
@@ -7358,40 +7358,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.4
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.4
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.25,
+                        "technicalAccuracy": 7,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.4
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.6
                     }
                 }
             }
@@ -7657,40 +7657,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.62,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.25
                     }
                 }
             }
@@ -7962,40 +7962,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     }
                 }
             }
@@ -8264,40 +8264,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     }
                 }
             }
@@ -8575,40 +8575,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.86,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.5,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -8877,40 +8877,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.83,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
@@ -9204,40 +9204,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.9,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.67
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.67,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.67
                     }
                 }
             }
@@ -9522,40 +9522,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.88,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.25
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.8,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.25
                     }
                 }
             }
@@ -9841,40 +9841,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.95,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 10,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     }
                 }
             }
@@ -10151,40 +10151,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.9,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.75,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 3,
+                        "attackSurfaceCoverage": 0.5
                     }
                 }
             }
@@ -10472,40 +10472,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 1.0,
+                        "technicalAccuracy": 1,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.83,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.4,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.88,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.33
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.6,
+                        "technicalAccuracy": 3,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 0.67
                     }
                 }
             }
@@ -10786,40 +10786,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.87,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.25
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.43,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 4,
+                        "attackSurfaceCoverage": 1.0
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.75
                     }
                 }
             }
@@ -11091,40 +11091,40 @@
                 },
                 "researcherConclusion": {
                     "ollama/qwen2.5-coder:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.25,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.75
                     },
                     "ollama/deepseek-r1:8b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 6,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 0.25
                     },
                     "ollama/starcoder2:7b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.0,
+                        "technicalAccuracy": 0,
+                        "effectChainAwareness": 0,
+                        "attackSurfaceCoverage": 0.0
                     },
                     "ollama/phi4:14b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.33,
+                        "technicalAccuracy": 4,
+                        "effectChainAwareness": 5,
+                        "attackSurfaceCoverage": 0.5
                     },
                     "ollama/llama3.2:3b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.88,
+                        "technicalAccuracy": 2,
+                        "effectChainAwareness": 2,
+                        "attackSurfaceCoverage": 0.25
                     },
                     "ollama/gemma3:12b": {
-                        "hallucinationFrequency": "undefined",
-                        "technicalAccuracy": "undefined",
-                        "effectChainAwareness": "undefined",
-                        "attackSurfaceCoverage": "undefined"
+                        "hallucinationFrequency": 0.2,
+                        "technicalAccuracy": 5,
+                        "effectChainAwareness": 6,
+                        "attackSurfaceCoverage": 1.0
                     }
                 }
             }
