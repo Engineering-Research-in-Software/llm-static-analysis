@@ -1,0 +1,85 @@
+\section{Results}
+
+\subsection{Dataset and Coverage}
+The pipeline execution covered 119 unique callsites spanning 34 distinct Android applications from the iWanDroid corpus. The six models described in the previous section each acted as both Inspector and Auditor, processing every callsite to produce a $6 \times 6 = 36$ cell audit matrix per assigned permutation. Across the full population of 156 callsite permutations drawn for ground-truth conclusion, this amounted to 5{,}616 audit cells in total. Of these, 4{,}510 contained scored output; the remaining empties were dominated by starcoder2:7b, whose row of the matrix was filled in only 8 of the 936 cells assigned to it as an Auditor, since its rare findings as Inspector also left other Auditors with nothing to evaluate against.
+
+Inspector productivity varied by an order of magnitude throughout the lineup. qwen2.5-coder:7b produced 900 findings, followed by gemma3:12b at 610, llama3.2:3b at 578, phi4:14b at 413, and deepseek-r1:8b at 311. Far below sat starcoder2:7b at 23.
+
+Where Inspectors returned no findings at all, the same ordering holds. gemma3:12b engaged with every callsite-permutation in the population; qwen2.5-coder:7b returned empty on 3 of 156; phi4:14b on 29; deepseek-r1:8b on 60; llama3.2:3b on 62; starcoder2:7b on 147. Auditor coverage on the remaining cells was uneven: qwen2.5-coder:7b filled all 936 of its assigned cells, gemma3:12b 934, deepseek-r1:8b 915, phi4:14b 905, llama3.2:3b 812, and starcoder2:7b only 8.
+
+All metric values reported in this section are researcher-assigned conclusions: each Inspector's output across the callsites of a given app is consolidated into ground-truth scores on the four metrics, and the figures below aggregate those conclusions across the population.
+
+\subsection{Metric Structure (RQ A)}
+Pairwise correlations between the four normalised metrics are shown in Figure~\ref{fig:rqa-corr}. TA, ECA, and ASC covary strongly with one another: Pearson coefficients are $0.93$ between TA and ECA, $0.81$ between ECA and ASC, and $0.72$ between TA and ASC. The Spearman version preserves the same pattern with marginal shifts in magnitude; the corresponding rank coefficients are $0.93$, $0.81$, and $0.73$. By comparison, $1{-}HF$ does not correlate meaningfully with any of the other three; its Pearson coefficients sit between $-0.16$ and $-0.05$, and the Spearman version lands between $-0.22$ and $-0.10$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{graphs/rqa_correlation.png}
+\caption{Pearson and Spearman correlations between the four normalised metrics across all 119 callsites.}
+\label{fig:rqa-corr}
+\end{figure}
+
+Figure~\ref{fig:rqa-pca} presents a principal component analysis over the same four-dimensional space. PC1 captures approximately 66\% of the total variance and loads roughly equally on TA, ECA, and ASC, contributing close to zero on $1{-}HF$. A further 25\% lands on PC2, which is loaded almost exclusively by $1{-}HF$. PC3 and PC4 together account for under 9\% and add no separable structure on top of the first two. The four metrics reduce to two effective dimensions: a shared quality axis carried by TA, ECA, and ASC, and a separate hallucination axis.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{graphs/rqa_pca.png}
+\caption{PCA scree plot and component loadings over the four normalised metrics.}
+\label{fig:rqa-pca}
+\end{figure}
+
+\subsection{Model Performance (RQ B)}
+Figure~\ref{fig:rqb-heatmap} gives per-model conclusion-derived means on the four metrics, z-scored within column and annotated with raw values. gemma3:12b records the highest scores on TA, ECA, and ASC at $4.75$, $4.55$, and $0.59$ respectively. qwen2.5-coder:7b matches it on TA at $4.65$ but trails on ECA at $3.84$ and ASC at $0.52$, while carrying the highest HF of the lineup at $0.45$. deepseek-r1:8b and phi4:14b form a further cluster behind that pair, with respective means of $(4.50, 3.44, 0.41)$ and $(4.32, 3.64, 0.46)$. llama3.2:3b sits below the cluster on every positively-oriented metric at $(1.96, 1.61, 0.25)$. On every metric, starcoder2:7b records the lowest values at $(0.38, 0.26, 0.02)$; its low HF of $0.03$ follows from the small number of findings it produced rather than from restraint.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{graphs/rqb_heatmap.png}
+\caption{Mean per-model metric values. Cells are z-scored within column; raw means are annotated.}
+\label{fig:rqb-heatmap}
+\end{figure*}
+
+The composite Trustworthiness Score TS\textsubscript{equal}, computed as an equal weighting of the four normalised metrics on a $[0,1]$ scale, is plotted per app per model in Figure~\ref{fig:rqb-box}. gemma3:12b is at the top again, holding both the highest median and the tightest interquartile range at $0.52$. deepseek-r1:8b, phi4:14b, and qwen2.5-coder:7b overlap to a degree that any within-cluster ordering depends on the subsample considered, with means of $0.49$, $0.49$, and $0.48$. llama3.2:3b drops below them at $0.30$, and starcoder2:7b occupies a band of its own with most of its distribution compressed around $0.26$. Within-model spread is widest for deepseek-r1:8b and phi4:14b, each covering roughly $[0.10, 0.85]$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{graphs/rqb_boxplots.png}
+\caption{Per-callsite TS\textsubscript{equal} distribution per Inspector model.}
+\label{fig:rqb-box}
+\end{figure}
+
+Figure~\ref{fig:rqb-radar} shows the same means as a radar projection, making the model shapes directly comparable. gemma3 traces the widest polygon on the quality axes; deepseek-r1 closes it on TA but trails on ECA and ASC; phi4 covers similar area to deepseek with a flatter profile; qwen2.5 matches gemma3 on TA and ASC but loses ground on $1{-}HF$; llama3.2 shrinks toward the centre on every quality axis while keeping $1{-}HF$ comparable to the leading models; starcoder2 collapses toward the centre on TA, ECA, and ASC but holds the highest $1{-}HF$ in the lineup.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{graphs/rqb_radar.png}
+\caption{Model performance radar over the four normalised metrics.}
+\label{fig:rqb-radar}
+\end{figure}
+
+The cross-researcher view in Figure~\ref{fig:rqb-batch} reports mean TS\textsubscript{equal} per model within each of the four researcher partitions. The per-model ranking is preserved across partitions, and within-model variation between researchers stays bounded by approximately $0.1$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{graphs/rqb_cross_researcher.png}
+\caption{Mean TS\textsubscript{equal} per model, broken down by callsite batch.}
+\label{fig:rqb-batch}
+\end{figure}
+
+\subsection{Failure Patterns (RQ C)}
+Figure~\ref{fig:rqc-ctx} plots each of the four metrics against the context length supplied to the model. No metric shows a meaningful trend across the $0$--$3500$ character range present in the dataset; Pearson coefficients stay below $0.08$ in absolute terms for all four. Longer or richer context does not predict performance at the resolution available here.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{graphs/rqc_context_length.png}
+\caption{Each of the four metrics plotted against per-audit context length.}
+\label{fig:rqc-ctx}
+\end{figure*}
+
+A per-callsite view of TS\textsubscript{equal} over the full population appears in Figure~\ref{fig:rqc-callsite}. Variation among rows within a column is often larger than variation among columns within a row; vertical bands of uniformly low scores mark callsites on which every model scored poorly, and isolated weak cells mark model-specific failures against otherwise tractable evidence. The row corresponding to starcoder2:7b stands out as uniformly low throughout.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{graphs/rqc_callsite_heatmap.png}
+\caption{TS\textsubscript{equal} per model (rows) per callsite (columns), spanning the full 119-callsite population.}
+\label{fig:rqc-callsite}
+\end{figure*}

@@ -1,7 +1,7 @@
 metric,H_stat,p_kruskal
-TS_equal,29.896,0.0
-TS_pca,40.654,0.0
-hallucinationFrequency,17.762,0.0033
-technicalAccuracy,36.984,0.0
-effectChainAwareness,38.848,0.0
-attackSurfaceCoverage,32.743,0.0
+TS_equal,69.861,0.0
+TS_pca,102.767,0.0
+hallucinationFrequency,59.313,0.0
+technicalAccuracy,98.783,0.0
+effectChainAwareness,110.261,0.0
+attackSurfaceCoverage,84.346,0.0

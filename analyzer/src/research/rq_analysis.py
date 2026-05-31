@@ -37,10 +37,10 @@ PLOTS_DIR = RESEARCH_DIR / "plots"
 OUT_DIR = VALIDATED_DIR / "rq_outputs"
 
 CALLSITE_FILES = {
-    "bina": RESEARCH_DIR / "callsite_results_bina.json",
+    "bina": RESEARCH_DIR / "callsite_results_bina_filtered_filled_researcher.json",
     "yusuf": RESEARCH_DIR / "callsite_results_yusuf_filtered_filled.json",
-    "lily": RESEARCH_DIR / "callsite_results_lily_filtered_filled.json",
     "denisa": RESEARCH_DIR / "callsite_results_denisa_filtered_filled.json",
+    "lily": RESEARCH_DIR / "evaluations_lily" / "evaluations_lily.merged.json",
 }
 RESEARCHER_LABELS = {"bina": "R1", "yusuf": "R2", "lily": "R3", "denisa": "R4"}
 
@@ -59,15 +59,39 @@ MODEL_SHORT = {
 # ─── Data Loaders ─────────────────────────────────────────────────────────────
 
 def load_conclusions() -> pd.DataFrame:
-    """Load all validated/*/conclusions.json → flat DataFrame."""
-    records = []
-    for path in sorted(glob.glob(str(VALIDATED_DIR / "*" / "conclusions.json"))):
-        app = Path(path).parent.name
+    """Aggregate per-app per-model researcherConclusion across all callsite files.
+
+    For each (app, model), average each metric across every permutation/callsite/researcher
+    that supplied a researcherConclusion entry for that model.
+    """
+    bucket: dict[tuple[str, str], list[dict]] = {}
+    for path in CALLSITE_FILES.values():
         with open(path) as f:
-            d = json.load(f)
-        for model, m in d.get("researcher", {}).items():
-            records.append({"app": app, "model": model, **m})
-    df = pd.DataFrame(records)
+            data = json.load(f)
+        for entry in data:
+            m = re.search(r"APP:\s*([^\n]+)", entry.get("context", ""))
+            if not m:
+                continue
+            app = m.group(1).strip()
+            for perm in entry.get("permutations", []):
+                rc = perm.get("researcherConclusion", {})
+                if not isinstance(rc, dict):
+                    continue
+                for model, metrics in rc.items():
+                    if not isinstance(metrics, dict):
+                        continue
+                    bucket.setdefault((app, model), []).append(metrics)
+    rows = []
+    for (app, model), items in bucket.items():
+        row = {"app": app, "model": model}
+        for k in METRICS:
+            vals = [
+                float(it[k]) for it in items
+                if isinstance(it.get(k), (int, float)) and not isinstance(it.get(k), bool)
+            ]
+            row[k] = float(np.mean(vals)) if vals else np.nan
+        rows.append(row)
+    df = pd.DataFrame(rows)
     df["model_short"] = df["model"].map(MODEL_SHORT)
     return df
 

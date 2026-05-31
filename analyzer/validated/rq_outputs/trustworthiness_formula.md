@@ -10,11 +10,11 @@
   TS_equal = 0.25 * (inv_hf + ta_norm + eca_norm + asc_norm)
 
 ## PCA-derived weights (from PC1 on validated/conclusions.json)
-  w_1-HF = 0.0055
-  w_TA_10 = 0.3399
-  w_ECA_10 = 0.3431
-  w_ASC = 0.3115
+  w_1-HF = 0.0554
+  w_TA_10 = 0.3158
+  w_ECA_10 = 0.3269
+  w_ASC = 0.3019
 
-  TS_pca = 0.0055*1-HF + 0.3399*TA/10 + 0.3431*ECA/10 + 0.3115*ASC
+  TS_pca = 0.0554*1-HF + 0.3158*TA/10 + 0.3269*ECA/10 + 0.3019*ASC
 
-## Correlation between TS_equal and TS_pca: r = 0.918
+## Correlation between TS_equal and TS_pca: r = 0.947
