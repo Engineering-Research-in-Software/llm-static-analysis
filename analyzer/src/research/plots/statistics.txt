@@ -151,4 +151,13 @@ deepseek-r1       936             0.5                      5.6          0.694   
  starcoder2       936             2.7                      7.2          0.637    0.096    7.259     4.590     0.458              0.056
    llama3.2       936             3.1                     15.5          0.602    0.247    6.563     4.889     0.512              0.067
 
+Failure Taxonomy Summary:
+      model  n_audits    mean_TS_equal  mean_HF  mean_TA  mean_ECA  mean_ASC 
+     gemma3       936            0.799    0.087    8.052     6.860     0.792 
+       phi4       936            0.744    0.097    7.872     6.062     0.679 
+    qwen2.5       936            0.734    0.127    7.597     6.081     0.696 
+deepseek-r1       936            0.694    0.085    7.529     5.318     0.575 
+ starcoder2       936            0.637    0.096    7.259     4.590     0.458 
+   llama3.2       936            0.602    0.247    6.563     4.889     0.512 
+
 Plots saved: rqc_context_length.png, rqc_callsite_heatmap.png
