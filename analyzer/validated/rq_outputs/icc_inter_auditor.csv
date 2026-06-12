@@ -1,5 +1,5 @@
 ,ICC_A1,CI95_low,CI95_high,p-value
-hallucinationFrequency,0.08,-0.03,0.45,0.10266499405967812
-technicalAccuracy,0.018,-0.07,0.35,0.3484526086074668
-effectChainAwareness,-0.049,-0.11,0.27,0.6845432961938336
-attackSurfaceCoverage,0.159,-0.02,0.64,0.04677054260243518
+hallucinationFrequency,0.08,-0.03,0.45,0.10266499405967804
+technicalAccuracy,0.018,-0.07,0.35,0.3484526086074664
+effectChainAwareness,-0.049,-0.11,0.27,0.6845432961938338
+attackSurfaceCoverage,0.159,-0.02,0.64,0.046770542602435204
